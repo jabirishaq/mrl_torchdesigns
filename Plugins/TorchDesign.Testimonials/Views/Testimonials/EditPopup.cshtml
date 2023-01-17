@@ -1,0 +1,119 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
+
+}
+@model TestimonialsModel
+@using Nop.Plugin.TorchDesign.Testimonials.Models;
+<link href="~/Plugins/TorchDesign.Testimonials/Content/magnific-popup.css" rel="stylesheet" />
+<script src="~/Plugins/TorchDesign.Testimonials/Content/jquery.magnific-popup.js"></script>
+<link href="~/Plugins/TorchDesign.Testimonials/Content/Testimonials.css" rel="stylesheet" />
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
+{
+
+    if (@ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try { window.opener.document.forms['Widgets-event-form'].btnRefresh.click(); }
+            catch (e) { }
+            window.close();
+        </script>
+    }
+    <div>
+        @Html.HiddenFor(x => x.Id)
+        @Html.HiddenFor(x => x.IsPublished)
+        @Html.HiddenFor(x => x.IsRejected)
+        <div class="section-header">
+            <div class="title">
+                Testomonial Preview
+            </div>
+
+        </div>
+
+        <div>
+            <div class="inputs">
+                @*@Html.LabelFor(model => model.Message)*@
+                <div class="editmessage">
+                    @Html.TextAreaFor(model => model.Message, new { @class = "editmessage" })
+                </div>
+
+            </div>
+
+            <div class="fltleft popupleftsidetext">
+
+                <table class="adminContent">
+                    <tr>
+                        <td>
+                           @T("admin.affiliates.customers.name")
+                        </td>
+                        <td>
+                            @Html.EditorFor(model => model.CustomerName)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.LabelFor(model => model.Location)
+                        </td>
+                        <td>
+                            @Html.EditorFor(model => model.Location)
+                        </td>
+                    </tr>
+
+                </table>
+
+            </div>
+            <div class="fltright imagecontainer">
+                @foreach (var pic in Model.Picturelist)
+                {
+
+
+                    <a href="@pic.FullSizePicture" class="bigphoto">
+
+                        <img src="@pic.PictureUrl" title="@pic.PictureUrl" itemprop="image" class="testImages" />
+
+                    </a>
+
+                }
+
+            </div>
+        </div>
+
+
+
+
+        <div class="cleardiv">
+
+            <div class="fltleft">
+                <input type="submit" name="back" class="k-button" value="@T("plugins.torchdesign.testimonial.back")" />
+            </div>
+            <div class="fltright">
+                <input type="submit" name="save" class="k-button customebutton" value="@T(" admin.common.save")" />
+                @if (!@Model.IsPublished)
+                {
+                    <input type="submit" id="Approve" name="Approve" class="k-button customebutton" value="@T("plugins.torchdesign.testimonial.approve")" />
+                }
+                @if (!@Model.IsRejected)
+                {
+                    <input type="submit" id="Reject" name="Reject" class="k-button customebutton" value="@T("plugins.torchdesign.testimonial.reject")" />
+                }
+            </div>
+
+        </div>
+    </div>
+    @*@Html.Partial("~/Plugins/TorchDesign.Testimonials/Views/FrequentlyAskedQ/_CreateOrUpdate.cshtml", Model)*@
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('.bigphoto').magnificPopup(
+        {
+            type: 'image',
+            removalDelay: 300,
+            gallery: {
+                enabled: true
+            }
+        });
+    });
+</script>

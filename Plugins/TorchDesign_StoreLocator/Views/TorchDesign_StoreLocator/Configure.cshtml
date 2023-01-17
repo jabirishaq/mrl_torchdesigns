@@ -1,0 +1,381 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.Widgets.TorchDesign_StoreLocator.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+}
+@using (Html.BeginForm())
+{
+    <div>
+        <table>
+            <tr>
+                <td>
+                    @Html.NopLabelFor(model => model.Description):
+                </td>
+                <td>
+                    @Html.TextAreaFor(model => model.Description, new { style = "Width: 250px; Height: 50px;" })
+                    @Html.ValidationMessageFor(model => model.Description)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.NopLabelFor(model => model.GoogleAPIKey):
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.GoogleAPIKey, new { style = "Width: 250px;" })
+                    @Html.ValidationMessageFor(model => model.GoogleAPIKey)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="1">
+                <td>
+                    <input type="submit" id="Savesettingbtn" name="Savesettingbtn" class="k-button" value="@T(" admin.common.save")" />
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Widgets-event-form" }))
+{
+
+
+    <table>
+        <tr>
+            <td>
+                @{
+    var addNewUrl = Url.RouteUrl("Plugin.Widgets.TorchDesign_StoreLocator.AddPopup") + "?btnId=btnRefresh&formId=Widgets-event-form";
+                }
+                <br />
+                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Widgets.Storelocator.addstore")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 400, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#event-grid").data('kendoGrid');
+                            //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                            optionsGrid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <hr />
+    <br />
+
+    @*<table class="adminContent">
+            <tr>
+                <td>
+                    @T("Admin.Configuration.Languages.Resources.Description")
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="#event-grid"></div>
+
+                    <script>
+                        $(document).ready(function () {
+                            $("#event-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("StoreList", "TorchDesign_StoreLocator"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("EditPopup", "TorchDesign_StoreLocator"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("DeleteStrLocation", "TorchDesign_StoreLocator"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                Name: { editable: true, type: "string" },
+                                                Value: { editable: true, type: "string" },
+                                                Id: { editable: false, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "create" || e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    pageSizes: [@(gridPageSizes)]
+                                },
+                                sortable: true,
+                                toolbar: ["create"],
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                filterable: {
+                                    extra: false,
+                                    operators: {
+                                        string: {
+                                            contains: "Contains",
+                                            eq: "Is equal to",
+                                            startswith: "Starts with"
+                                        }
+                                    }
+                                },
+                                scrollable: false,
+                                columns: [ {
+                                    field: "Id",
+                                    title: "@T("Plugins.Widgets.Storelocator.StoreNumber")",
+                                    width: 150
+                                },
+                                              {
+                                                  field: "StoreName",
+                                                  title: "@T("Plugins.Widgets.Storelocator.StoreName")",
+                                                  width: 250
+                                              },
+                        {
+                            field: "Address",
+                            title: "@T("Plugins.Widgets.Storelocator.Address")",
+                            width: 250
+                        },
+                        {
+                            field: "City",
+                            title: "@T("Plugins.Widgets.Storelocator.City")",
+                            width: 250
+                        },
+                        {
+                            field: "Region",
+                            title: "@T("Plugins.Widgets.Storelocator.Region")",
+                            width: 250
+                        },
+                        {
+                            field: "CountryCode",
+                            title: "@T("Plugins.Widgets.Storelocator.CountryCode")",
+                            width: 250
+                        },
+                        {
+                            field: "PostalCode",
+                            title: "@T("Plugins.Widgets.Storelocator.PostelCode")",
+                            width: 250
+                        },
+
+                        {
+                            field: "PhoneNumber",
+                            title: "@T("Plugins.Widgets.Storelocator.PhoneNumber")",
+                            width: 250
+                        },
+                        {
+                            field: "StoreType",
+                            title: "@T("Plugins.Widgets.Storelocator.StoreType")",
+                            width: 250
+                        },
+                        {
+                            field: "Latitude",
+                            title: "@T("Plugins.Widgets.Storelocator.Latitude")",
+                            width: 440,
+                        },
+                        {
+                            field: "Longitude",
+                            title: "@T("Plugins.Widgets.Storelocator.Longitude")",
+                            width: 440,
+
+                        },
+                        {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 80,
+                            template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Widgets.TorchDesign_StoreLocator.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=Widgets-event-form', 800, 400, true); return false;\" class='k-button' />"
+                        },{
+                            command: [{
+                                name: "destroy",
+                                text: "@T("Admin.Common.Delete")"
+                            }],
+                            width: 80
+                        }],
+
+                            });
+                        });
+
+                    </script>
+                </td>
+            </tr>
+        </table>*@
+
+
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div>
+                    <div id="event-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            $("#event-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("StoreList", "TorchDesign_StoreLocator"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("EditPopup", "TorchDesign_StoreLocator"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("DeleteStrLocation", "TorchDesign_StoreLocator"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                PictureUrl: { editable: false, type: "string" },
+                                                //LanguageName: { editable: false, type: "string" },
+                                                //Height: { editable: true, type: "number" },
+                                                //Width: { editable: true, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pageSize: @(defaultGridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: true,
+                                    previousNext: true,
+                                    info: true
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [
+                                     {
+                                         field: "StoreNumber",
+                                         title: "@T("Plugins.Widgets.Storelocator.StoreNumber")",
+                                         width: 150
+                                     },
+      {
+          field: "StoreName",
+          title: "@T("Plugins.Widgets.Storelocator.StoreName")",
+          width: 250
+      },
+     {
+         field: "Address",
+         title: "@T("Plugins.Widgets.Storelocator.Address")",
+         width: 250
+     },
+    {
+        field: "City",
+        title: "@T("Plugins.Widgets.Storelocator.City")",
+        width: 250
+    },
+     {
+         field: "Region",
+         title: "@T("Plugins.Widgets.Storelocator.Region")",
+         width: 250
+     },
+     {
+         field: "CountryCode",
+         title: "@T("Plugins.Widgets.Storelocator.CountryCode")",
+         width: 250
+     },
+      {
+          field: "PostalCode",
+          title: "@T("Plugins.Widgets.Storelocator.PostelCode")",
+          width: 250
+      },
+
+        {
+            field: "PhoneNumber",
+            title: "@T("Plugins.Widgets.Storelocator.PhoneNumber")",
+            width: 250
+        },
+{
+    field: "StoreType",
+    title: "@T("Plugins.Widgets.Storelocator.StoreType")",
+    width: 250
+},
+ {
+     field: "Latitude",
+     title: "@T("Plugins.Widgets.Storelocator.Latitude")",
+     width: 440,
+ },
+  {
+      field: "Longitude",
+      title: "@T("Plugins.Widgets.Storelocator.Longitude")",
+      width: 440,
+
+  },
+{
+    field: "Id",
+    title: "@T("Admin.Common.Edit")",
+    width: 80,
+    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Widgets.TorchDesign_StoreLocator.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=Widgets-event-form', 800, 400, true); return false;\" class='k-button' />"
+},
+   {
+       command: [{
+           name: "destroy",
+           text: "@T("Admin.Common.Delete")"
+       }],
+       width: 80
+   }]
+                            });
+                        });
+                    </script>
+                </div>
+            </td>
+
+        </tr>
+    </table>
+}

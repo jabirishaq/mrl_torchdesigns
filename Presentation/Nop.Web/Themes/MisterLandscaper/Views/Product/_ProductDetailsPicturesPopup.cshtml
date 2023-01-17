@@ -1,0 +1,121 @@
+﻿@model ProductDetailsModel
+@using Nop.Core.Domain.Media
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Models.Catalog;
+@{
+    Html.AddScriptParts("~/Scripts/jquery.magnific-popup.js");
+    Html.AddCssFileParts("~/Content/magnific-popup/magnific-popup.css");
+
+    int productPerRow = EngineContext.Current.Resolve<MediaSettings>().ProductThumbPerRowOnProductDetailsPage;
+}
+<div class="gallery">
+    <div id="gallarypopup" class="picture picturecotainer">
+
+        @if (Model.PictureModels.Count > 1)
+        {
+            <h5 class="popuptext">@T("alternate.view")</h5>
+            <div style="float:left; width:20%;">
+                <div class="productdetailpopupslidermaindiv">
+                    <div class="swiper-container">
+                        <div class="swiper-wrapper">
+                            @for (int i = 0; i < Model.PictureModels.Count; i++)
+                            {
+                                var picture = Model.PictureModels[i];
+                                <div class="swiper-slide">
+                                    <a id="image-anchor" class="" href="javascript:void(0)" title="@Model.Name">
+                                        <img id="thumb_popup_@i" src="@picture.ImageUrl" onclick="changepopupImage('@picture.DefaultPictureImageUrl','@picture.FullSizeImageUrl','main-product-popup-img-@Model.Id','main-product-popup-img-lightbox-anchor-@i')" alt="@picture.AlternateText" title="@picture.Title" data-img="@picture.FullSizeImageUrl" />
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+            </div>
+            @*<script>
+                var swiper = new Swiper('.swiper-container', {
+                    slidesPerView: 3,
+                    spaceBetween: 0,
+                    mousewheelControl: true,
+                    direction: 'vertical',
+                    loop: true,
+                    nextButton: '.swiper-button-next',
+                    prevButton: '.swiper-button-prev'
+                });
+            </script>*@
+           
+
+        }
+        <div class="largeimg">
+            @if (Model.DefaultPictureZoomEnabled)
+            {
+
+                for (int i = 0; i < Model.PictureModels.Count; i++)
+                {
+                    var picture1 = Model.PictureModels[i];
+
+                    <a title="@Model.Name" id="main-product-popup-img-lightbox-anchor-@i">
+                        <img alt="@Model.DefaultPictureModel.AlternateText" src="@picture1.DefaultPictureImageUrl" title="@picture1.Title" itemprop="image" id="main-product-popup-img-@Model.Id" style="width:100%" />
+                    </a>
+
+                }
+
+
+            }
+            else
+            {
+                <img alt="@Model.DefaultPictureModel.AlternateText" src="@Model.DefaultPictureModel.ImageUrl" title="@Model.DefaultPictureModel.Title" itemprop="image" id="main-product-popup-img-@Model.Id" style="width:100%" />
+
+            }
+        </div>
+
+    </div>
+
+    <script>
+        $('#image-anchor').css('display', 'none');
+        $('.largeimg').css('display', 'none');
+        function changepopupImage(imgUrl, fullimgUrl, mainId, zoomId) {
+            var mainImage = "#" + mainId;
+            var zoomImageId = "#" + zoomId;
+            $(mainImage).attr("src", fullimgUrl);
+            hideallpopup();
+            $(zoomImageId).css("display", "block");
+        }
+
+        function hideallpopup() {
+            $("[id^=main-product-popup-img-lightbox-anchor]").each(function (index) {
+
+                var id = "#" + this.id;
+                $(id).css("display", "none");
+            });
+        }
+
+        $(document).ready(function () {
+            $('#gallarypopup').css('display', 'none');
+            $('#image-anchor').css('display', 'block');
+            $('.largeimg').css('display', 'block');
+            hideallpopup();
+            $("#thumb_popup_0").click();
+
+            $("#productdetail_menu_overrview").click();
+
+        });
+    </script>
+
+    <script>
+        function openpopup() {
+            $("[id^=main-product-popup-img-lightbox-anchor]").each(function (index) {
+
+                var id = "#" + this.id;
+
+                var displayValue = $(id).css("display");
+                if (displayValue == "block")
+                    $(id).click();
+
+            });
+        }
+    </script>
+
+
+</div>

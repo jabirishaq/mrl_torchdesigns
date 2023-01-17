@@ -1,0 +1,51 @@
+﻿@model TestConnectionModel
+@using Nop.Plugin.TorchDesigns.DynamicsGPWCF.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+@{
+    //Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+}
+
+@using (Html.BeginForm())
+{
+    <br />
+    <div class="">
+        <div class="">
+            <div class="">
+                <strong>@T("Plugins.TorchDesign.DynamicsGp.CompnyNames")</strong>
+            </div>
+            @if (Model.Errors.Count() > 0)
+            {
+            <div class="gpService-errors">
+                <ul style="color:red">
+                    @foreach (var item in Model.Errors)
+                    {
+                        <li>@item</li>
+                    }
+                </ul>
+            </div>
+            }
+            <ul class="list">
+                @foreach (var item in Model.CompanyName)
+                {
+                    <li class="year">
+                        <p>@item</p>
+                    </li>
+                }
+                <input type="button" class="k-button" id="TestConnection" onClick="goBack();" value="@T("Plugins.TorchDesign.DynamicsGp.Back")" />
+                @*<button class="k-button" type="button" id="TestConnection" value="@T("Plugins.TorchDesign.DynamicsGp.Back")" onclick="location.href = '@Url.Content(~/Admin/Plugin/ConfigureMiscPlugin?systemName=Misc.TorchDesigns.DynamicsGP)'"></button>*@
+            </ul>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+}
+<script>
+        function goBack() {
+            var origin = location.origin;
+            window.location = origin + '/Admin/Plugin/ConfigureMiscPlugin?systemName=Misc.TorchDesigns.DynamicsGPWCF';
+        }
+</script>

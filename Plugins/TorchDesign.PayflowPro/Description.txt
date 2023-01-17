@@ -1,0 +1,8 @@
+﻿Group: Payment methods
+FriendlyName: PayFlow Pro Credit Card
+SystemName: Payment.TorchDesignPayflowPro
+Version: 1.23
+SupportedVersions: 3.40
+Author: Torch Designs, LLC
+DisplayOrder: 1
+FileName: Nop.Plugin.TorchDesign.PayflowPro.dll

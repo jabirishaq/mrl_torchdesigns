@@ -1,0 +1,8 @@
+﻿Group: PepperPunch
+FriendlyName: accessiBe
+SystemName: PepperPunch.Widgets.AccessiBe
+Version: 1.00
+SupportedVersions: 3.40
+Author: PepperPunch,nopCommerce team
+DisplayOrder: 1
+FileName: PepperPunch.Widgets.AccessiBe.dll

@@ -1,0 +1,44 @@
+﻿@model Nop.Web.Models.HomepageImage.PublicInfoModel
+@using Nop.Core
+@using Nop.Core.Domain.Orders
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Catalog;
+@using System
+@using Nop.Web.Framework.UI
+
+@if (!string.IsNullOrEmpty(Model.Picture1Url) && !string.IsNullOrEmpty(Model.Picture2Url))
+{
+    <div class="topicmaindiv">
+        <span class="topictitalspan">@T("contant.getstarted")</span>
+        <div class="topicsubdivider"></div>
+        <div class="topicleftimage">
+            @if (!string.IsNullOrEmpty(Model.Link1))
+            {
+           
+            <a href="@Model.Link1">
+            <img src="@Model.Picture1Url" alt="" title="" class="fullwidth" />
+            </a>
+            }
+            else
+            {
+                <img src="@Model.Picture1Url" alt="" title="" class="fullwidth" />
+            }
+        </div>
+        <div class="topicrightimage">
+            @if (!string.IsNullOrEmpty(Model.Link2))
+            {
+        <a href="@Model.Link2">
+            <img src="@Model.Picture2Url" alt="" title="" class="fullwidth" />
+        </a>
+            }
+            else
+            {
+                <img src="@Model.Picture2Url" alt="" title="" class="fullwidth" />
+            }
+        </div>
+    </div>
+
+}
+
+

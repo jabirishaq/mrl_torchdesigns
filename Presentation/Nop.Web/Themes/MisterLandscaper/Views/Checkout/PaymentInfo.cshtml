@@ -1,0 +1,95 @@
+﻿@model CheckoutPaymentInfoModel
+@using Nop.Web.Models.Checkout;
+@using Nop.Core.Infrastructure;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+    var _workcontext = EngineContext.Current.Resolve<Nop.Core.IWorkContext>();
+
+}
+<div class="page checkout-page">
+   
+
+    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Payment })
+
+    <div class="page-title">
+        <h1>@T("checkout.payment")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @Html.Widget("checkout_payment_info_top")
+        <div class="section payment-info">
+            <div class="title">
+                <strong>@T("Checkout.PaymentInfo")</strong>
+            </div>
+            @if (Model.Warnings.Count > 0)
+            {
+                <div class="message-error">
+                    <ul>
+                        @foreach (var warning in Model.Warnings)
+                        {
+
+                            if (@warning == int.MaxValue.ToString())
+                            {
+                                @*<input type="button" class="button-2 edit-address-button" onclick="location.href='@(Url.RouteUrl("CustomerAddressEdit", new { addressId = address.Id }))'" value='@T("Common.Edit")' />*@
+                                <li>
+                                    @*<a href="@(Url.RouteUrl("CustomerAddressEdit", new { addressId = _workcontext.CurrentCustomer.BillingAddress.Id, redirect=1 }))" style=" color:#0e275f; font-size: 13px;"> Your bank has indicated that the billing address you entered is incorrect Please click here to correct your billing address.</a>*@
+                                    <a href="@(Url.RouteUrl("CheckoutBillingAddress", new { redirect = 1 }))" style="color:red; font-size: 12px;font-weight:bold"> Your bank has indicated that the billing address you entered is incorrect Please click here to correct your billing address.</a>
+                               
+                                 </li>
+                            }
+                            else
+                            {
+                                if (warning == "cvv50")
+                                {
+                                    <script>
+                                        $(document).ready(function () {
+
+                                            $("#CardCode").css("background", "Yellow");
+                                        });
+                                    </script>
+                                }
+                                else
+                                {
+                                    <li>@warning</li>
+                                }
+
+                            }
+
+                        }
+                    </ul>
+                </div>
+            }
+            @using (Html.BeginRouteForm("CheckoutPaymentInfo", FormMethod.Post))
+            {
+                <div class="info">
+                    @Html.Action(Model.PaymentInfoActionName, Model.PaymentInfoControllerName, Model.PaymentInfoRouteValues)
+                </div>
+                if (Model.DisplayCaptcha)
+                {
+                    <div class="captcha-note">
+                        <p> @T("Captcha.NoticeOnPaymentInfo") </p>
+                    </div>
+
+                    <div class="captcha-box">
+                        @Html.Raw(Html.GenerateCaptcha())
+                    </div>
+                }
+                <div class="buttons" style="margin: 0 10px 0 0;">
+                    <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 payment-info-next-step-button nextbutton" />
+                </div>
+                <div class="message-error">
+                    @Html.ValidationSummary(false)
+                </div>
+            }
+        </div>
+        @Html.Widget("checkout_payment_info_bottom")
+        <div class="section order-summary-body">
+            <div class="title specialtitle">
+                <strong>@T("Checkout.OrderSummary")</strong>
+            </div>
+            @Html.Action("OrderSummary", "ShoppingCart")
+        </div>
+    </div>
+</div>

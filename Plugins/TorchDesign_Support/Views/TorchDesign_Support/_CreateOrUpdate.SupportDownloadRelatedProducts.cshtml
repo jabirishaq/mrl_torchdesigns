@@ -1,0 +1,238 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportDownloadModel
+@using Nop.Web.Framework;
+@if (Model.Id > 0)
+{
+    @*<div class="section-header">
+            <input type="button" id="delete-selected" class="k-button" value="@T("Admin.Common.Delete.Selected")" />
+        </div>*@
+    <table class="adminContent relatedproducts">
+        <tr>
+            <td>
+                <div id="supportDownloadrelatedproducts-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#supportDownloadrelatedproducts-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("SupportDownloadRelatedProductList", "Support", new { supportDownloadId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                    @*,
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("SupportDownloadRelatedProductDelete", "Support"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }*@
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+
+                                            DisplayOrder: { editable: true, type: "number" },
+                                            ProductId: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: false,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: true,
+                            columns: [
+                                 {
+                                     field: "Id",
+                                     headerTemplate: "<input id='mastercheckbox' type='checkbox'/>",
+                                     headerAttributes: { style: "text-align:center" },
+                                     attributes: { style: "text-align:center" },
+                                     template: "<input type='checkbox' value='#=Id#' class='checkboxGroups'/>",
+                                     width: 50
+                                 },
+                                 {
+                                     field: "ProductName",
+                                     title: "@T("Admin.Support.SupportDownload.RelatedProducts.Fields.Product")"
+                                 }, @*{
+                                     field: "DisplayOrder",
+                                     title: "@T("Admin.Support.SupportDownload.RelatedProducts.Fields.DisplayOrder")",
+                                     //integer format
+                                     format: "{0:0}",
+                                     width: 150
+                                 }, {
+                                     field: "ProductId",
+                                     title: "@T("Admin.Common.View")",
+                                     width: 100,
+                                     template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                                 },*@ @*{
+                                     command: [{
+                                         name: "destroy",
+                                         text: "@T("Admin.Common.Delete")"
+                                     }],
+                                     width: 200
+                                 }*@]
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+        <tr style="float:right;">
+            <td width="100%">
+                <input type="submit" id="btnAddNewRelatedProduct" name="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("SupportDownloadRelatedProductAddPopup", "Support", new { supportDownloadId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "supportDownload-form" }))    ', 800, 800, true); return false;" class="k-button" />
+                <input type="button" id="delete-selected" class="k-button" value="@T("Admin.Common.Delete.Selected")" style="margin:5px" />
+
+                <input type="submit" id="btnRefreshRelatedProducts" name="btnRefreshRelatedProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshRelatedProducts').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#supportDownloadrelatedproducts-grid").data('kendoGrid');
+                            optionsGrid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    @T("Admin.Support.SupportTopic.RelatedProducts.SaveBeforeEdit")
+}
+
+<script type="text/javascript">
+
+    var selectedIds = [];
+
+    $(document).ready(function () {
+
+        //delete selected
+        $('#delete-selected').click(function (e) {
+            var x = window.confirm("Are you sure you want to delete this Selected Related Products?")
+            if (x) {
+                e.preventDefault();
+
+                var postData = {
+                    selectedIds: selectedIds
+                };
+
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("SupportDownloadRelatedProductDeleteSelected", "Support"))",
+                    data: postData,
+                    complete: function (data) {
+                        //reload grid
+                        var grid = $('#supportDownloadrelatedproducts-grid').data('kendoGrid');
+                        //grid.dataSource.page(1); //new search. Set page size to 1
+                        grid.dataSource.read();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert(thrownError);
+                    },
+                    traditional: true
+                });
+                return false;
+            }
+            else {
+                //reload grid
+                var grid = $('#supportDownloadrelatedproducts-grid').data('kendoGrid');
+                //grid.dataSource.page(1); //new search. Set page size to 1
+                grid.dataSource.read();
+            }
+
+        });
+
+        $('#mastercheckbox').click(function () {
+            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+        });
+
+        //wire up checkboxes.
+        $('#supportDownloadrelatedproducts-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+            var $check = $(this);
+            if ($check.is(":checked") == true) {
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if (checked == -1) {
+                    //add id to selectedIds.
+                    selectedIds.push($check.val());
+                }
+            }
+            else {
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if (checked > -1) {
+                    //remove id from selectedIds.
+                    selectedIds = $.grep(selectedIds, function (item, index) {
+                        return item != $check.val();
+                    });
+                }
+            }
+            updateMasterCheckbox();
+        });
+    });
+
+    function onDataBound(e) {
+        $('#supportDownloadrelatedproducts-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+            var currentId = $(this).val();
+            var checked = jQuery.inArray(currentId, selectedIds);
+            //set checked based on if current checkbox's value is in selectedIds.
+            $(this).attr('checked', checked > -1);
+        });
+
+        updateMasterCheckbox();
+    }
+
+    function updateMasterCheckbox() {
+        var numChkBoxes = $('#supportDownloadrelatedproducts-grid input[type=checkbox][id!=mastercheckbox]').length;
+        var numChkBoxesChecked = $('#supportDownloadrelatedproducts-grid input[type=checkbox][checked][id!=mastercheckbox]').length;
+        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+    }
+</script>
+
+<style>
+    .k-grid td {
+        border-style: none !important;
+    }
+
+    .k-grid-pager {
+        display: none !important;
+    }
+
+    .k-grid-content {
+        height: 200px !important;
+    }
+
+    .k-grid-header {
+        display: none !important;
+    }
+     .k-alt, .k-separator {
+    background-color: #fff;
+}
+</style>

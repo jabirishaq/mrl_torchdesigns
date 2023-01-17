@@ -1,0 +1,279 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.TorchDesign.MegaSearch.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+<link href="~/Plugins/TorchDesign.MegaSearch/Content/Searchstyle.css" rel="stylesheet" />
+
+@using (Html.BeginForm())
+{
+    <br />
+
+    <div class="settigndiv">
+        <div class="taxtitle">
+            <strong>@T("Plugins.TorchDesign.MegaSearch.SelectOptionFromWhichYouWantToSearch")</strong>
+        </div>
+        <table class="adminContent">
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ProductSearch):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ProductSearch)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByProductDescription):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByProductDescription)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByProductSku):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByProductSku)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByProductPartNo):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByProductPartNo)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByProductTag):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByProductTag)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByVideoTag):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByVideoTag)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.CategorySearch):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.CategorySearch)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByCategoryDescription):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByCategoryDescription)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ManufacturerSearch):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ManufacturerSearch)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByManufacturerDescription):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByManufacturerDescription)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.BlogPostSearch):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.BlogPostSearch)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByBlogPostDescription):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByBlogPostDescription)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.NewsSearch):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.NewsSearch)
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.LabelFor(model => model.ByNewsDescription):
+                </td>
+                <td class="checkright">
+                    @Html.EditorFor(model => model.ByNewsDescription)
+
+                </td>
+            </tr>
+        </table>
+        <div style="margin:10px auto 0; width:332px"><hr /></div>
+        <input type="submit" id="Savesettingbtn" name="Savesettingbtn" class="k-button" value="@T(" admin.common.save")" style="margin-top:10px;" />
+    </div>
+
+    <div style="clear:both"></div>
+}
+
+<script>
+    $(document).ready(function () {
+        var productsearch = document.getElementById('ProductSearch');
+        var categorysearch = document.getElementById('CategorySearch');
+        var manufacturersearch = document.getElementById('ManufacturerSearch');
+        var blogsearch = document.getElementById('BlogPostSearch');
+        var newssearch = document.getElementById('NewsSearch');
+
+        var bypdesc = document.getElementById('ByProductDescription');
+        var bypsku = document.getElementById('ByProductSku');
+        var byproductno = document.getElementById('ByProductPartNo');
+        var byvideotag = document.getElementById('ByVideoTag');
+        var byptag = document.getElementById('ByProductTag');
+        var bycdesc = document.getElementById('ByCategoryDescription');
+        var bymdesc = document.getElementById('ByManufacturerDescription');
+        var bybdesc = document.getElementById('ByBlogPostDescription');
+        var byndesc = document.getElementById('ByNewsDescription');
+
+        if (productsearch.checked) {
+
+            bypdesc.disabled = false;
+            bypsku.disabled = false;
+            byvideotag.disabled = false;
+            byproductno.disabled = false;
+            byptag.disabled = false;
+        }
+        else {
+            bypdesc.disabled = true;
+            byvideotag.disabled = true;
+            byproductno.disabled = true;
+            bypsku.disabled = true;
+            byptag.disabled = true;
+        }
+        if (categorysearch.checked) {
+
+            bycdesc.disabled = false;
+        }
+        else {
+            bycdesc.disabled = true;
+        }
+        if (manufacturersearch.checked) {
+
+            bymdesc.disabled = false;
+        }
+        else {
+            bymdesc.disabled = true;
+        }
+        if (blogsearch.checked) {
+
+            bybdesc.disabled = false;
+        }
+        else {
+            bybdesc.disabled = true;
+        }
+        if (newssearch.checked) {
+
+            byndesc.disabled = false;
+
+        }
+        else {
+            byndesc.disabled = true;
+        }
+
+        // when unchecked or checked, run the function
+        productsearch.onchange = function () {
+            if (this.checked) {
+                bypdesc.disabled = false;
+                bypsku.disabled = false;
+                byvideotag.disabled = false;
+                byproductno.disabled = false;
+                byptag.disabled = false;
+            } else {
+                bypdesc.checked = false;
+                bypsku.checked = false;
+                byptag.checked = false;
+                byvideotag.checked = false;
+                byproductno.checked = false;
+                bypdesc.disabled = true;
+                bypsku.disabled = true;
+                byptag.disabled = true;
+                byvideotag.disabled = true;
+                byproductno.disabled = true;
+            }
+
+        }
+        categorysearch.onchange = function () {
+            if (this.checked) {
+                bycdesc.disabled = false;
+            } else {
+                bycdesc.checked = false;
+                bycdesc.disabled = true;
+            }
+
+        }
+        manufacturersearch.onchange = function () {
+            if (this.checked) {
+                bymdesc.disabled = false;
+            } else {
+                bymdesc.checked = false;
+                bymdesc.disabled = true;
+            }
+
+        }
+        blogsearch.onchange = function () {
+            if (this.checked) {
+                bybdesc.disabled = false;
+            } else {
+                bybdesc.checked = false;
+                bybdesc.disabled = true;
+            }
+
+        }
+        newssearch.onchange = function () {
+            if (this.checked) {
+                byndesc.disabled = false;
+            } else {
+                byndesc.checked = false;
+                byndesc.disabled = true;
+            }
+
+        }
+
+    });
+</script>
+
+
+
+
+

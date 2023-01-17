@@ -1,0 +1,92 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportTopicModel
+@using Nop.Web.Framework;
+@{
+    //page title
+    ViewBag.Title = T("Admin.Support.SupportTopics.EditSupportTopicDetails").Text;
+    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "supportTopic-form" }))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+            @T("Admin.Support.SupportTopics.EditSupportTopicDetails") - @Model.Title @Html.ActionLink("(" + T("Admin.Support.SupportTopics.Topics.BackToList") + ")", "SupportTopicList")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+
+            <a href='javascript:void(0)' class='k-button k-button-icontext k-grid-delete' onclick='deletefunction(@Model.Id)'>Delete</a>
+
+        </div>
+    </div>
+    @Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdateSupportTopic.cshtml", Model)
+
+}
+@*@Html.DeleteConfirmation("topic-delete")*@
+
+@{
+    string delurl = "";
+    if (Session["urlredirect"] != null)
+    {
+        delurl = Session["urlredirect"].ToString();
+
+    }
+}
+
+<script>
+
+    function deletefunction(id) {
+        var redirect = "@delurl";
+        var x = window.confirm("Are you sure you want to delete this support topic?")
+        if (x) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Plugin.DeleteSupportTopic")",
+                data: { "id": id },
+                success: function (data) {
+
+                    if (data.Result) {
+                        //var productpicturesGrid = $("#supporttopics-grid");
+                        //productpicturesGrid.data('kendoGrid').dataSource.read();
+
+                        if (redirect.length > 2) {
+
+
+                            window.location.href = redirect;
+                        }
+                        else {
+                            var url = '@Url.Action("SupportTopicList", "Support")';
+                            window.location.href = url;
+                        }
+
+                        }
+                    else {
+                        if (redirect.length > 2) {
+
+                            window.location.href = redirect
+                        } else {
+                            var url = '@Url.Action("SupportTopicList", "Support")';
+                            window.location.href = url;
+                        }
+                        }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error In Delete");
+
+                }
+            });
+
+        }
+        //else
+        //{
+        //        var productpicturesGrid = $("#supporttopics-grid");
+        //productpicturesGrid.data('kendoGrid').dataSource.read();
+        //}
+
+    }
+
+
+</script>

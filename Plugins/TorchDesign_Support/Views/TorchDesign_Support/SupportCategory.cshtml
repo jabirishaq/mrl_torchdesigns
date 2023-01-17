@@ -1,0 +1,188 @@
+﻿@model ProductCategorySupportCategory
+@using Nop.Plugin.Widgets.TorchDesign_Support.Models;
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Nop.Web.Framework.UI;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain.Customers;
+@using Nop.Web.Extensions;
+
+
+@{
+
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Html.AddTitleParts("Support");
+    var _workcontext = EngineContext.Current.Resolve<IWorkContext>();
+}
+
+
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+
+<div class="breadcrumbcustome">
+    <span class="arrowspan"><a href="@Url.RouteUrl("Support")">Support</a></span><span>@Model.ProductCategoryName</span>
+</div>
+
+<div class="productmenu-titles">
+
+    <div class="img">
+        <img src="~/plugins/Widgets.TorchDesign_Support/Content/img/thumb.png" />
+    </div>
+    <div class="detail">
+        <h3>@T("admin.support")</h3>
+        <p>@T("support.description")</p>
+    </div>
+
+</div>
+@if (_workcontext.CurrentCustomer.IsAdmin())
+{
+   <div class="supports_links">
+        <a id="topicadd" href="@Url.RouteUrl("CreateSupportTopic", new { redirect = 1 })">@T("admin.support.supporttopics.addnewcustom")</a>
+        <a id="topicvideo" href="@Url.RouteUrl("CreateSupportVideo", new { redirect = 1 })">@T("admin.support.supportvideo.addnewcustom")</a>
+        <a id="topicdownload" href="@Url.RouteUrl("CreateSupportDownload", new { redirect = 1 })">@T("admin.support.supportdownloads.addnewcustom")</a>
+    </div>
+    
+    @*<script>
+        $(document).ready(function () {
+            var href = $("#topicadd").attr("href");
+            var ln = parseInt(href.length) - parseInt(1);
+            var path = (window.location.pathname);
+            path = path.substr(1, path.length)
+            path = path.replace("/", "-");
+            href = href.substr(0, ln);
+            href = href + path;
+            //href = href.replace("/", "-");
+            $("#topicadd").attr("href", href);
+
+            var href = $("#topicvideo").attr("href");
+            var ln = parseInt(href.length) - parseInt(1);
+            var path = (window.location.pathname);
+            path = path.substr(1, path.length)
+            path = path.replace("/", "-");
+            href = href.substr(0, ln);
+            href = href + path;
+            $("#topicvideo").attr("href", href);
+
+            var href = $("#topicdownload").attr("href");
+            var ln = parseInt(href.length) - parseInt(1);
+            var path = (window.location.pathname);
+            path = path.substr(1, path.length)
+            path = path.replace("/", "-");
+            href = href.substr(0, ln);
+            href = href + path;
+            $("#topicdownload").attr("href", href);
+
+         
+        })
+    </script>*@
+}
+
+<div class="forlines">
+</div>
+
+
+<div class="product-supportcategory">
+    <div class="fltleft supportcatproductcatcontainer">
+        <img src="@Model.ProductCategoryPictureUrl" /><br />
+
+    </div>
+    <div class="fltleft">
+        <div><span class="titlefont">@Model.ProductCategoryName</span></div>
+        <div class="supportcatcontainer">
+            
+            @foreach (var Supportcategory in Model.AvailableSupportCategories)
+            {
+                if (@Supportcategory.IsTopicAvailable)
+                {
+                <div class="supportcat">
+                    <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Public.SupportTopiclist", new { suportCategorysename = @Supportcategory.SeName })">
+                        <div><img src="@Supportcategory.SupportCategoryPictureUrl"></div>
+                        <div class="productdetailicontitle">@Supportcategory.SupportCategoryName</div>
+                    </a>
+                </div>
+               }
+            }
+
+            @if (Model.AvailbleVideo)
+            {
+                <div class="supportcat">
+                    <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Public.SupportVideolist", new { productCategorsename = @Model.SeoName })">
+                        <div><img src="/Themes/MisterLandscaper/Content/images/pdvideo.png"></div>
+                        <div class="productdetailicontitle">Video</div>
+                    </a>
+                </div>
+
+            }
+
+            @if (Model.AvailbleDownload)
+            {
+                <div class="supportcat">
+                    <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Public.SupportDownloadlist", new { productCategorsename = @Model.SeoName })">
+                        <div><img src="~/Themes/MisterLandscaper/Content/images/pddownload.png"></div>
+                        <div class="productdetailicontitle">Download</div>
+                    </a>
+                </div>
+
+            }
+
+            <div class="supportcat">
+                <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("warranties") })">
+                    <div><img src="~/Themes/MisterLandscaper/Content/images/pdworranties.png" /></div>
+                    <div class="productdetailicontitle">Warranties</div>
+                </a>
+            </div>
+
+            @*<div class="supportcat">
+                <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Faqpublicinfo")">
+                    <div><img src="~/Themes/MisterLandscaper/Content/images/pdcommon.png"></div>
+                    <div class="productdetailicontitle">Common Question</div>
+                </a>
+            </div>*@
+
+        </div>
+    </div>
+</div>
+
+<div class="forlines"></div>
+<div class="below_links">
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("what_is_drip_irrigation_and_micro_spray") })">
+            <div>
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_drip.png" />
+
+            </div>
+            <div class="productdetailicontitle">What is Drip Irrigation</div>
+        </a>
+    </div>
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Wateringtips")">
+            <div>
+
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_watering.png" />
+            </div>
+            <div class="productdetailicontitle">Watering Tips</div>
+        </a>
+    </div>
+    @if (Model.SystemDesignEnabled)
+    {
+        <div class="supportcat">
+            <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("systemdesigndhelpstep1")">
+                <div>
+
+                    <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_system.png" />
+                </div>
+                <div class="productdetailicontitle">System Design Help</div>
+            </a>
+        </div>
+    }
+   
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("ContactUs")">
+            <div>
+
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_contact.png" />
+            </div>
+            <div class="productdetailicontitle">Contact</div>
+        </a>
+    </div>
+</div>
+

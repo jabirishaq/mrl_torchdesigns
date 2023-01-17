@@ -1,0 +1,264 @@
+﻿@model TestimonialsModel
+@using Nop.Plugin.TorchDesign.Testimonials.Models;
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Nop.Web.Framework.UI;
+@using Nop.Services.Localization;
+@using Nop.Core.Infrastructure;
+
+@{
+
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Html.AddTitleParts("Testimonials");
+
+    Html.AddMetaDescriptionParts(Model.Message);
+    Html.AddMetaKeywordParts(Model.CustomerName);
+
+
+    var storeName = EngineContext.Current.Resolve<IStoreContext>().CurrentStore.GetLocalized(x => x.Name);
+    Html.AddHeadCustomParts("<meta property=\"og:type\" content=\"product\" />");
+    Html.AddHeadCustomParts("<meta property=\"og:title\" content=\"" + Html.Encode(Model.CustomerName) + "\" />");
+    Html.AddHeadCustomParts("<meta property=\"og:description\" content=\"" + Html.Encode(Model.Message) + "\" />");
+    Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + Model.DifaultPicture + "\" />");
+    Html.AddHeadCustomParts("<meta property=\"og:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+    Html.AddHeadCustomParts("<meta property=\"og:site_name\" content=\"" + Html.Encode(storeName) + "\" />");
+
+
+    Html.AddHeadCustomParts("<meta property=\"twitter:card\" content=\"summary\" />");
+    Html.AddHeadCustomParts("<meta property=\"twitter:site\" content=\"" + Html.Encode(storeName) + "\" />");
+    Html.AddHeadCustomParts("<meta property=\"twitter:title\" content=\"" + Html.Encode(Model.CustomerName) + "\" />");
+    Html.AddHeadCustomParts("<meta property=\"twitter:description\" content=\"" + Html.Encode(Model.Message) + "\" />");
+    Html.AddHeadCustomParts("<meta property=\"twitter:image\" content=\"" + Model.DifaultPicture + "\" />");
+    Html.AddHeadCustomParts("<meta property=\"twitter:url\" content=\"" + Request.Url.AbsoluteUri + "\" />");
+
+    string curl = Request.Url.ToString();
+
+    @*  string imageurl = curl.Substring(0, curl.Length - 13);*@
+
+}
+<link href="~/Plugins/TorchDesign.Testimonials/Content/magnific-popup.css" rel="stylesheet" />
+<script src="~/Plugins/TorchDesign.Testimonials/Content/jquery.magnific-popup.js"></script>
+<link href="~/Plugins/TorchDesign.Testimonials/Content/Testimonials.css" rel="stylesheet" />
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+
+@*@Html.Partial("_TestimonialImages", Model)*@
+<div class="testimonialscontainer">
+
+
+    <div class="testhead">
+        <div class="thumb">
+            <img src="~/plugins/TorchDesign.Testimonials/Content/img/thumb.png" height="120" width="120" />
+        </div>
+        <div class="heading">Customer Testimonials</div>
+        <div class="heading-text">
+            See what our awesome customers
+            are saying about Mister Landscaper
+            products & how they are using them
+        </div>
+    </div>
+    <div class="line" style="margin-top:25px;"></div>
+    <div class="testimonials">Testimonials</div>
+    <div class="line"></div>
+
+    <div>
+
+        <div class="message">@Model.Message</div>
+        <div class="middle">
+            <div class="mtext">
+                <span class="cname">@Model.CustomerName</span>
+                <span class="location"><i>@Model.Location</i></span>
+            </div>
+            <div class="social">
+
+
+                <!-- AddThis Button END -->
+
+
+                <ul class="sociallinkul" style="list-style:none;display:none;">
+                    <li class="social-img"><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?s =100&amp;p[url] =@curl"><img src="~/plugins/TorchDesign.Testimonials/Content/img/fb.png" height="30" width="30" /></a></li>
+                    <li class="social-img"><a target="_blank" href="https://twitter.com/intent/tweet?url=@curl&amp;text=Testimonial&amp;via=MisterLandscaper"><img src="~/plugins/TorchDesign.Testimonials/Content/img/twitter.png" height="30" width="30" /></a></li>
+                    <li class="social-img pin"><a class="pinit" target="_blank" href="http://pinterest.com/pin/create/button/?url=@curl&media=@Model.DifaultPicture"><img src="~/plugins/TorchDesign.Testimonials/Content/img/p.png" height="30" width="30" /></a></li>
+
+                </ul>
+
+                @*<ul style="list-style:none">
+                        <li class="social-img"><a href="https://www.facebook.com/sharer.php?u=YOUR_URL&t=@Model.Message" target="_blank"><img src="~/plugins/TorchDesign.Testimonials/Content/img/fb.png" height="30" width="30" /></a></li>
+                        <li class="social-img"><a href="#"><img src="~/plugins/TorchDesign.Testimonials/Content/img/twitter.png" height="30" width="30" /></a></li>
+                        <li class="social-img"><a href="#"><img src="~/plugins/TorchDesign.Testimonials/Content/img/p.png" height="30" width="30" /></a></li>
+                    </ul>*@
+            </div>
+        </div>
+        @if (Model.Picturelist.Count > 0)
+        {
+            <div class="viewlargediv">
+
+                <a id="fancyCarausal-@Model.Id" data-fancybox-group='gallery-@Model.Id' href="#gallarypopup-@Model.Id">
+
+                    <span class="viewlarge">@T("view.large")</span>
+                </a>
+
+            </div>
+        }
+        @foreach (var pic in Model.Picturelist)
+        {
+            <a href="@pic.FullSizePicture" class="bigphoto_@Model.Id">
+
+                <img src="@pic.PictureUrl" height="100" width="100" class="testImages" modelprop="image" />
+
+            </a>
+
+
+        }
+        <script>
+            $(document).ready(function () {
+                $('.bigphoto_@Model.Id').magnificPopup(
+                    {
+                        type: 'image',
+                        removalDelay: 300,
+                        gallery: {
+                            enabled: true
+                        }
+                    });
+            });
+            $(window).bind("load", function () {
+                $(".pin a").removeClass();
+                $(".pin a").addClass("pinit");
+                $(".sociallinkul").css("display", "block");
+
+                //$(".pin a").css("width", "30px!important");
+                //$(".pin a").css("height", "30px!important");
+            });
+        </script>
+
+
+        <div class="gallery-@Model.Id">
+            <div id="gallarypopup-@Model.Id" class="picture picturecotainer">
+
+                @if (Model.Picturelist.Count > 1)
+                {
+                    <h5 class="popuptext">@T("alternate.view")</h5>
+                    <div style="float:left; width:20%;">
+                        <div class="productdetailpopupslidermaindiv">
+                            <div class="swiper-container">
+                                <div class="swiper-wrapper">
+                                    @for (int i = 0; i < @Model.Picturelist.Count; i++)
+                                    {
+                                        var picture = Model.Picturelist[i];
+                                        <div class="swiper-slide">
+                                            <a id="image-anchor-@Model.Id-@i" class="" href="javascript:void(0)">
+                                                <img id="thumb_popup_@Model.Id-@i" src="@picture.PictureUrl" onclick="changepopupImage('Model.DifaultPicture', '@picture.FullSizePicture', 'main-product-popup-img-@Model.Id', 'main-product-img-lightbox-anchor-@Model.Id')" data-img="@picture.FullSizePicture" />
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <div class="swiper-button-prev"></div>
+                            <div class="swiper-button-next"></div>
+                        </div>
+                    </div>
+
+                }
+                <div class="largeimg">
+                    <img src="@Model.DifaultPicture" modelprop="image" id="main-product-popup-img-@Model.Id" style="width:100%" />
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="line"></div>
+
+
+
+    </div>
+
+    <script>
+
+        function changepopupImage(imgUrl, fullimgUrl, mainId, zoomId) {
+            var mainImage = "#" + mainId;
+            $(mainImage).attr("src", fullimgUrl);
+        }
+
+        $("#thumb_popup_0").click();
+
+        (function ($) {
+
+            $(function () {
+
+                $("[id^=fancyCarausal-]").click(function () {
+                    var geId = "#" + this.id;
+
+                    $(geId).attr('rel', 'media-gallery').fancybox({
+                        openEffect: 'none',
+                        closeEffect: 'none',
+                        prevEffect: 'none',
+                        nextEffect: 'none',
+                        arrows: false,
+                        helpers: {
+                            media: {},
+                            buttons: {}
+                        },
+                        afterShow: function (current, previous) {
+
+                            var swiper = new Swiper('.swiper-container', {
+                                slidesPerView: 3,
+                                spaceBetween: 0,
+                                mousewheelControl: true,
+                                direction: 'vertical',
+                                loop: true,
+                                nextButton: '.swiper-button-next',
+                                prevButton: '.swiper-button-prev'
+                            });
+                        }
+                    });
+
+                })
+
+
+
+            });
+
+        })(jQuery);
+
+
+        $(document).ready(function () {
+
+
+            $(".fancybox").fancybox({
+                width: '70%',
+                height: '70%',
+                helpers: {
+                    media: {}
+                },
+                afterShow: function (current, previous) {
+
+                    var swiper = new Swiper('.swiper-container', {
+                        slidesPerView: 3,
+                        spaceBetween: 0,
+                        mousewheelControl: true,
+                        direction: 'vertical',
+                        loop: true,
+                        nextButton: '.swiper-button-next',
+                        prevButton: '.swiper-button-prev'
+                    });
+                }
+                //onComplete: function () {
+                //    $(".test").click();// or whatever you html object is
+                //}
+            });
+
+
+            $("[id^=image-anchor-]").each(function (index) {
+                var id = "#" + this.id;
+                $(id).css('display', 'block');
+            });
+
+            $("[id^=gallarypopup-]").each(function (index) {
+                var id = "#" + this.id;
+                $(id).css('display', 'none');
+            });
+
+        });
+    </script>
+
+</div>

@@ -1,0 +1,91 @@
+﻿@model CheckoutProgressModel
+@using Nop.Web.Models.Checkout;
+<div class="progresscontaonerdiv">
+    <div class="order-progress">
+
+        <ul>
+            @Html.Widget("checkout_progress_before")
+            <li class="licontain statustfirst">
+                <a id="1" @(Model.CheckoutProgressStep == CheckoutProgressStep.Cart ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\"")) @(Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\"", Url.RouteUrl("ShoppingCart"))) : null)>@T("Checkout.Progress.Cart")</a>
+                <div class="lidivcontain"></div>
+            </li>
+            <li class="licontain">
+                <a id="2" @(Model.CheckoutProgressStep == CheckoutProgressStep.Address ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\"")) @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\"", Url.RouteUrl("CheckoutBillingAddress"))) : null)>@T("Checkout.Progress.Address")</a>
+                <div class="lidivcontain"></div>
+            </li>
+            <li class="licontain">
+                <a id="3" @(Model.CheckoutProgressStep == CheckoutProgressStep.Shipping ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\"")) @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\"", Url.RouteUrl("CheckoutShippingMethod"))) : null)>@T("Checkout.Progress.Shipping")</a>
+                <div class="lidivcontain"></div>
+            </li>
+            <li class="licontain">
+                <a id="4" @(Model.CheckoutProgressStep == CheckoutProgressStep.Payment ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\"")) @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\"", Url.RouteUrl("CheckoutPaymentMethod"))) : null)>@T("Checkout.Progress.Payment")</a>
+                <div class="lidivcontain"></div>
+            </li>
+            <li class="licontain">
+                <a id="5" @(Model.CheckoutProgressStep == CheckoutProgressStep.Confirm ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\"")) @(Model.CheckoutProgressStep != CheckoutProgressStep.Cart && Model.CheckoutProgressStep != CheckoutProgressStep.Address && Model.CheckoutProgressStep != CheckoutProgressStep.Shipping && Model.CheckoutProgressStep != CheckoutProgressStep.Payment && Model.CheckoutProgressStep != CheckoutProgressStep.Complete ? @Html.Raw(string.Format(" href=\"{0}\"", Url.RouteUrl("CheckoutConfirm"))) : null)>@T("Checkout.Progress.Confirm")</a>
+                <div class="lidivcontain"></div>
+            </li>
+            <li class="licontain statustlast">
+                <a id="6" @(Model.CheckoutProgressStep == CheckoutProgressStep.Complete ? @Html.Raw(" class=\"active-step\"") : @Html.Raw(" class=\"inactive-step\""))>@T("Checkout.Progress.Complete")</a>
+                <div class="lidivcontain" style="width: 17px;"></div>
+            </li>
+            @Html.Widget("checkout_progress_after")
+        </ul>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var doc = document.getElementsByClassName("active-step")[0].id
+       
+        if (doc === "1") {
+
+        }
+        if (doc === "2")
+        {
+            $('#1').removeClass('inactive-step');
+            $('#1').addClass('active-step');
+
+        }
+        if (doc === "3") {
+            $('#1').removeClass('inactive-step');
+            $('#1').addClass('active-step');
+            $('#2').removeClass('inactive-step');
+            $('#2').addClass('active-step');
+
+        }
+        if (doc === "4") {
+            $('#1').removeClass('inactive-step');
+            $('#1').addClass('active-step');
+            $('#2').removeClass('inactive-step');
+            $('#2').addClass('active-step');
+            $('#3').removeClass('inactive-step');
+            $('#3').addClass('active-step');
+
+        }
+        if (doc === "5") {
+
+            $('#1').removeClass('inactive-step');
+            $('#1').addClass('active-step');
+            $('#2').removeClass('inactive-step');
+            $('#2').addClass('active-step');
+            $('#3').removeClass('inactive-step');
+            $('#3').addClass('active-step');
+            $('#4').removeClass('inactive-step');
+            $('#4').addClass('active-step');
+        }
+        if (doc === "6") {
+
+            $('#1').removeClass('inactive-step');
+            $('#1').addClass('active-step');
+            $('#2').removeClass('inactive-step');
+            $('#2').addClass('active-step');
+            $('#3').removeClass('inactive-step');
+            $('#3').addClass('active-step');
+            $('#4').removeClass('inactive-step');
+            $('#4').addClass('active-step');
+            $('#5').removeClass('inactive-step');
+            $('#5').addClass('active-step');
+        }
+    });
+</script>

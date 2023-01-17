@@ -1,0 +1,73 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportTopicModel
+@using Nop.Web.Framework;
+
+<div class="topicpage">
+    <div><h4>Steps:</h4></div>
+    <ul style="list-style:none;">
+
+        @for (int i = 0; i < Model.AvailableTopicStep.Count; i++)
+        {
+            var item = Model.AvailableTopicStep[i];
+            @Html.HiddenFor(x => x.AvailableTopicStep[i].Id)
+
+            <script>
+                $("#@Html.FieldIdFor(x => x.AvailableTopicStep[i].Id)").val(@Model.AvailableTopicStep[i].Id);
+
+            </script>
+            <li>
+                <div class="topicStepdiv" id="topic-step-div_@i">
+                    <div class="clr"></div>
+                    <div class="left">
+                        <div class="steptitlecontainer">
+                            Step : @Html.DisplayFor(model => Model.AvailableTopicStep[i].SupportStepNo)
+                            @Html.HiddenFor(x => x.AvailableTopicStep[i].SupportStepNo)
+                        </div>
+                        <table>
+                            <tr>
+                                <td class="topictext"> Step Title :</td>
+                                <td class="topicdata">
+                                    @Html.EditorFor(model => Model.AvailableTopicStep[i].Title)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="topictext" style="display:block;"> Description :</td>
+                                <td class="topicdata">
+                                    @Html.TextAreaFor(model => Model.AvailableTopicStep[i].Description, new { style = "Width: 250px; Height: 150px;" })
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="right">
+                        <div class="stepbtn">
+
+                            @if (Model.CompareCount - 1 >= i)
+                            {
+                                string srrno = "mov_" + i;
+                                <a href='javascript:void(0)' class="k-button" onclick='makeup(@Model.AvailableTopicStep[i].Id,"@srrno")'>Move Up</a>
+                                <a href='javascript:void(0)' class="k-button" onclick='makedown(@Model.AvailableTopicStep[i].Id,"@srrno")'>Move Down</a>
+                                <a href='javascript:void(0)' class='k-button k-button-icontext k-grid-delete' onclick='deletestepfunction(@Model.AvailableTopicStep[i].Id, "@srrno")'>Delete Step</a>
+                            }
+
+
+
+                        </div>
+                        <div class="clr"></div>
+                        <div class="topictext">
+
+                            <div>  Picture Preview :</div>
+                            @* <img src="@item.PictureThumbnailUrl" class="steppicture" />*@
+                            <div>   @Html.EditorFor(model => Model.AvailableTopicStep[i].PictureId)</div>
+
+                        </div>
+                    </div>
+                </div>
+            </li>
+        }
+
+    </ul>
+    <div class="clr"></div>
+
+</div>
+<div class="clr"></div>
+<div class="erorr">@ViewBag.Error</div>

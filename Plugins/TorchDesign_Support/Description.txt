@@ -1,0 +1,8 @@
+﻿Group: Widgets
+FriendlyName: TorchDesign_Support
+SystemName:TorchDesign_Support
+Version: 1.00
+SupportedVersions: 3.40
+Author: Torch Designs, LLC
+DisplayOrder: 1
+FileName: Nop.Plugin.Widgets.TorchDesign_Support.dll

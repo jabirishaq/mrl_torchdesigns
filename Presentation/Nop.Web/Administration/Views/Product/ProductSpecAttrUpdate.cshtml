@@ -1,0 +1,187 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model EditProductSpecificationAttributeModel
+@{
+  
+    //page title
+    ViewBag.Title = T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AssociatedProduct.AddNew").Text;
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+            @T("Admin.Catalog.Products.ProductVariantAttributes.Attributes.Values.Fields.AssociatedProduct.Edit")
+        </div>
+    </div>    
+    
+   if (ViewBag.RefreshPage == true)
+   {
+    <script type="text/javascript">
+        try { window.opener.document.forms['product-form'].btnRefreshsp.click(); }
+        catch (e){}
+        window.close();
+    </script>
+   }
+
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SpecificationAttributeGroupId):
+            </td>
+            <td class="adminData">
+
+                <select id="SpecificationAttributeGroupId" name="SpecificationAttributeGroupId" data-val-number="The field Specification Group must be a number." data-val="true" class="valid">
+                   @foreach (var item in Model.AvailableSpecificationGroup)
+                   {
+                       if (item.Selected)
+                       {
+                        <option value="@item.Value" selected="selected">@item.Text</option>
+                       }
+                       else
+                       {
+                        <option value="@item.Value">@item.Text</option>
+                       }
+
+                   }
+                
+                </select>
+                   
+                   @* @Html.DropDownListFor(model => model.SpecificationAttributeGroupId, Model.AvailableSpecificationGroup)*@
+                    @* @Html.ValidationMessageFor(model => model.SpecificationAttributeGroupId)*@
+</td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SpecificationAttributeId):
+            </td>
+            <td class="adminData">
+
+                <select id="SpecificationAttributeId" name="SpecificationAttributeId" data-val-number="The field Attribute must be a number." data-val="true">
+                    
+                        @foreach (var item in Model.AvailableAttribute)
+                        {
+                            if (item.Selected)
+                            {
+                                <option value="@item.Value" selected="selected">@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+
+
+                        }
+
+                    </select>
+                  @*  @Html.DropDownListFor(model => model.SpecificationAttributeId, Model.AvailableAttribute)*@
+                    @*  @Html.ValidationMessageFor(model => model.SpecificationAttributeId)*@
+                </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.SpecificationAttributeOptionId):
+            </td>
+            <td class="adminData">
+
+                <select id="SpecificationAttributeOptionId" name="SpecificationAttributeOptionId" data-val-number="The field Attribute option must be a number." data-val="true">
+
+                    @foreach (var item in Model.AvailableAttributeOption)
+                    {
+                        if (item.Selected)
+                        {
+                            <option value="@item.Value" selected="selected">@item.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+
+
+                    }
+
+                </select>
+
+              @*  @Html.DropDownListFor(model => model.SpecificationAttributeOptionId, Model.AvailableAttributeOption)*@
+               
+                @*@Html.ValidationMessageFor(model => model.SpecificationAttributeOptionId)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CustomValue):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CustomValue)
+                @Html.ValidationMessageFor(model => model.CustomValue)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AllowFiltering):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AllowFiltering)
+                @Html.ValidationMessageFor(model => model.AllowFiltering)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowOnProductPage):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.ShowOnProductPage)
+                @Html.ValidationMessageFor(model => model.ShowOnProductPage)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="left">
+                <input type="submit" id="save" class="k-button" value="@T("admin.common.save")" />
+            </td>
+        </tr>
+    </table>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        @*$("#@Html.FieldIdFor(model => model.SpecificationAttributeGroupId)").change(function() {
+            //search
+            var grid = $('#specificationattributes-grid').data('kendoGrid');
+            grid.dataSource.page(1); //new search. Set page size to 1
+            grid.dataSource.read();
+
+            return false;
+        });*@
+
+
+        $("#@Html.FieldIdFor(model => model.SpecificationAttributeId)").change(function() {
+            var selectedItem = $(this).val();
+            var ddlSpecOptions = $("#@Html.FieldIdFor(model => model.SpecificationAttributeOptionId)")
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.Action("GetOptionsByAttributeId", "SpecificationAttribute"))",
+                data: { "attributeId": selectedItem },
+                success: function(data) {
+                    ddlSpecOptions.html('');
+                    $.each(data, function(id, option) {
+                        ddlSpecOptions.append($('<option></option>').val(option.id).html(option.name));
+                    });
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    alert('Failed to retrieve specification options.');
+                }
+            });
+        });
+    });
+    </script>
+
+}

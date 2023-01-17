@@ -1,0 +1,189 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.TorchDesigns.DynamicsGPWCF.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+@*@{
+        var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>
+    ().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>
+        ().GridPageSizes;
+
+        }*@
+<link href="~/Plugins/TorchDesigns.DynamicsGPWCF/Content/GPstyle.css" rel="stylesheet" />
+<style>
+    .testConnection {
+        margin-left: 5%;
+    }
+</style>
+@using (Html.BeginForm())
+{
+    <br />
+    <h1 class="gpserviceTitle">
+        @T("Plugins.TorchDesign.DynamicsGp.DynamicsGPSettings")
+
+    </h1>
+    if (Model.Errors.Count() > 0)
+    {
+        <div class="gpService-errors">
+            <ul style="color:red">
+                @foreach (var item in Model.Errors)
+                {
+                    <li>@item</li>
+                }
+            </ul>
+        </div>
+    }
+    <div class="gpServiceDiv">
+        <div class="gpservice-status">
+            @if (Model.Status)
+            {
+                <div class="GPstatus green">
+                    <span>@T("Plugins.TorchDesign.DynamicsGp.status")</span>
+                    @T("Plugins.TorchDesign.DynamicsGp.status.Connected")
+                </div>
+            }
+            else
+            {
+                <div class="GPstatus">
+                    <span>@T("Plugins.TorchDesign.DynamicsGp.status")</span>
+                    @T("Plugins.TorchDesign.DynamicsGp.status.NotConnected")
+                </div>
+            }
+        </div>
+        <div class="webService">
+            <div class="gp-title">
+                <strong>@T("Plugins.TorchDesign.DynamicsGp.webServiceTitle")</strong>
+
+            </div>
+            <table class="adminContent">
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.WebServiceAddress):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.WebServiceAddress)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.CompanyKey):
+                    </td>
+                    <td class="adminData">
+                        @Html.DropDownListFor(model => model.CompanyKey, Model.AvailableCompanies)
+                        @*@Html.EditorFor(model => model.CompanyKey)*@
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="domain-and-saleorder">
+            <div class="domain">
+                <div class="gp-title">
+                    <strong>@T("Plugins.TorchDesign.DynamicsGp.domainTitle")</strong>
+                </div>
+                <div class="gp-description">
+                    <p>@T("Plugins.TorchDesign.DynamicsGp.domainDescription")</p>
+                </div>
+                <table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Domain):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.Domain)
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.UserName):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.UserName)
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.Password):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { type = "password" } })
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="saleorder">
+                <div class="gp-title">
+                    <strong>@T("Plugins.TorchDesign.DynamicsGp.SaleOrderTitle")</strong>
+                </div>
+                <table class="adminContent">
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.PONumberPrefix):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.PONumberPrefix)
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.SalespersonKeyId):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.SalespersonKeyId)
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.SalesTerritoryKeyId):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.SalesTerritoryKeyId)
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.PaymentCardTypeKeyId):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.PaymentCardTypeKeyId)
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.CurrencyKeyISOCode):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.CurrencyKeyISOCode)
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.TaxScheduleId):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.TaxScheduleId)
+
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="buttons">
+            <input type="submit" id="SaveGPSettingBtn" name="SaveGPSettingBtn" class="k-button" value="@T(" Admin.Common.Save")" />
+
+            <input type="submit" name="TestConnection" class="k-button testConnection" id="TestConnection" onclick="location.href='@Url.Action(" TestConnection")'" value="@T(" Plugins.TorchDesign.DynamicsGp.TestConnection")" />
+        </div>
+    </div>
+    <div style="clear:both"></div>
+}

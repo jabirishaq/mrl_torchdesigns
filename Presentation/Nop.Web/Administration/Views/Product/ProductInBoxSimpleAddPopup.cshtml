@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model AddProductInBoxSimpleModel
+@{
+    ViewBag.Title = T("Admin.Catalog.Products.AssociatedProducts.AddNew").Text;
+}
+@using (Html.BeginForm())
+{
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
+
+    @Html.HiddenFor(x => x.Parentid)
+    <div class="productinboxcontainer">
+        @if (Model.titleerro)
+        {
+            <div style="color:red">Please enter product name</div>
+        }
+        @if (Model.quantityerro)
+        {
+            <div style="color:red">Quantity must be more than 0</div>
+        }
+       
+    </div>
+    <div class="productinboxcontainer">
+        <div class="productboxsubcontain">
+           
+            <table>
+                <tr>
+                    <td>
+                        @T("admin.catalog.bulkedit.list.searchproductname"):
+                    </td>
+                    <td class=" specialtextbox">
+                        @Html.EditorFor(model => model.Title)
+                        @Html.ValidationMessageFor(model => model.Title)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        @T("admin.orders.products.quantity"):
+                    </td>
+                    <td>
+                        @Html.EditorFor(model => model.Quantity)
+                        @Html.ValidationMessageFor(model => model.Quantity)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td>
+                        @Html.LabelFor(model => model.DisplayOrder):
+                    </td>
+                    <td>
+                        @Html.EditorFor(model => model.DisplayOrder)
+                        @Html.ValidationMessageFor(model => model.DisplayOrder)
+                    </td>
+
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+}

@@ -1,0 +1,135 @@
+﻿@model PublicSupportTopicModel
+@using Nop.Plugin.Widgets.TorchDesign_Support.Models;
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Nop.Web.Framework.UI;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain.Customers;
+@using Nop.Core.Domain.Seo;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Seo;
+@using Nop.Web.Extensions;
+
+@{
+
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Html.AddTitleParts("Support");
+    var _workcontext = EngineContext.Current.Resolve<IWorkContext>();
+    int productcatid = 0;
+    string productcatname = "";
+    string ProductCatSename = "";
+    string SupportCatSename = "";
+    if (Session["ProductCategoryId"] != null)
+    {
+        productcatid = Convert.ToInt32(Session["ProductCategoryId"].ToString());
+        var _productcategory = EngineContext.Current.Resolve<Nop.Services.Catalog.ICategoryService>();
+        ProductCatSename = _productcategory.GetCategoryById(productcatid).GetSeName();
+        productcatname = Session["ProductCategoryName"].ToString();
+    }
+    int supportcatid = 0;
+    string supportcatname = "";
+    if (Session["SupportCategoryId"] != null)
+    {
+        supportcatid = Convert.ToInt32(Session["SupportCategoryId"].ToString());
+        var _productcategory = EngineContext.Current.Resolve<Nop.Plugin.Widgets.TorchDesign_Support.Services.ISupportService>();
+        SupportCatSename = _productcategory.GetSupportCategoryById(supportcatid).GetSeName();
+        supportcatname = Session["SupportCategoryName"].ToString();
+    }
+}
+
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+
+<div class="breadcrumbcustome" style="margin-bottom:20px;">
+
+    @if (productcatid > 0)
+    {   <span class="arrowspan"><a href="@Url.RouteUrl("Support")">Support</a></span>
+        <span class="arrowspan"><a href="@Url.RouteUrl("Public.SupportCategory", new { productCategorsename = @ProductCatSename })">@productcatname</a></span>
+    }
+    @if (supportcatid > 0)
+    {
+        <span class="arrowspan"><a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Public.SupportTopiclist", new { suportCategorysename = @SupportCatSename })">@supportcatname</a></span>
+        <span>@Model.Title</span>
+    }
+
+</div>
+
+<div class="supportstep">
+    <div>
+        <div class="fltleft" style="font-size:16px;">@Model.Title</div>
+        @if (_workcontext.CurrentCustomer.IsAdmin())
+        {
+            @*<div class="fltleft"  style="width:50%">@Model.Description</div>*@
+            <div class="fltright"><a id="editlink" href="@Url.RouteUrl("EditSupportTopic", new { id = @Model.Id, redirect ="edit"})">@T("Admin.Common.Edit")</a></div>
+            @*<script>
+                    $(document).ready(function () {
+                        var href = $("#editlink").attr("href");
+                        var ln = parseInt(href.length) - parseInt(1);
+                        var path = (window.location.pathname);
+                        path = path.substr(1, path.length)
+                        href = href.substr(0, ln);
+                        path = path.replace("/", "-");
+                        href = href + path;
+                        $("#editlink").attr("href", href);
+
+
+
+                    })
+                </script>*@
+        }
+    </div>
+
+    <div class="clr"></div>
+    <div class="fltleft suporttopicdescpublic">@Model.Description</div>
+    <div class="clr"></div>
+    @if (Model.TemplateId == 20)
+    {
+
+        foreach (var item in Model.AddSupportTopicStepModel)
+        {
+            <div class="line"></div>
+            <div class="suportcollumone">
+                <div class="stepcontainer">
+                    <div class="stepnum">
+                        @item.Title
+                    </div>
+                    <div class="stepimage">
+                        <img src="@item.PictureThumbnailUrl" />
+                    </div>
+                    <div class="stepdesc">
+                        @Html.Raw(item.Description)
+                    </div>
+                </div>
+            </div>
+        }
+
+    }
+    @if (Model.TemplateId == 10)
+    {
+        int i = 0;
+        foreach (var item in Model.AddSupportTopicStepModel)
+        {
+            if (i % 2 == 0)
+            {
+                <div class="clr"></div>
+                <div class="line"></div>
+            }
+
+            <div class="stepcontainercoltwo">
+                <div class="stepnum">
+                    @item.Title
+                </div>
+                <div class="stepimage">
+                    <img src="@item.PictureThumbnailUrl" />
+                </div>
+                <div class="stepdesc">
+                    @Html.Raw(item.Description)
+                </div>
+            </div>
+
+            i++;
+        }
+
+        <div class="clr"></div>
+    }
+
+</div>

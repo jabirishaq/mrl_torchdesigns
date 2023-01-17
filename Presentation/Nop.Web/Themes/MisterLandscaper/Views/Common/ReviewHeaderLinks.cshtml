@@ -1,0 +1,14 @@
+﻿@model Reviewheaderlink
+@using Nop.Web.Models.Common;
+
+
+@if (Model.IsAuthenticated)
+{ 
+    @*<li><a href="@Url.RouteUrl("CustomerInfo")" class="account">@Model.CustomerEmailUsername</a></li>*@
+    @*<li><a href="@Url.RouteUrl("Logout")" class="ico-logout">@T("Account.Signout")</a></li>*@
+}
+else
+{     
+    @*<li><a href="@Url.RouteUrl("Register")" class="ico-register">@T("Account.Register")</a></li>*@
+    <a href="/login?ReturnUrl=/productreviews/@Model.productid" class="ratinglogintext">@T("Review.login")</a>
+}

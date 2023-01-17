@@ -1,0 +1,21 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportVideoModel
+@using Nop.Web.Framework;
+@{    
+    //page title
+    ViewBag.Title = T("Admin.Support.SupportVideo.AddNew").Text;
+	 Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+}
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+            @T("Admin.Support.SupportVideo.AddNew") @Html.ActionLink("(" + T("Admin.Support.SupportVideo.BackToList") + ")", "SupportVideoList")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+        </div>
+    </div>
+    @Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdateSupportVideo.cshtml", Model)
+}

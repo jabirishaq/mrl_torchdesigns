@@ -1,0 +1,61 @@
+﻿@model NewsItemListModel
+@using Nop.Web.Extensions;
+@using Nop.Web.Models.News;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.NewsArchive").Text);
+}
+<div class="page news-list-page">
+    @*<div class="page-title">
+        <a href="@Url.RouteUrl("NewsRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("News.RSS.Hint")">@T("News.RSS")</a>
+        <h1>@T("News")</h1>
+    </div>*@
+    <div class="clr topiccontainer" style="margin-top: 36px;">
+        <div style="width: 78%; margin: auto;">
+            <div class="fltleft" style="width: 20%; margin-right: 10px;"><img style="width: 100%;" src="/Themes/MisterLandscaper/Content/images/newstitle.png" alt="" /></div>
+            <div class="fltleft" style="width: 78%;">
+                <span class="topicmaintitlespan">Mister Landscaper News</span>
+                <div class="topicpageheaderdiv">The latest news on water conservation, Drip Irrigation, Micro Irrigation, and new product development.</div>
+            </div>
+        </div>
+        <div class="cleardiv">&nbsp;</div>
+    </div>
+    <div class="forline">&nbsp;</div>
+    <div class="clr">&nbsp;</div>
+
+ 
+        <div class="page-body">
+            <div class="latestnewstitle">
+                Latest News
+            </div>
+            @Html.Widget("newslist_page_before_items")
+            <div class="news-items">
+                @foreach (var item in Model.NewsItems)
+            {
+            <div class="item">
+                <div class="news-details">
+                    <a class="newstitle" href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })">
+                        @item.Title
+                    </a> <span class="news-details">
+                        -
+                        @item.CreatedOn.ToString("D")
+                    </span>
+                </div>
+                <div class="newsdescription news-details">
+                    @Html.Raw(item.Short)
+                </div>
+                <a href="@Url.RouteUrl("NewsItem", new { SeName = item.SeName })" class="read-more">
+                    @T("News.MoreInfo")
+                </a>
+                @Html.Widget("newslist_page_inside_item", item.Id)
+            </div>
+            }
+            </div>
+            <div class="pager">
+                @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+            </div>
+            @Html.Widget("newslist_page_after_items")
+        </div>
+    </div>

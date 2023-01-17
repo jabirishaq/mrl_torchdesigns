@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="header.topmenu.menuitem.home">
+    <Value>Home</Value>
+  </LocaleResource>
+  <LocaleResource Name="header.topmenu.menuitem.contact">
+    <Value>Contact</Value>
+  </LocaleResource> 
+  <LocaleResource Name="header.topmenu.menuitem.Pinterest">
+    <Value>Pinterest</Value>
+  </LocaleResource>
+  <LocaleResource Name="header.topmenu.menuitem.Testimonials">
+    <Value>Testimonials</Value>
+  </LocaleResource>  
+  <LocaleResource Name="footer.product.item.Download.Product.Catalog">
+    <Value>Download Product Catalog</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Catalog.Products.Fields.Runs">
+    <Value>Maximum Run</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Common.None">
+    <Value>None</Value>
+  </LocaleResource>  
+  <LocaleResource Name="SystemDesign.ImageUpload">
+    <Value>Image Upload</Value>
+  </LocaleResource> 
+  <LocaleResource Name="SystemDesign.ImageUpload.Content">
+    <Value>Please upload your completed landscape drawing and any supporting images, including pictures of all landscape areas where irrigation is to be installed. Ideally, landscape images will include faucet locations.</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.dynamicsgp.companykey.hint">
+    <Value>Company Key</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.dynamicsgp.webserviceaddress.hint">
+    <Value>Web Service Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.dynamicsgp.status">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.dynamicsgp.webservicetitle">
+    <Value>Web Services Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.dynamicsgp.domaintitle">
+    <Value>Domain Login Information</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.dynamicsgp.domaindescription">
+    <Value>Please provide login informatrion for the web service. The provided account must be granted the proper permissions in th Dynamics Security Console on the Web Service Server.</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.dynamicsgp.saleordertitle">
+    <Value>Sales Order Configuration</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.TorchDesign.DynamicsGp.status.Connected">
+    <Value>Connected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.TorchDesign.DynamicsGp.status.NotConnected">
+    <Value>Not Connected</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.TorchDesign.DynamicsGP.Error.WebserviceAddress">
+    <Value>Web service address is empty. please go to all setting find "torchdesignsdynamicsgpwcfsettings.webserviceaddress" setting and set it's value. or you can smiply uninstall and re-install plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.TorchDesign.DynamicsGP.Error.UserName">
+    <Value>UserName is empty. please go to all setting find "torchdesignsdynamicsgpwcfsettings.username" setting and set it's value. or you can smiply uninstall and re-install plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.TorchDesign.DynamicsGP.Error.Password">
+    <Value>Password is empty. please go to all setting find "torchdesignsdynamicsgpwcfsettings.password" setting and set it's value. or you can smiply uninstall and re-install plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="Plugins.TorchDesign.DynamicsGP.Error.Domain">
+    <Value>Domain is empty. please go to all setting find "torchdesignsdynamicsgpwcfsettings.domain" setting and set it's value. or you can smiply uninstall and re-install plugin.</Value>
+  </LocaleResource>
+</Language>

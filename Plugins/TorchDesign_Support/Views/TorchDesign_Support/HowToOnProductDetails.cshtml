@@ -1,0 +1,187 @@
+﻿@model ProductDetailSupportCategory
+@using Nop.Plugin.Widgets.TorchDesign_Support.Models;
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Nop.Web.Framework.UI;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain.Customers;
+
+@{
+
+    //Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    //Html.AddTitleParts("Support");
+    var _workcontext = EngineContext.Current.Resolve<IWorkContext>();
+
+}
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+
+<div class="product-supportcategory">
+
+    @if (Model.AvailableSupportCategories.Count > 0)
+    {
+        foreach (var Supportcategory in Model.AvailableSupportCategories)
+        {
+            <div id="catdiv_@Supportcategory.SupportCategoryId">
+                <div class="productdetailiconcontaindiv">
+                    <a href="javascript:void(0)" id="SupportAnchr_@Supportcategory.SupportCategoryId" onclick="supportancherclick(@Supportcategory.SupportCategoryId)">
+                        <div><img src="@Supportcategory.SupportCategoryPictureUrl"></div>
+                        <div class="productdetailicontitle">@Supportcategory.SupportCategoryName</div>
+                    </a>
+                </div>
+            </div>
+
+                <div id="suppcat_@Supportcategory.SupportCategoryId">
+                    <div class="productdetailcontainer" id="descdiv_@Supportcategory.SupportCategoryId">
+                        <div class="productdetailhidedivheader">
+                            @Supportcategory.SupportCategoryName
+                        </div>
+                        <div class="tabdiscription">
+                            <ul>
+                                @foreach (var item in Model.AvailableSupportTopics.Where(x => x.SupportCategoryId.Contains(@Supportcategory.SupportCategoryId)))
+                                {
+
+                                <li style="list-style:none;">
+                                    <a id="productdetail" href="@Url.RouteUrl("Public.SupportTopicSingle", new { suportTopicsename = @item.Sename })">
+                                        @item.SupportTopicName
+                                    </a>
+                                </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+
+        }
+    }
+    @if (Model.AvailableSupportVideo.Count > 0)
+    {
+
+        <div id="catdiv_video">
+            <div class="productdetailiconcontaindiv">
+                <a href="javascript:void(0)" id="SupportVideo1" onclick="supportancherclick('video')">
+                    <div><img src="/Themes/MisterLandscaper/Content/images/pdvideo.png"></div>
+                    <div class="productdetailicontitle">Video</div>
+                </a>
+            </div>
+        </div>
+
+        <div id="suppcat_video">
+            <div class="productdetailcontainer" id="descdiv_video">
+                <div class="productdetailhidedivheader">
+                    Video
+                </div>
+                <div class="tabdiscription">
+                    @foreach (var item in Model.AvailableSupportVideo)
+                    {
+
+                    <div class="vediosubdiv">
+                        <a href="http://vimeo.com/@item.VimeoInformation" class="fancybox fancybox.iframe" data-fancybox-group='gallery'>
+                            <div class="videoimage">
+                                <img src="@item.PictureUrl" />
+                            </div>
+                            @* <div class="PlayLink" style="display: block; padding-top: 40px;"></div>*@
+                            <div class="productdetailicontitle videotitlecontainer"> @item.Title</div>
+                        </a>
+
+                    </div>
+
+
+                    }
+                </div>
+            </div>
+        </div>
+        <script>document.getElementById("productdetail_menu_Product_Videos").innerHTML = "";</script>
+
+
+    }
+
+    @if (Model.AvailableSupportDownload.Count > 0)
+    {
+        <div id="catdiv_download">
+            <div class="productdetailiconcontaindiv">
+                <a href="javascript:void(0)" id="SupportDownload1" onclick="supportancherclick('download')">
+                    <div><img src="~/Themes/MisterLandscaper/Content/images/pddownload.png"></div>
+                    <div class="productdetailicontitle">Download</div>
+                </a>
+            </div>
+        </div>
+
+        <div id="suppcat_download">
+            <div class="productdetailcontainer" id="descdiv_download">
+                <div class="productdetailhidedivheader">
+                    Download
+                </div>
+                <div class="tabdiscription">
+                    <ul>
+                        @foreach (var item in Model.AvailableSupportDownload)
+                        {
+                            <li style="list-style:none;">
+                                <a href="@Url.RouteUrl("GetDownloadContent", new { downloadid=@item.DownloadId })">@item.Title</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <script>
+@*document.getElementById("productdetail_menu_Product_Download").innerHTML = "";*@
+            $("#productdetail_menu_Product_Download").parent().css("display", "none");
+        </script>
+    }
+
+
+
+    @*<script>
+
+        (function ($) {
+
+            $(function () {
+
+                $(".fancyYoutube").fancybox({
+                    'transitionIn': 'elastic',
+                    'transitionOut': 'fade',
+                    'width': '680',
+                    'height': '495',
+                    'type': 'swf'
+                });
+
+                // $('.fancybox').fancybox();
+
+                $('.fancyCarausal')
+                .attr('rel', 'media-gallery')
+                .fancybox({
+                    openEffect: 'none',
+                    closeEffect: 'none',
+                    prevEffect: 'none',
+                    nextEffect: 'none',
+
+                    arrows: false,
+                    helpers: {
+                        media: {},
+                        buttons: {}
+                    }
+                });
+
+
+            });
+
+        })(jQuery);
+
+        $(document).ready(function () {
+            @*$(".forvideoicon").css("width", "100px");
+
+                var videourl = $("#@Html.FieldIdFor(model => model.VimeoInformation)").val();
+                $(".forvideoicon").append("<a href='" + videourl + "' class='fancybox fancybox.iframe' data-fancybox-group='gallery'><div class='PlayLink'></div></a>");*@
+    @*      $("#tabs").tabs();
+                $(".fancybox").fancybox({
+                    width: '70%',
+                    height: '70%',
+                    helpers: {
+                        media: {}
+                    }
+                });
+
+            });
+        </script>*@

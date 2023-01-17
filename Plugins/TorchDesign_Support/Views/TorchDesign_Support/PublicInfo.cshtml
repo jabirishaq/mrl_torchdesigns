@@ -1,0 +1,378 @@
+﻿@model PublicInfoModel
+@using Nop.Plugin.Widgets.TorchDesign_Support.Models;
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Nop.Web.Framework.UI;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain.Customers;
+@using Nop.Web.Extensions;
+@{
+    var searchTooltip = T("support.Searchbox.placeholder.text");
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Html.AddTitleParts("Support");
+    var _workcontext = EngineContext.Current.Resolve<IWorkContext>();
+}
+
+
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+<script src="~/Themes/MisterLandscaper/Content/fancybox/jquery.fancybox.js?v=2.1.4"></script>
+<script src="~/Themes/MisterLandscaper/Content/fancybox/jquery.fancybox.pack.js"></script>
+<script src="~/Themes/MisterLandscaper/Content/fancybox/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+<script src="~/Themes/MisterLandscaper/Content/fancybox/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<link href="~/Themes/MisterLandscaper/Content/fancybox/jquery.fancybox.css" rel="stylesheet" />
+<link href="~/Themes/MisterLandscaper/Content/fancybox/helpers/jquery.fancybox-buttons.css" rel="stylesheet" />
+
+@*@Html.Partial("_TestimonialImages", Model)*@
+@*<div class="testimonialscontainer">
+    @using (Html.BeginForm())
+    {
+        <div class="testhead">
+            <div class="thumb">
+                <img src="~/plugins/Widgets.TorchDesign_Support/Content/img/thumb.png" height="120" width="120" />
+            </div>
+            <div class="heading">Support</div>
+            <div class="heading-text">
+               Access top resources through
+                a quick keyword search. Or find help
+               and info searching by product
+            </div>
+        </div>
+        <div class="line" style="margin-top:25px;"></div>
+        <div class="testimonials">Testimonials</div>
+        <div class="line"></div>
+        <div>
+        </div>
+
+        <div>
+            @foreach (var item in Model.AvailableCategories)
+            {
+                <div class="message">@item.Id</div>
+                <div class="middle">
+                    <div class="mtext">
+                        <span class="cname">@item.Category</span>
+                    </div>
+                    <a href="#" class="bigphoto_@item.Id">
+
+                        <img src="@item.PictureUrl" height="100" width="100" class="testImages" itemprop="image" />
+
+                    </a>
+                </div>
+                <div class="line"></div>
+            }
+        </div>
+    }
+    </div>*@
+
+<div class="productmenu-titles">
+
+    <div class="img">
+        <img src="~/plugins/Widgets.TorchDesign_Support/Content/img/thumb.png" />
+    </div>
+    <div class="detail">
+        <h3>@T("admin.support")</h3>
+        <p>@T("support.description")</p>
+    </div>
+
+</div>
+@if (_workcontext.CurrentCustomer.IsAdmin())
+{
+    <div class="supports_links">
+        <a id="topicadd" class="supports-link" href="@Url.RouteUrl("CreateSupportTopic", new { redirect = 1 })">@T("admin.support.supporttopics.addnewcustom")</a>
+        <a id="topicvideo" class="supports-link" href="@Url.RouteUrl("CreateSupportVideo", new { redirect = 1 })">@T("admin.support.supportvideo.addnewcustom")</a>
+        <a id="topicdownload" class="supports-link" href="@Url.RouteUrl("CreateSupportDownload", new { redirect = 1 })">@T("admin.support.supportdownloads.addnewcustom")</a>
+    </div>
+
+    @*<script>
+            $(document).ready(function () {
+                var href = $("#topicadd").attr("href");
+                var ln = parseInt(href.length) - parseInt(1);
+                var path = (window.location.pathname);
+                path = path.substr(1, path.length)
+                href = href.substr(0, ln);
+                href = href + path;
+                $("#topicadd").attr("href", href);
+
+                var href = $("#topicvideo").attr("href");
+                var ln = parseInt(href.length) - parseInt(1);
+                var path = (window.location.pathname);
+                path = path.substr(1, path.length)
+                href = href.substr(0, ln);
+                href = href + path;
+                $("#topicvideo").attr("href", href);
+
+                var href = $("#topicdownload").attr("href");
+                var ln = parseInt(href.length) - parseInt(1);
+                var path = (window.location.pathname);
+                path = path.substr(1, path.length)
+                href = href.substr(0, ln);
+                href = href + path;
+                $("#topicdownload").attr("href", href);
+
+
+            })
+        </script>*@
+}
+<div class="forlines">
+</div>
+<div class="searchbox">
+    <div class="search-img">
+        <img src="~/plugins/Widgets.TorchDesign_Support/Content/img/Searchicon.png" height="50" width="50" class="srcimg" />
+    </div>
+    <div class="support-search">
+        <form id="test-form" method="post">
+            @Html.EditorFor(model => model.KeywordText, new { htmlAttributes = new { @class = "search-box-text text-box single-line", @placeholder = @searchTooltip, @id = "Search-text" } })
+            <input type="submit" id="SupportSearchbtn" name="Savesettingbtn" class="search-box-button" value="" />
+
+            <script>
+                $('#SupportSearchbtn').click(function () {
+                    var search_terms = $("#Search-text");
+                    if (search_terms.val() == "" || search_terms.val() == "@searchTooltip") {
+                        alert("Plese Insert Keyword In Textbox Which You Want To Search");
+                        search_terms.focus();
+                        return false;
+                    }
+                    return true;
+                });
+                $(document).ready(function () {
+                    $("#tabs").tabs();
+
+                });
+            </script>
+
+        </form>
+    </div>
+</div>
+<div class="forlines">
+</div>
+
+@if (Model.IsResultFound)
+{
+
+
+    <div id="tabs" style="margin-top:28px;">
+        <ul>
+            <li><a href="#tabs-1">@T("support.supportcategories")</a></li>
+            <li><a href="#tabs-2">@T("support.supporttopics")</a></li>
+            <li><a href="#tabs-3">@T("support.supportvideos")</a></li>
+            <li><a href="#tabs-4">@T("support.supportdownloads")</a></li>
+        </ul>
+        <div id="tabs-1">
+
+            @if (Model.AvailableSupportCategories.Count > 0)
+            {
+                <div class="supportcatcontainer">
+                    @foreach (var Supportcategory in Model.AvailableSupportCategories)
+                    {
+                        <div class="supportcat">
+                            <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Public.SupportTopiclist", new { suportCategorysename = @Supportcategory.SeName })">
+                                <div><img src=" @Supportcategory.SupportCategoryPictureUrl "></div>
+                                <div class="productdetailicontitle">@Supportcategory.SupportCategoryName</div>
+                            </a>
+                        </div>
+
+                    }
+                    <div class="clr"></div>
+                </div>
+            }
+            @if (Model.AvailableSupportCategories.Count == 0)
+            {
+                <span>@T("support.resultnotfoud.text.category")</span>
+            }
+        </div>
+        <div id="tabs-2">
+            @if (Model.AvailableSupportTopics.Count > 0)
+            {
+                <div class="supportTopiccontainer">
+                    <ul>
+                        @foreach (var SupportTopic in Model.AvailableSupportTopics)
+                        {
+                            <li>
+                                <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Public.SupportTopicSingle", new { suportTopicsename = @SupportTopic.SeoName })">
+                                    @SupportTopic.SupportTopicTitle
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                    <div class="clr"></div>
+                </div>
+            }
+            @if (Model.AvailableSupportTopics.Count == 0)
+            {
+                <span>@T("support.resultnotfoud.text.topic")</span>
+            }
+        </div>
+        <div id="tabs-3">
+            @if (Model.AvailableSupportVideo.Count > 0)
+            {
+                <div>
+                    @foreach (var item in Model.AvailableSupportVideo)
+                    {
+
+                        <div class="vediosubdiv">
+                            <a href="http://vimeo.com/@item.VimeoInformation" class="fancybox fancybox.iframe" data-fancybox-group='gallery'>
+                                <div class="videoimage">
+                                    <img src="@item.PictureUrl" />
+                                </div>
+                                @* <div class="PlayLink" style="display: block; padding-top: 40px;"></div>*@
+                                <div class="productdetailicontitle videotitlecontainer"> @item.Title</div>
+                            </a>
+
+                        </div>
+                    }
+                    <div class="clr"></div>
+                </div>
+            }
+            @if (Model.AvailableSupportVideo.Count == 0)
+            {
+                <span>@T("support.resultnotfoud.text.video")</span>
+            }
+        </div>
+        <div id="tabs-4">
+            @if (Model.AvailableSupportDownload.Count > 0)
+            {  <div class="supportTopiccontainer">
+                <ul>
+                    @foreach (var item in Model.AvailableSupportDownload)
+                    {
+                        <li>
+                            <a href="@Url.RouteUrl("GetDownloadContent", new { downloadid = @item.DownloadId })">@item.Title</a>
+                        </li>
+                    }
+                </ul>
+                <div class="clr"></div>
+            </div>
+            }
+            @if (Model.AvailableSupportDownload.Count == 0)
+            {
+                <span>@T("support.resultnotfoud.text.download")</span>
+            }
+        </div>
+    </div>
+
+}
+
+@if (!Model.IsResultFound)
+{
+    <div class="product-category">
+
+        @foreach (var category in Model.AvailableCategories)
+        {
+
+            <div class="product-category-box">
+                <div class="imagesections">
+                    <a href="@Url.RouteUrl("Public.SupportCategory", new { productCategorsename = @category.SeoName })"><img src="@category.PictureUrl" /></a>
+                </div>
+                <div class="linksections">
+                    <a href="@Url.RouteUrl("Public.SupportCategory", new { productCategorsename = @category.SeoName })">@category.Category</a>
+                </div>
+            </div>
+        }
+    </div>
+
+}
+<div class="forlines"></div>
+<div class="below_links">
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("what_is_drip_irrigation_and_micro_spray") })">
+            <div>
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_drip.png" />
+
+            </div>
+            <div class="productdetailicontitle">What is Drip Irrigation</div>
+        </a>
+    </div>
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Wateringtips")">
+            <div>
+
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_watering.png" />
+            </div>
+            <div class="productdetailicontitle">Watering Tips</div>
+        </a>
+    </div>
+    @if (Model.SystemDesignEnabled)
+    {
+        <div class="supportcat">
+            <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("systemdesigndhelpstep1")">
+                <div>
+
+                    <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_system.png" />
+                </div>
+                <div class="productdetailicontitle">System Design Help</div>
+            </a>
+        </div>
+    }
+
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("ContactUs")">
+            <div>
+
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_contact.png" />
+            </div>
+            <div class="productdetailicontitle">Contact</div>
+        </a>
+    </div>
+</div>
+<script type="text/javascript">
+
+    //      $(".forvideoicon")
+    //.mouseover(function () {
+    //    $(".PlayLink").css("display", "block");
+    //    $(".PlayLink").css("padding-top", "40px");
+
+    //})
+    //.mouseout(function () {
+    //    $(".PlayLink").css("display", "none");
+    //});
+
+    (function ($) {
+
+        $(function () {
+
+            $(".fancyYoutube").fancybox({
+                'transitionIn': 'elastic',
+                'transitionOut': 'fade',
+                'width': '680',
+                'height': '495',
+                'type': 'swf'
+            });
+
+            // $('.fancybox').fancybox();
+
+            $('.fancyCarausal')
+            .attr('rel', 'media-gallery')
+            .fancybox({
+                openEffect: 'none',
+                closeEffect: 'none',
+                prevEffect: 'none',
+                nextEffect: 'none',
+
+                arrows: false,
+                helpers: {
+                    media: {},
+                    buttons: {}
+                }
+            });
+
+
+        });
+
+    })(jQuery);
+
+    $(document).ready(function () {
+        @*$(".forvideoicon").css("width", "100px");
+
+            var videourl = $("#@Html.FieldIdFor(model => model.VimeoInformation)").val();
+            $(".forvideoicon").append("<a href='" + videourl + "' class='fancybox fancybox.iframe' data-fancybox-group='gallery'><div class='PlayLink'></div></a>");*@
+        $("#tabs").tabs();
+        $(".fancybox").fancybox({
+            width: '70%',
+            height: '70%',
+            helpers: {
+                media: {}
+            }
+        });
+
+    });
+
+</script>

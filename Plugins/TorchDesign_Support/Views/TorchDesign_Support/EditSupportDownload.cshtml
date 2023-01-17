@@ -1,0 +1,85 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportDownloadModel
+@using Nop.Web.Framework;
+@{    
+	//page title
+	ViewBag.Title = T("Admin.Support.SupportDownloads.EditSupportDownloadDetails").Text;
+	Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "supportDownload-form" }))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+            @T("Admin.Support.SupportDownloads.EditSupportDownloadDetails") - @Model.Title @Html.ActionLink("(" + T("Admin.Support.SupportDownloads.Downloads.BackToList") + ")", "SupportDownloadList")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+            <a href='javascript:void(0)' class='k-button k-button-icontext k-grid-delete' onclick='deletefunction(@Model.Id)'>Delete</a>
+        </div>
+    </div>
+    @Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdateSupportDownload.cshtml", Model)
+}
+@{
+    string delurl = "";
+    if (Session["urlredirect"] != null)
+    {
+        delurl = Session["urlredirect"].ToString();
+
+    }
+}
+
+<script>
+
+    function deletefunction(id) {
+
+        var redirect = "@delurl";
+        var x = window.confirm("Are you sure you want to delete this support Download?")
+        if (x)
+        {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Plugin.DeleteSupportDownload")",
+                data: { "id": id },
+                success: function (data) {
+
+                if(data.Result)
+                {
+                    //var productpicturesGrid = $("#supporttopics-grid");
+                    //productpicturesGrid.data('kendoGrid').dataSource.read();
+                    //$("#supportlist").click();
+                    if (redirect.length > 2) {
+                        window.location.href = redirect;
+                    }
+                    else {
+                        var url = '@Url.Action("SupportDownloadList", "Support")';
+                        window.location.href = url;
+                    }
+                }
+                else {
+                    if (redirect.length > 2) {
+                        window.location.href = redirect;
+                    }
+                    else {
+                        var url = '@Url.Action("SupportDownloadList", "Support")';
+                        window.location.href = url;
+                    }
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error In Delete");
+
+            }
+        });
+
+    }
+    //else
+    //{
+    //        var productpicturesGrid = $("#supporttopics-grid");
+    //productpicturesGrid.data('kendoGrid').dataSource.read();
+    //}
+
+    }
+
+</script>

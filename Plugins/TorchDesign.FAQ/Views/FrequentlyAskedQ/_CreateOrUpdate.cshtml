@@ -1,0 +1,273 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.TorchDesign.FAQ.Models;
+@using Nop.Web.Framework;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+    @*@(Html.LocalizedEditor<ConfigurationModel, FAQLangLocalizedModel>("product-info-localized",
+            @<table>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Locales[item].Question):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.Locales[item].Question)
+                        @Html.ValidationMessageFor(model => model.Locales[item].Title)
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Locales[item].Description):
+                    </td>
+                    <td class="adminData">
+                        @Html.TextAreaFor(model => model.Locales[item].Description, new { style = "Width: 250px; Height: 50px;" })
+                        @Html.ValidationMessageFor(model => model.Locales[item].ShortDescription)
+                    </td>
+                </tr>
+                <tr>
+            <td colspan="2">
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            </td>
+        </tr>
+            </table>,*@
+
+    <div id="tabs">
+        <ul>
+            <li><a href="#tabs-1">Question</a></li>
+            <li><a href="#tabs-2">Category</a></li>
+
+        </ul>
+        <div id="tabs-1">
+            @Html.HiddenFor(x => x.IsAddMode)
+            <table>
+                @*<tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.category):
+                        </td>
+                        <td class="adminData">
+                            @Html.EditorFor(model => model.category)
+                            @Html.ValidationMessageFor(model => model.Title)
+                        </td>
+                    </tr>*@
+                @*<tr>
+                        <td class="adminTitle">
+                            @Html.NopLabelFor(model => model.CategoryId):
+                        </td>
+                        <td class="adminData">
+                            @Html.DropDownListFor(model => model.CategoryId, Model.AvailableCategories)
+                        </td>
+                    </tr>*@
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.question):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.question)
+                        @*@Html.ValidationMessageFor(model => model.Title)*@
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.description):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.description, "RichEditor")
+                        @*@Html.TextAreaFor(model => model.description, new { style = "Width: 250px; Height: 50px;" })*@
+                        @*@Html.ValidationMessageFor(model => model.ShortDescription)*@
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.DisplayOrder):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.DisplayOrder)
+                        @*@Html.ValidationMessageFor(model => model.Title)*@
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.IsActive):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.IsActive)
+                        @*@Html.ValidationMessageFor(model => model.Title)*@
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <div id="tabs-2">
+            @if (Model.IsAddMode)
+            {
+                <div id="productcategories-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#productcategories-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("FaqCategoryList", "FrequentlyAskedQ", new { faqId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    create: {
+                                        url: "@Html.Raw(Url.Action("FaqCategoryInsert", "FrequentlyAskedQ", new { faqId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    update: {
+                                        url:"@Html.Raw(Url.Action("FaqCategoryUpdate", "FrequentlyAskedQ"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("FaqCategoryDelete", "FrequentlyAskedQ"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            Category: { editable: true, type: "string" },
+                                            //FaqId: { editable: false, type: "number" },
+                                            CategoryId: { editable: true, type: "number" },
+
+                                            DisplayOrder: { editable: true, type: "number" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "create" || e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            toolbar: ["create"],
+                            edit: function(e) {
+                                if (e.model.isNew()) {
+                                    //little hack here
+                                    //pre-select the first value of kendoui dropdownlist datasource
+                                    //for some reasons (maybe, bug) it always sends 0
+                                    //if no value has been selected (changed) in the dropdownlist
+                                    if (allCategories.length > 0) {
+                                        e.model.CategoryId = allCategories[0].Id;
+                                    }
+                                }
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "CategoryId",
+                                title: "@T("Admin.Catalog.Products.Categories.Fields.Category")",
+                                width: 200,
+                                editor: categoryDropDownEditor,
+                                template: "#:Category#"
+                            },
+                            {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Catalog.Products.Categories.Fields.DisplayOrder")",
+                                width: 200,
+                                //integer format
+                                format: "{0:0}"
+                            }, {
+                                command: [{
+                                    name: "edit",
+                                    text: "@T("Admin.Common.Edit")"
+                                }, {
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }],
+                                width: 200
+                            }]
+                        });
+                    });
+
+                    //local datasource
+                    var allCategories = [
+                        @{
+                        var faqService = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Plugin.TorchDesign.FAQ.Services.IFrequentlyAskedQService>();
+                    var allCategories = faqService.GetAllFAQCategory();
+                }
+                        @for (int i = 0; i < allCategories.Count; i++)
+                {
+                    var category = allCategories[i];
+                    <text>
+                                {
+                                    Id: @(category.Id),
+                                    Name: "@(Html.Raw(category.CategoryName))"
+                                }
+                                </text>
+                    if (i != allCategories.Count - 1)
+                    {
+                        <text>,</text>
+                    }
+                }
+                    ];
+
+                    function categoryDropDownEditor(container, options) {
+                        $('<input required data-text-field="Name" data-value-field="Id" data-bind="value:CategoryId"/>')
+                            .appendTo(container)
+                            .kendoDropDownList({
+                                autoBind: false,
+                                dataSource: allCategories
+                            });
+                    }
+                </script>
+            }
+            @if (!Model.IsAddMode)
+            {
+                  <div>First Save The Question</div>
+            }
+        </div>
+    </div>
+
+
+
+
+    @*<script>
+        $("#savecont").click(function(){
+            document.getElementById("IsAddMode").val()=true;
+        });
+    </script>*@
+
+    <script>
+        $(function() {
+            $( "#tabs" ).tabs();
+        });
+       
+    </script>

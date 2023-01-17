@@ -1,0 +1,94 @@
+﻿.gpserviceTitle {
+    font-size: 19px;
+    margin: 0 0 10px;
+    display: inline-block;
+    width: 100%;
+    border-bottom: 2px solid #bbb;
+    padding-bottom: 5px;
+}
+
+.gpServiceDiv {
+    width: 100%;
+}
+
+    .gpServiceDiv .webService {
+        margin: 10px 0 30px;
+        border: 1px solid #a7bac5;
+        border-radius: 5px;
+        padding: 10px;
+    }
+
+        .gpServiceDiv .webService .text-box.single-line,
+        .gpServiceDiv .webService select {
+            width: 50%;
+        }
+
+
+.gp-title {
+    margin: -17px 0 14px;
+}
+
+    .gp-title strong {
+        background: #fff;
+        padding: 0 5px;
+        font-size: 12px;
+    }
+
+.domain-and-saleorder {
+    width: 100%;
+}
+
+    .domain-and-saleorder .domain {
+        width: 45%;
+        border: 1px solid #a7bac5;
+        border-radius: 5px;
+        padding: 10px;
+        float: left;
+    }
+
+    .domain-and-saleorder .saleorder {
+        width: 45%;
+        border: 1px solid #a7bac5;
+        border-radius: 5px;
+        padding: 10px;
+        float: right;
+    }
+
+.buttons {
+    clear: both;
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+    .buttons input {
+        padding: 9px;
+        margin-bottom: 20px;
+        margin-left: 10px;
+    }
+
+.gpservice-status .GPstatus {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #d30100;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-right: 10px;
+    margin: 10px 5px 20px
+}
+
+    .gpservice-status .GPstatus span {
+        color: #2e2e2e;
+        margin-right: 10px;
+    }
+
+    .gpservice-status .GPstatus.green {
+        color: #3da33d;
+    }
+
+    .gpservice-status .GPstatus img {
+        width: 29px;
+        float: right;
+    }

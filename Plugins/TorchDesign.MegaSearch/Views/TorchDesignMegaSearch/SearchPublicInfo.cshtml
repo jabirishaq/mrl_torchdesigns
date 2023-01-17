@@ -1,0 +1,469 @@
+﻿@model PublicInfoModel
+@using Nop.Core
+@using Nop.Plugin.TorchDesign.MegaSearch.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+@using Nop.Core.Domain.Orders
+@{
+    Layout = "";
+    var searchTooltip = T("Searchbox.placeholder.text");
+}
+
+
+<link href="~/Plugins/TorchDesign.MegaSearch/Content/Searchstyle.css" rel="stylesheet" />
+<form id="test-form" method="get">
+    <div class="">
+        @Html.EditorFor(model => model.KeywordText, new { htmlAttributes = new { @class = "search-box-text", @placeholder = @searchTooltip, @id = "Search-tetx" } })
+        @*@Html.HiddenFor(x => x.Viewmode)*@
+        <input type="submit" id="Searchbtn" name="Savesettingbtn" class="search-box-button" value="" />
+    </div>
+
+
+    <div style="clear:both"></div>
+    <div class="megasearchresult">
+
+        <div class="page-body">
+
+
+
+            @if (Model.KeywordText != null)
+            {
+                <script>
+                    $(document).ready(function () {
+                        $(".page").hide();
+
+                    });
+
+                </script>
+
+                <div class="" style="margin-bottom:30px">
+                    <span>@T("search.searchterm")   </span>  @Html.EditorFor(model => model.KeywordText, new { htmlAttributes = new { @class = "search-box-text", @placeholder = @searchTooltip, @id = "Search-tetx1" } })
+                    <input type="submit" id="Searchbtn1" name="Savesettingbtn" class="search-box-button" value="" />
+                </div>
+
+                <div id="tabs">
+                    <ul>
+                        <li><a href="#tabs-1">@T("Product.list")</a></li>
+
+                        @*<li><a href="#tabs-3">@T("admin.common.supportcategorieslist")</a></li>*@
+                        @if (Model.AvailableSupportTopics.Count > 0)
+                        {
+                            <li><a href="#tabs-2">@T("support.supporttopics")</a></li>
+                        }
+                        @if (Model.AvailableSupportVideo.Count > 0)
+                        {
+                            <li><a href="#tabs-3">@T("support.supportvideos")</a></li>
+                        }
+                        @if (Model.AvailableSupportDownload.Count > 0)
+                        {
+                            <li><a href="#tabs-4">@T("support.supportdownloads")</a></li>
+                        }
+                        <li><a href="#tabs-5">@T("other.list")</a></li>
+                    </ul>
+                    <div id="tabs-1">
+
+                        @if (Model.Products.Count > 0)
+                        {
+                        <div class="clr"></div>
+                        <div class="seprate"></div>
+                        <div class="stitle"><strong>@T("megasearch.news.Producttext")</strong></div>
+                        <div class="product-list">
+                            @foreach (var product in Model.Products)
+                                {
+                                <div class="item-box">
+                                    <div class="product-item" data-productid="@product.Id">
+                                        @{
+                                //prepare "Add to cart" AJAX link
+                                string addtocartlink = "";
+                                var shoppingCartTypeId = (int)ShoppingCartType.ShoppingCart;
+                                var quantity = 1;
+                                if (product.ProductPrice.ForceRedirectionAfterAddingToCart)
+                                {
+                                    addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = product.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, forceredirection = product.ProductPrice.ForceRedirectionAfterAddingToCart });
+                                }
+                                else
+                                {
+                                    addtocartlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = product.Id, shoppingCartTypeId = shoppingCartTypeId, quantity = quantity, });
+                                }
+                                        }
+                                        <div class="fltleft fullwidth">
+                                            <div class="fltleft imagcontainer">
+                                                <div class="picture">
+                                                    <a href="@product.SeName" title="@product.DefaultPictureModel.Title">
+                                                        <img alt="@product.DefaultPictureModel.AlternateText" src="@product.DefaultPictureModel.ImageUrl" title="@product.DefaultPictureModel.Title" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="fltleft titlecontainer">
+                                                <div>
+                                                    <h2 class="product-title">
+                                                        <a href="@product.SeName">@product.Name</a>
+                                                    </h2>
+                                                </div>
+                                                <div class="fullwidth">
+                                                    <div class="fltleft discriptioncontainer">
+                                                        <div class="prices">
+                                                            @{
+
+                                if ((@product.IsNewProduct) || (!String.IsNullOrEmpty(@product.ProductPrice.OldPrice)))
+                                {
+                                    if ((@product.IsNewProduct) && (!String.IsNullOrEmpty(@product.ProductPrice.OldPrice)))
+                                    {
+
+
+                                                                <span class="strike"><span class="price old-price">@product.ProductPrice.OldPrice <span><img src="~/Themes/MisterLandscaper/Content/images/NewItem_Tag.jpg" /></span></span></span>
+                                                                <span class="price actual-price" style="color:#ff0000">@product.ProductPrice.Price <span><img src="~/Themes/MisterLandscaper/Content/images/Sale_Tag.jpg" style="margin-left:6px;" /></span></span>
+                                    }
+                                    else
+                                    {
+                                        if (product.IsNewProduct)
+                                        {
+
+                                                                <span class="price actual-price">@product.ProductPrice.Price<span><img src="~/Themes/MisterLandscaper/Content/images/NewItem_Tag.jpg" /></span></span>
+                                        }
+                                        else
+                                        {
+
+                                                                <span class="strike"><span class="price old-price">@product.ProductPrice.OldPrice</span></span>
+                                                                <span class="price actual-price" style="color:#ff0000">@product.ProductPrice.Price<span><img src="~/Themes/MisterLandscaper/Content/images/Sale_Tag.jpg" style="margin-left:6px;" /></span></span>
+                                        }
+
+                                    }
+                                }
+                                else
+                                {
+                                                                <span class="price actual-price">@product.ProductPrice.Price</span>
+                                }
+
+
+
+
+                                                            }
+
+                                                        </div>
+
+                                                        <div class="details">
+
+
+                                                            <div class="desctitle" style="font-size: 11px;">Product Description:</div>
+                                                            <div class="description">
+                                                                @Html.Raw(product.ShortDescription)
+                                                            </div>
+
+                                                        </div>
+
+                                                    </div>
+                                                    <div>
+
+                                                        <div class="rightside">
+                                                            @if (product.Manifacturepartno != null)
+                                                            {
+                                                                <div style="color: #0e275f;font-size: 11px;">Part #: @product.Manifacturepartno</div>
+                                                            }
+
+                                                            @if (product.ReviewOverviewModel.AllowCustomerReviews)
+                                                            {
+                                                                int ratingPercent = 0;
+                                                                if (product.ReviewOverviewModel.TotalReviews != 0)
+                                                                {
+                                                                    ratingPercent = ((product.ReviewOverviewModel.RatingSum * 100) / product.ReviewOverviewModel.TotalReviews) / 5;
+                                                                }
+                                                                <div class="product-rating-box">
+                                                                    <div class="rating">
+                                                                        <div style="width: @(ratingPercent)%">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            }
+                                                            <div class="buttons">
+
+                                                                @if (!product.ProductPrice.DisableBuyButton)
+                                                            {
+                                                                    <input type="button" style="font-size:11px;padding: 5px 8px 5px 3px !important;" value="@(product.ProductPrice.AvailableForPreOrder ? T(" shoppingcart.preorder")
+                                                           : T("shoppingcart.addtocart"))" class="button-2 product-box-add-to-cart-button" onclick="AjaxCart.addproducttocart_catalog('@addtocartlink    ');return false;" />
+                                                            }
+                                                            </div>
+
+
+
+                                                            @if (product.IsBestSellers)
+                                                            {
+                                                                <span><img src="~/Themes/MisterLandscaper/Content/images/BestSeller_Updated.jpg" style="margin-top:3px;" /></span>
+                                                            }
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                }
+                        </div>
+                        }
+                        else
+                        {
+                            if (Model.IsTextEmpty)
+                            {
+
+                            }
+                            else
+                            {
+                        <span>@T("megasearch.resultnotfoud.text")</span>
+                            }
+                        }
+
+                    </div>
+
+                    @*<div id="tabs-3">
+
+                            @if (Model.AvailableSupportCategories.Count > 0)
+                            {
+                                <div class="supportcatcontainer">
+                                    @foreach (var Supportcategory in Model.AvailableSupportCategories)
+                                    {
+                                        <div class="supportcat">
+                                            <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Public.SupportTopiclist", new { suportCategorysename = @Supportcategory.SeName })">
+                                                <div><img src=" @Supportcategory.SupportCategoryPictureUrl "></div>
+                                                <div class="productdetailicontitle">@Supportcategory.SupportCategoryName</div>
+                                            </a>
+                                        </div>
+
+                                    }
+                                    <div class="clr"></div>
+                                </div>
+                            }
+                            @if (Model.AvailableSupportCategories.Count == 0)
+                            {
+                                <span>@T("support.resultnotfoud.text.category")</span>
+                            }
+                        </div>*@
+                    @if (Model.AvailableSupportTopics.Count > 0)
+                    {
+                        <div id="tabs-2">
+
+                            <div class="supportTopiccontainer">
+                                <ul>
+                                    @foreach (var SupportTopic in Model.AvailableSupportTopics)
+                                    {
+                                    <li>
+                                        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Public.SupportTopicSingle", new { suportTopicsename = @SupportTopic.SeoName })">
+                                            @SupportTopic.SupportTopicTitle
+                                        </a>
+                                    </li>
+                                    }
+
+                                </ul>
+                                <div class="clr"></div>
+                            </div>
+
+                            @if (Model.AvailableSupportTopics.Count == 0)
+                        {
+                        <span>@T("support.resultnotfoud.text.topic")</span>
+                        }
+                        </div>
+                    }
+                    @if (Model.AvailableSupportVideo.Count > 0)
+                    {
+                        <div id="tabs-3">
+
+                            <div>
+                                @foreach (var item in Model.AvailableSupportVideo)
+                            {
+                        <div class="vediosubdiv">
+                            <a href="http://vimeo.com/@item.VimeoInformation" class="fancybox fancybox.iframe" data-fancybox-group='gallery'>
+                                <img src="@item.PictureUrl" />
+                                <div class="productdetailicontitle videotitlecontainer">@item.Title</div>
+                            </a>
+
+                        </div>
+                            }
+                                <div class="clr"></div>
+                            </div>
+
+                            @if (Model.AvailableSupportVideo.Count == 0)
+                    {
+                        <span>@T("support.resultnotfoud.text.video")</span>
+                    }
+                        </div>
+                    }
+                    @if (Model.AvailableSupportDownload.Count > 0)
+                    {
+                        <div id="tabs-4">
+                            <div class="supportTopiccontainer">
+                                <ul>
+                                    @foreach (var item in Model.AvailableSupportDownload)
+                            {
+                            <li>
+                                <a href="@Url.RouteUrl("GetDownloadContent", new { downloadid = @item.DownloadId })">@item.Title</a>
+                            </li>
+                            }
+                                </ul>
+                                <div class="clr"></div>
+                            </div>
+
+                            @if (Model.AvailableSupportDownload.Count == 0)
+                    {
+                        <span>@T("support.resultnotfoud.text.download")</span>
+                    }
+                        </div>
+                    }
+                    <div id="tabs-5">
+                        @{
+                int j = 0;
+                        }
+                        @if (Model.Category.Count > 0)
+                        {
+                            j++;
+                            <div class="seprate"></div>
+                            <div class="stitle"><strong>@T("megasearch.news.Categorytext")</strong></div>
+                            <div class="sub-category-grid">
+                                @foreach (var catitem in Model.Category)
+                                {
+                                    <div class="item-box">
+                                        <div class="sub-category-catitem">
+                                            <h2 class="title">
+                                                <a href="@catitem.SeName" title="@catitem.PictureModel.Title">
+                                                    @catitem.Name
+                                                </a>
+                                            </h2>
+                                            <div class="picture">
+                                                <a href="@catitem.SeName" title="@catitem.PictureModel.Title">
+                                                    <img src="@catitem.PictureModel.ImageUrl" title="@catitem.PictureModel.Title" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+
+                        @if (Model.Manufacturer.Count > 0)
+                        {
+                            j++;
+                            <div class="seprate"></div>
+                            <div class="stitle"><strong>@T("megasearch.news.Menufacturertext")</strong></div>
+                            <div class="manufacturer-grid">
+                                @foreach (var manufitem in Model.Manufacturer)
+                                {
+                                    <div class="item-box">
+                                        <div class="manufacturer-manufitem">
+                                            <h2 class="title">
+                                                <a href="@manufitem.SeName" title="@manufitem.PictureModel.Title">
+                                                    @manufitem.Name
+                                                </a>
+                                            </h2>
+                                            <div class="picture">
+                                                <a href="@manufitem.SeName" title="@manufitem.PictureModel.Title">
+                                                    <img src="@manufitem.PictureModel.ImageUrl" title="@manufitem.PictureModel.Title" />
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                        }
+
+                        @if (Model.Blog.Count > 0)
+                        {
+                            j++;
+
+                            <div class="seprate"></div>
+                            <div class="stitle"><strong>@T("megasearch.news.Blogtext")</strong></div>
+                            <div class="product-list">
+                                @{int i = 1;}
+                                @foreach (var blogitem in Model.Blog)
+                                {
+                                    <div class="item-box">
+                                        <div class="sub-category-blogitem" style="margin-bottom:10px">
+                                            <h2 class="title">
+                                                <a href="@blogitem.SeName" title="" style="color:#0E275F;font-weight:bold">
+                                                    @i)  @blogitem.Title
+                                                </a>
+                                            </h2>
+                                            <div class="normalfontcontainerdiv">
+                                                @Html.Raw(blogitem.Body)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    i = i + 1;
+                                }
+                            </div>
+                        }
+
+                        @if (Model.News.Count > 0)
+                        {
+                            j++;
+                            <hr />
+                            <div class="seprate"></div>
+                            <div class="stitle"><strong>@T("megasearch.news.headertext")</strong></div>
+                            <div class="product-list">
+                                @foreach (var newsitem in Model.News)
+                                {
+                                    <div class="item-box">
+                                        <div class="sub-category-newsitem">
+                                            <h2 class="title">
+                                                <a href="@newsitem.SeName" title="">
+                                                    @newsitem.Title
+                                                </a>
+                                            </h2>
+                                            <div class="normalfontcontainerdiv">
+                                                @Html.Raw(newsitem.Short)
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        @if (j <= 0)
+                        {
+                            if (Model.IsTextEmpty)
+                            {
+
+                            }
+                            else
+                            {
+                                <span>@T("megasearch.resultnotfoud.text")</span>
+                            }
+                        }
+                    </div>
+
+                </div>
+
+            }
+
+        </div>
+        <script>
+            $('#Searchbtn').click(function () {
+                var search_terms = $("#Search-tetx");
+                if (search_terms.val() == "" || search_terms.val() == "@searchTooltip") {
+                    alert("Plese Insert Keyword In Textbox Which You Want To Search");
+                    search_terms.focus();
+                    return false;
+                }
+                return true;
+            });
+            $(document).ready(function () {
+                $("#tabs").tabs();
+                $("#Searchbtn1").click(function () {
+                    $("#Search-tetx").val($("#Search-tetx1").val());
+                    $("#Searchbtn").click();
+                });
+            })
+            @*$(function () {
+                $("#@Html.FieldIdFor(model => model.DisplayoptionId)").change(function () {
+
+                    $("#@Html.FieldIdFor(model => model.Viewmode)").val($(this).val());
+                    $("#Searchbtn").click();
+                });
+            });*@
+
+        </script>
+
+    </div>
+
+</form>

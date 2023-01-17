@@ -1,0 +1,163 @@
+﻿@model CategoriesModel
+@using Nop.Plugin.TorchDesign.FAQ.Models;
+@using Nop.Web.Framework;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@{
+    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+
+    ViewBag.Title = T("Plugins.TorchDesign.Customer.Title").Text;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+
+    @*<table>
+
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.CategoryName):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.CategoryName)
+                    @Html.ValidationMessageFor(model => model.Title)
+                </td>
+            </tr>
+
+
+        </table>*@
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+            @T("Plugins.TorchDesign.Customerorigin.Backlinktitle") <a href="/Admin/Plugin/ConfigureMiscPlugin?systemName=Widgets.FAQ">@T("Plugins.TorchDesign.Zip2Tax.Counterbacklinl")</a>
+        </div>
+
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td>
+
+                <div id="productvariantattributes-grid"></div>
+                <script>
+                    $(document).ready(function () {
+                        $("#productvariantattributes-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("CategoryList", "FrequentlyAskedQ", new { optionId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    create: {
+                                        url: "@Html.Raw(Url.Action("CatagoryInsert", "FrequentlyAskedQ", new { optionId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("CategoryUpdate", "FrequentlyAskedQ"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    @*destroy: {
+                                    url: "@Html.Raw(Url.Action("CustomerOriginDelete", "TorchDesignCustomerOrigin"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }*@
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            CategoryName: { editable: true, type: "string" },
+                                            Active: { editable: true, type: "boolean" },
+                                            DisplayOrder: { editable: true, type: "number" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "create" || e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            toolbar: ["create"],
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "CategoryName",
+                                    title: "@T("admin.catalog.categories.list.searchcategoryname")",
+                                    width: 150
+                                },{
+                                    field: "Active",
+                                    title: "@T("admin.affiliates.fields.active")",
+                                    width: 150,
+                                    headerAttributes: { style: "text-align:center" },
+                                    attributes: { style: "text-align:center" },
+                                    template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Active#.gif" />'
+                                }, {
+                                    field: "DisplayOrder",
+                                    title: "@T("Plugins.Widgets.Slider.Displayorder")",
+                                    width: 150
+                                },
+                                {
+                                    command: [
+                                        {
+                                            name: "edit",
+                                            text: "@T("Admin.Common.Edit")"
+                                        }@*, {
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }*@
+                                    ],
+                                    width: 200
+                                }
+                            ]
+                        });
+                    });
+                </script>
+                <input type="submit" id="btnRefreshProductAttributes" name="btnRefreshProductAttributes" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshProductAttributes').click(function () {
+                            //refresh grid
+                            var grid = $("#productvariantattributes-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>

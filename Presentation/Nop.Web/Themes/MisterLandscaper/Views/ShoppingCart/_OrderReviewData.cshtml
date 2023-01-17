@@ -1,0 +1,199 @@
+﻿@model ShoppingCartModel.OrderReviewDataModel
+@using Nop.Web.Models.ShoppingCart;
+@if (Model.Display)
+{
+    <div class="order-review-data">
+        <div class="fltleft">
+            <div class="title">
+                @T("Order.BillingAddress")
+            </div>
+            <table>
+                <tr>
+                    <td class="aligntextright">@T("admin.affiliates.customers.name"):</td>
+                    <td>@Model.BillingAddress.FirstName @Model.BillingAddress.LastName</td>
+                </tr>
+                <tr>
+                    <td class="aligntextright">@T("Order.Email"):</td>
+                    <td >@Model.BillingAddress.Email</td>
+                </tr>
+                @if (Model.BillingAddress.PhoneEnabled)
+                {
+                    <tr>
+                        <td class="aligntextright">@T("Order.Phone"):</td>
+                        <td>@Model.BillingAddress.PhoneNumber</td>
+                    </tr>
+                }
+                @if (Model.BillingAddress.FaxEnabled)
+                {
+                    <tr>
+                        <td class="aligntextright">@T("Order.Fax"):</td>
+                        <td>@Model.BillingAddress.FaxNumber</td>
+                    </tr>
+                }
+                @if (Model.BillingAddress.CompanyEnabled && !String.IsNullOrEmpty(Model.BillingAddress.Company))
+                {
+                    <tr>
+                        <td class="aligntextright">@T("admin.address.fields.company"):</td>
+                        <td>@Model.BillingAddress.Company</td>
+                    </tr>
+                }
+                @if (Model.BillingAddress.StreetAddressEnabled)
+                {
+                    <tr>
+                        <td class="aligntextright">@T("account.fields.streetaddress")1:</td>
+                        <td>@Model.BillingAddress.Address1</td>
+                    </tr>
+                }
+                @if (Model.BillingAddress.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.BillingAddress.Address2))
+                {
+                    <tr>
+                        <td class="aligntextright">@T("account.fields.streetaddress")2:</td>
+                        <td>@Model.BillingAddress.Address2</td>
+                    </tr>
+                }
+                @if (Model.BillingAddress.CityEnabled ||
+                Model.BillingAddress.StateProvinceEnabled ||
+                Model.BillingAddress.ZipPostalCodeEnabled)
+                {
+                    <tr>
+                        <td class="aligntextright"></td>
+                        <td>
+                            @if (Model.BillingAddress.CityEnabled)
+                            {
+                                @Model.BillingAddress.City
+                            }
+                            @if (Model.BillingAddress.CityEnabled && (Model.BillingAddress.StateProvinceEnabled || Model.BillingAddress.ZipPostalCodeEnabled))
+                            {
+                                <text>,</text>
+                            }
+                            @if (Model.BillingAddress.StateProvinceEnabled)
+                            {
+                                @Model.BillingAddress.StateProvinceName
+                            }
+                            @if (Model.BillingAddress.ZipPostalCodeEnabled)
+                            {
+                                @Model.BillingAddress.ZipPostalCode
+                            }
+                        </td>
+                    </tr>
+                }
+                @if (Model.BillingAddress.CountryEnabled && !String.IsNullOrEmpty(Model.BillingAddress.CountryName))
+                {
+                    <tr>
+                        <td class="aligntextright"></td>
+                        <td>@Model.BillingAddress.CountryName</td>
+                    </tr>
+                }
+                @if (!String.IsNullOrEmpty(Model.PaymentMethod))
+                {
+                    <tr>
+                        <td class="aligntextright">@T("Order.PaymentMethod"):</td>
+                        <td>@Model.PaymentMethod</td>
+                    </tr>
+                }
+
+
+            </table>
+        </div>
+
+        @if (Model.IsShippable)
+        {
+            <div class="shipaddress">
+                <div class="title">
+                    @T("Order.ShippingAddress")
+                </div>
+                <table>
+                    @if (!Model.SelectedPickUpInStore)
+                    {
+                        <tr>
+                            <td class="aligntextright">@T("admin.affiliates.customers.name"):</td>
+                            <td>@Model.ShippingAddress.FirstName @Model.ShippingAddress.LastName</td>
+                        </tr>
+                        <tr>
+                            <td class="aligntextright">@T("Order.Email"):</td>
+                            <td>@Model.ShippingAddress.Email</td>
+                        </tr>
+                        if (Model.BillingAddress.PhoneEnabled)
+                        {
+                            <tr>
+                                <td class="aligntextright">@T("Order.Phone"):</td>
+                                <td>@Model.ShippingAddress.PhoneNumber</td>
+                            </tr>
+                        }
+                        if (Model.BillingAddress.FaxEnabled)
+                        {
+                            <tr>
+                                <td class="aligntextright">@T("Order.Fax"):</td>
+                                <td>@Model.ShippingAddress.FaxNumber</td>
+                            </tr>
+                        }
+                        if (Model.ShippingAddress.CompanyEnabled && !String.IsNullOrEmpty(Model.ShippingAddress.Company))
+                        {
+                            <tr>
+                                <td class="aligntextright">@T("admin.address.fields.company"):</td>
+                                <td>@Model.ShippingAddress.Company</td>
+                            </tr>
+                        }
+                        if (Model.ShippingAddress.StreetAddressEnabled)
+                        {
+                            <tr>
+                                <td class="aligntextright">@T("account.fields.streetaddress")1:</td>
+                                <td>@Model.ShippingAddress.Address1</td>
+                            </tr>
+                        }
+                        if (Model.ShippingAddress.StreetAddress2Enabled && !String.IsNullOrEmpty(Model.ShippingAddress.Address2))
+                        {
+                            <tr>
+                                <td class="aligntextright">@T("account.fields.streetaddress")2:</td>
+                                <td>@Model.ShippingAddress.Address2</td>
+                            </tr>
+                        }
+                        if (Model.ShippingAddress.CityEnabled ||
+                        Model.ShippingAddress.StateProvinceEnabled ||
+                        Model.ShippingAddress.ZipPostalCodeEnabled)
+                        {
+                            <tr>
+                                <td class="aligntextright"></td>
+                                <td>
+                                    @if (Model.ShippingAddress.CityEnabled)
+                                    {
+                                        @Model.ShippingAddress.City
+                                    }
+                                    @if (Model.ShippingAddress.CityEnabled && (Model.ShippingAddress.StateProvinceEnabled || Model.ShippingAddress.ZipPostalCodeEnabled))
+                                    {
+                                        <text>,</text>
+                                    }
+                                    @if (Model.ShippingAddress.StateProvinceEnabled)
+                                    {
+                                        @Model.ShippingAddress.StateProvinceName
+                                    }
+                                    @if (Model.ShippingAddress.ZipPostalCodeEnabled)
+                                    {
+                                        @Model.ShippingAddress.ZipPostalCode
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        if (Model.ShippingAddress.CountryEnabled && !String.IsNullOrEmpty(Model.ShippingAddress.CountryName))
+                        {
+                            <tr>
+                                <td class="aligntextright"></td>
+                                <td>@Model.ShippingAddress.CountryName</td>
+                            </tr>
+                        }
+
+                    }
+                    @if (!String.IsNullOrEmpty(Model.ShippingMethod))
+                    {
+                        <tr>
+                            <td class="aligntextright">@T("Order.ShippingMethod"):</td>
+                            <td>@Model.ShippingMethod</td>
+                        </tr>
+
+                    }
+                </table>
+            </div>
+        }
+        <div class="clr"></div>
+    </div>
+}

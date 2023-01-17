@@ -1,0 +1,279 @@
+﻿@model BlogPostListModel
+@using Nop.Web.Extensions;
+@using Nop.Web.Models.Blogs;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Blog").Text);
+
+
+    int currentCategoryId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    }
+
+    //current product ID
+    int currentProductId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+    }
+    var _storeinfosetting = EngineContext.Current.Resolve<StoreInformationSettings>();
+    var _webStoreContext = EngineContext.Current.Resolve<Nop.Core.IWebHelper>();
+    var currentStoreUrl = _webStoreContext.GetStoreLocation();
+}
+@section left {
+    @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+    @Html.Action("BlogMonths", "Blog")
+    @*@Html.Action("BlogTags", "Blog")*@
+}
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+<div class="page blog-page">
+    @*<div>
+            <h1>@T("sites.blogs.title")</h1>
+        </div>*@
+    <div class="page-title">
+        <a href="@Url.RouteUrl("BlogRSS", new { languageId = Model.WorkingLanguageId })" class="link-rss" title="@T("Blog.RSS.Hint")">@T("Blog.RSS")</a>
+        <h1>
+            @if (String.IsNullOrEmpty(Model.PagingFilteringContext.Tag))
+            {
+                if (Model.PagingFilteringContext.GetParsedMonth().HasValue)
+                {
+                    @String.Format(T("Blog.FilteredByMonth").Text, Model.PagingFilteringContext.GetParsedMonth().Value.Year, Model.PagingFilteringContext.GetParsedMonth().Value.ToString("MMMM"))
+                }
+                else
+                {
+                    @T("Blog.title")
+                }
+            }
+            else
+            {
+                @String.Format(T("Blog.TaggedWith").Text, Model.PagingFilteringContext.Tag)
+            }
+        </h1>
+    </div>
+    <div class="page-body">
+        @Html.Widget("bloglist_page_before_posts")
+        <div class="blog-posts">
+            @foreach (var item in Model.BlogPosts)
+            {
+                <div class="post">
+                    <div class="post-head">
+                        <a class="post-title" href="@Url.RouteUrl("BlogPost", new { SeName = item.SeName })">@item.Title</a>
+                        <span class="post-date">-@item.CreatedOn.ToString("D")</span>
+                    </div>
+                    <div class="post-body">
+                        @Html.Raw(item.Body)
+                    </div>
+                    @if (item.Tags.Count > 0)
+                    {
+                        <div class="tags">
+                            <label>@T("Blog.Tags"):</label>
+                            <ul>
+                                @for (int i = 0; i < item.Tags.Count; i++)
+                                {
+                                    var tag = item.Tags[i];
+                                    <li><a href="@Url.RouteUrl("BlogByTag", new { tag = tag })">@tag</a></li>
+                                    if (i != item.Tags.Count - 1)
+                                    {
+                                        <li class="separator">,</li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    }
+                    @if (item.AllowComments)
+                    {
+                        <div class="blog-details">
+                            <a class="leavecomment" id="leavecomment-@item.Id" href="javascript:void(0)">
+                                @string.Format(T("Blog.CommentsLink").Text, item.NumberOfComments)
+                            </a>
+                        </div>
+                        <div class="cleardiv"></div>
+
+                     
+
+                        <div id="divleavecomment-@item.Id" style="margin-top:20px; display:none">
+
+
+                            @if (item.Comments.Count > 0)
+                            {
+                           
+                                <div class="comment-list">
+                                    <div class="title" style="font-size:19px;">
+                                        @T("Blog.Comments")
+                                    </div>
+                                    @foreach (var comment in item.Comments)
+                                    {
+                                        <div class="blog-comment">
+                                            <div class="comment-info">
+                                                <div class="user-info">
+                                                    @if (comment.AllowViewingProfiles)
+                                                    {
+                                                        <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="username">@(comment.CustomerName)</span>
+                                                    }
+                                                    <div class="avatar">
+                                                        @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                                        {
+                                                            <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" title="avatar" alt="avatar" />
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="comment-content">
+                                                <div class="comment-time">
+                                                    <label>@T("Blog.Comments.CreatedOn"):</label>
+                                                    <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                                </div>
+                                                <div class="comment-body">
+                                                    @Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))
+                                                </div>
+                                            </div>
+                                            @Html.Widget("blogpost_page_inside_comment", comment.Id)
+                                        </div>
+                                    }
+                                </div>
+                          
+                                <div class="cleardiv"></div>
+                            }
+
+
+                            <div class="fieldset">
+                                <div class="title">
+                                    <strong>@T("Blog.Comments.LeaveYourComment")</strong>
+                                </div>
+                                <div class="notifications">
+                                    <div class="message-error">@Html.ValidationSummary(true)</div>
+                                    @*@{
+                var result = TempData["nop.blog.addcomment.result"] as string;
+                        }
+                        @if (!String.IsNullOrEmpty(result))
+                        {
+                            <div class="result">@result</div>
+                        }*@
+                                </div>
+                                @*@using (Html.BeginForm())
+            {*@
+                                <div class="form-fields">
+                                    <div class="inputs">
+                                        @Html.LabelFor(model => item.AddNewComment.CommentText, new { }, ":")
+                                        @Html.TextAreaFor(model => item.AddNewComment.CommentText, new { @class = "outerblogcomment", @id = "text-" + @item.Id })
+                                        <span class="blgpost-error" id="message-@item.Id">@T("Blogpost.comment.required")</span>
+                                        @Html.ValidationMessageFor(model => item.AddNewComment.CommentText)
+                                    </div>
+                                    <script type="text/javascript">
+
+                                        $(document).ready(function () {
+                                            $("#blogPostSuccess-@item.Id").hide();
+                                            $('#addComment-@item.Id').click(function () {
+                                                var blogPostText = $("#text-@item.Id").val();
+                                                var blogPostId = @item.Id;
+                                                @*var displayOrder = $("#@Html.FieldIdFor(model => model.AddPictureModel.DisplayOrder)").val();*@
+
+                                                if (blogPostText.trim().length == 0) {
+                                                    $("#message-@item.Id").css('display','block');
+                                                    return;
+                                                }
+                                                //if (thumbId== 0) {
+                                                //    alert('Upload Picture Thumb');
+                                                //    return;
+                                                //}
+
+
+                                                //$('#addProductPicture').attr('disabled', true);
+                                                $.ajax({
+                                                    cache:false,
+                                                    type: "POST",
+                                                    url: "@(Url.Action("BlogCommentAddOnlist", "Blog"))",
+                                                    data: { "blogPostId": blogPostId,"blogPostText": blogPostText},
+                                                    success: function (data) {
+                                                        document.getElementById("text-@item.Id").value = "";
+                                                        $("#blogPostSuccess-@item.Id").show();
+                                                    },
+                                                    error:function (xhr, ajaxOptions, thrownError){
+                                                        alert('Failed to Post Comment.');
+
+                                                    }
+                                                });
+                                            });
+                                        });
+                                    </script>
+                                    @if (item.AddNewComment.DisplayCaptcha)
+                                    {
+                                        <div class="captcha-box">
+                                            @Html.Raw(Html.GenerateCaptcha())
+                                        </div>
+                                    }
+                                </div>
+                                <div class="buttons">
+                                    <input type="submit" name="add-comment" id="addComment-@item.Id" class="button-1 blog-post-add-comment-button" value="@T("Blog.Comments.SubmitButton")" />
+                                </div>
+                                <span class="blogpostcomment" id="blogPostSuccess-@item.Id">Blog comment is successfully added.</span>
+                                @*}*@
+                            </div>
+
+                        </div>
+
+                    }
+                    <div class="cleardiv"></div>
+
+                    @{
+
+
+                        var fb = "https://www.facebook.com/sharer/sharer.php?u=" + currentStoreUrl + item.SeName + "&p[title]=" + item.SeName + "s&display=popup";
+                        var twitterUrl = "https://twitter.com/intent/tweet?url=" + currentStoreUrl + item.SeName + "&amp;text=Blog&amp;via=MisterLandscaper";
+                        var pinterestURL = "http://pinterest.com/pin/create/button/?url=" + currentStoreUrl + item.SeName+"&media="+currentStoreUrl+ "Themes/MisterLandscaper/Content/Images/product.png";
+                           }
+                    <div class="social-icon">
+                        <a href="@fb" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/smallFacebook_Icon.jpg" /></a>
+                        <a href="@twitterUrl" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/smallTwitter_Icon.jpg" /></a>
+                        @*<a href="@_storeinfosetting.YoutubeLink" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/smallYoutube_Icon.jpg" /></a>*@
+                        <span class="blog-pinitspan"><a href="@pinterestURL" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/smallPinterest.png" /></a></span>
+                    </div>
+                    @Html.Widget("bloglist_page_inside_post", item.Id)
+                </div>
+
+            }
+        </div>
+        @* <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=nopsolutions"></script>*@
+
+        <div class="pager">
+            @Html.Pager(Model.PagingFilteringContext).QueryParam("pagenumber")
+        </div>
+        @Html.Widget("bloglist_page_after_posts")
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    $(window).bind("load", function () {
+        $(".social-icon .blog-pinitspan a").removeClass();
+        $(".social-icon .blog-pinitspan a").addClass("blog-pinit");
+    });
+
+    $("[id^=leavecomment-]").click(function () {
+        var curId = this.id;
+        $("[id^=leavecomment-]").each(function (index) {
+            var id = "#div" + this.id;
+           
+            $(id).css("display", "none");
+            $(".blogpostcomment").hide();
+            $(id).find('span').css('display','none');
+
+        });
+        var newid="#div" +curId;
+        $(newid).css("display", "block");
+    });
+
+</script>

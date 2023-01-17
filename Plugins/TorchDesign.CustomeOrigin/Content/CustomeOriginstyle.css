@@ -1,0 +1,43 @@
+﻿.maincontain { display: flex;padding: 14px;}
+.buttondiv {clear: both;margin: 0 0 0 10px;padding-top: 9px;text-align: right;}
+.optioncontainer {width:200px;margin:17px 0px 0px 11px;}
+.optioncontainer .questioncontainer{color: #0e277a;
+    font-size: 13px;
+    font-weight: bold;
+    padding-left: 12px;}
+.optioncontainer ul {list-style-type: none;margin: 5px 0;}
+.optioncontainer ul li {clear: both;float: left;padding: 5px;}
+.optioncontainer ul li span { float:left  }
+.dateconain {
+     float: left;
+    margin-right: 20px;
+    padding-top: 3px;
+}
+.dmain {
+     border: 1px solid #a7bac5;
+    border-radius: 7px;
+    margin: 0 auto;
+    padding: 15px 10px 15px 16px;
+    width: 524px;
+}
+.dmain .calltitle {
+    margin: -22px 0 14px;
+    text-align: center;
+}
+
+.calltitle strong {
+    background: none repeat scroll 0 0 #fff;
+    font-size: 12px;
+}
+.titlecontain {font-size: 28px;
+    line-height: 24px;
+    text-align: center;
+}
+#confirm-order-form {width:100%;}
+.bellowchartdiv {
+    /*background: none repeat scroll 0 0 white;*/
+    font-weight: normal;
+    /*margin-top: 335px;
+    position: relative;
+    z-index: 500000;*/
+}

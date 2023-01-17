@@ -1,0 +1,314 @@
+﻿@model Nop.Admin.Models.Support.SupportTopicModel
+@Html.ValidationSummary(false)
+
+<script type="text/javascript">
+	$(document).ready(function ()
+	{
+
+	});
+
+</script>
+@Html.HiddenFor(model => model.Id)
+
+<div id="supportTopic-edit">
+	<ul>
+		<li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+			@T("Admin.Suport.SupportTopics.Info")
+		</li>
+		<li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+			@T("Admin.Suport.SupportTopics.SupportCategory")
+		</li>
+		<li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+			@T("Admin.Suport.SupportTopics.ProductCategory")
+		</li>
+		<li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+			@T("Admin.Suport.SupportTopics.Steps")
+		</li>
+		<li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+			@T("Admin.Suport.SupportTopics.RelatedProducts")
+		</li>
+
+	</ul>
+	<div>
+		@TabInfo()
+	</div>
+	<div>
+		@TabSupportCategories()
+	</div>
+	<div>
+		@TabProductCategories()
+	</div>
+	<div>
+		@TabSteps()
+	</div>
+	<div>
+		@TabRelatedProducts()
+	</div>
+
+</div>
+<script>
+	$(document).ready(function ()
+	{
+		$("#supportTopic-edit").kendoTabStrip({
+			animation: {
+				open: {
+					effects: "fadeIn"
+				}
+			},
+			select: tabstrip_on_tab_select
+		});
+	});
+</script>
+
+@{
+	//custom tabs
+	var eventMessage = new AdminTabStripCreated(this.Html, "supportTopic-edit");
+	EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+	foreach (var eventBlock in eventMessage.BlocksToRender)
+	{
+		@eventBlock
+	}
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@helper TabInfo()
+{
+	<table class="adminContent">
+		<tr>
+			<td class="adminTitle">
+				@Html.NopLabelFor(model => model.Title):
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(model => model.Title)
+				@Html.ValidationMessageFor(model => model.Title)
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.NopLabelFor(model => model.Description):
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(x => x.Description, "RichEditor")
+				@Html.ValidationMessageFor(model => model.Description)
+			</td>
+		</tr>
+	</table>
+
+}
+
+@helper TabSupportCategories()
+{
+	if (Model.AvailableSupportCategories != null && Model.AvailableSupportCategories.Count > 0)
+	{
+		foreach (var supportCategory in Model.AvailableSupportCategories)
+		{
+			<input type="checkbox" name="SelectedSupportCategoryIds" value="@supportCategory.Id"
+					 @if (Model.SelectedSupportCategoryIds != null && Model.SelectedSupportCategoryIds.Contains(supportCategory.Id)) { <text> checked="checked" </text>   } />@supportCategory.Title
+					<br />
+		}
+	}
+	else
+	{
+		@T("Admin.Support.Fields.SupportCategories.NoSupportCategories")
+	}
+}
+
+@helper TabProductCategories()
+{
+	if (Model.AvailableCategories != null && Model.AvailableCategories.Count > 0)
+	{
+		foreach (var productCategory in Model.AvailableCategories)
+		{
+			<input type="checkbox" name="SelectedProductCategoryIds" value="@productCategory.Value"
+					 @if (Model.SelectedProductCategoryIds != null && Model.SelectedProductCategoryIds.Contains(int.Parse(productCategory.Value))) { <text> checked="checked" </text>    } />@productCategory.Text
+					<br />
+		}
+	}
+	else
+	{
+		@T("Admin.Support.Fields.ProductCategories.NoProductCategories")
+	}
+}
+@helper TabSteps()
+{
+	if (Model.Id > 0)
+	{
+
+		<div>
+			<input type="submit" id="btnRefreshsp" name="btnRefreshsp" style="display: none" />
+			<script type="text/javascript">
+				$(document).ready(function ()
+				{
+					$('#btnRefreshsp').click(function ()
+					{
+						//refresh grid
+						var optionsGrid = $("#supporttopicstep-grid").data('kendoGrid');
+						//taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+						optionsGrid.dataSource.read();
+						//return false to don't reload a page
+						return false;
+					});
+				});
+
+				$(document).ready(function() 
+				{
+						
+						
+				});
+				$('#addSupportTopic').click(function ()
+				{
+					alert("2");
+					debugger;
+					$('#suuportTopicstep-form').submit();
+					return false;
+				})
+			</script>
+
+			<div id="supporttopicstep-grid"></div>
+			<script>
+				$(document).ready(function ()
+				{
+					$("#supporttopicstep-grid").kendoGrid({
+						dataSource: {
+							type: "json",
+							transport: {
+								read: {
+									url: "@Html.Raw(Url.Action("SupportTopicStepList", "Support", new { supportTopicId = Model.Id}))",
+									type: "POST",
+									dataType: "json"
+								},
+								@*update: {
+                        url: "@Html.Raw(Url.Action("ProductSpecAttrUpdate", "Product"))",
+                        type: "POST",
+                        dataType: "json"
+                    },*@
+								destroy: {
+									url: "@Html.Raw(Url.Action("SupportTopicStepDelete", "Support"))",
+									type: "POST",
+									dataType: "json"
+								}
+							},
+							schema: {
+								data: "Data",
+								total: "Total",
+								errors: "Errors",
+								model: {
+									id: "Id",
+									fields: {
+
+										Id: { editable: false, type: "number" }
+									}
+								}
+							},
+							requestEnd: function (e)
+							{
+								if (e.type == "update")
+								{
+									this.read();
+								}
+							},
+							error: function (e)
+							{
+								display_kendoui_grid_error(e);
+								// Cancel the changes
+								this.cancelChanges();
+							},
+							serverPaging: true,
+							serverFiltering: true,
+							serverSorting: true
+						},
+						pageable: {
+							refresh: true,
+							numeric: false,
+							previousNext: false,
+							info: false
+						},
+						editable: {
+							confirmation: false,
+							mode: "inline"
+						},
+						scrollable: false,
+						columns: [{
+							field: "Title",
+							title: "@T("Admin.Support.SupportTopics.SupportTopicStep.Fields.Title")",
+							width: 200
+						},
+						{
+							field: "TemplateType",
+							title: "@T("Admin.Support.SupportTopics.SupportTopicStep.Fields.Template")",
+							width: 200
+						},
+						{
+							field: "PictureThumbnailUrl",
+							title: "@T("Admin.Support.SupportTopics.SupportTopicStep.Fields.PictureThumbnailUrl")",
+							template: '<img src="#=PictureThumbnailUrl#" />',
+							width: 200
+						}
+						]
+					});
+				});
+			</script>
+			@*}*@
+		</div>
+	}
+	using (Html.BeginForm("AddSupportTopicStep", "Support", FormMethod.Post, new { id = "suuportTopicstep-form" }))
+	 {
+	<table class="adminContent">
+
+
+		<tr>
+			<td class="adminTitle">
+				@Html.NopLabelFor(model => model.AddSupportTopicStepModel.Title):
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(model => model.AddSupportTopicStepModel.Title)
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.NopLabelFor(model => model.AddSupportTopicStepModel.TemplateId):
+			</td>
+			<td class="adminData">
+				@Html.DropDownListFor(model => model.AddSupportTopicStepModel.TemplateId, ((Nop.Core.Domain.Support.SupportTopicStepTemplate)Model.AddSupportTopicStepModel.TemplateId).ToSelectList())
+				@Html.ValidationMessageFor(model => model.AddSupportTopicStepModel.TemplateId)
+			</td>
+		</tr>
+
+		<tr>
+			<td class="adminTitle">
+				@Html.NopLabelFor(model => model.AddSupportTopicStepModel.Description):
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(x => x.AddSupportTopicStepModel.Description, "RichEditor")
+
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.NopLabelFor(model => model.AddSupportTopicStepModel.PictureId)
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(model => model.AddSupportTopicStepModel.PictureId)
+				@Html.ValidationMessageFor(model => model.AddSupportTopicStepModel.PictureId)
+			</td>
+		</tr>
+
+		@if (Model.Id > 0)
+		{
+		<tr>
+			<td colspan="2" align="left">
+				<input type="submit" id="addSupportTopic" class="k-button" value="@T("Admin.Support.SupportTopic.SupportTopicStep.AddButton")" />
+			</td>
+		</tr>
+		}
+	</table>
+	 }
+
+}
+@helper TabRelatedProducts()
+{
+	@Html.Partial("_CreateOrUpdate.RelatedProducts", Model)
+}
+

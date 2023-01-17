@@ -1,0 +1,21 @@
+﻿@model Nop.Admin.Models.Support.SupportCategoryModel
+@{
+	//page title
+	ViewBag.Title = T("Admin.Support.SupportTopics.EditCategoryDetails").Text;
+}
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "category-form" }))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-catalog.png")" alt="" />
+            @T("Admin.Support.SupportCategories.EditSupportCategoryDetails") - @Model.Title @Html.ActionLink("(" + T("Admin.Support.SuportCategories.BackToList") + ")", "SupportCategoryList")
+        </div>
+        <div class="options">
+            
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+            
+        </div>
+    </div>
+    @Html.Partial("_CreateOrUpdateSupportCategory", Model)
+}

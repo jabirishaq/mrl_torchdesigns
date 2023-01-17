@@ -1,0 +1,8 @@
+﻿Group: Widgets
+FriendlyName:TorchDesigns Testimonials
+SystemName: Widgets.Testimonials
+Version: 1.00
+SupportedVersions: 3.40
+Author: TorchDesigns, LLC
+DisplayOrder: 1
+FileName: Nop.Plugin.TorchDesign.Testimonials.dll

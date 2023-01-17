@@ -1,0 +1,40 @@
+﻿@model ProductCategoryModel
+@using Nop.Core
+@using Nop.Core.Domain
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Customers;
+
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+}
+<div class="productmenu-title">
+
+    <div class="img">
+        <img src="~/Themes/MisterLandscaper/Content/images/product.png" />
+    </div>
+    <div class="detail">
+        <h3>@T("product.cat.title")</h3>
+        <p>@T("product.description")</p>
+    </div>
+
+</div>
+<div class="top-div">
+</div>
+
+
+<div class="product-category">
+    
+    @foreach (var category in Model.ProductCategories)
+    {
+        
+        <div class="product-category-box">
+            <div class="imagesection">
+                <a href="@Url.RouteUrl("Category", new { SeName = @category.SeName})"><img src="@category.CategoryImageurl" /></a>
+            </div>
+            <div class="linksection">
+                <a href="@Url.RouteUrl("Category", new { SeName = @category.SeName})">@category.Name</a>
+            </div>
+        </div>    
+    }
+</div>

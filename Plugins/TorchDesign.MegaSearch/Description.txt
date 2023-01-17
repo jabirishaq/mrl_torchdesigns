@@ -1,0 +1,8 @@
+﻿Group: Widgets
+FriendlyName: MegaSearch
+SystemName:TorchDesignMegaSearch
+Version: 1.00
+SupportedVersions: 3.40
+Author: Torch Designs, LLC
+DisplayOrder: 1
+FileName: Nop.Plugin.TorchDesign.MegaSearch.dll

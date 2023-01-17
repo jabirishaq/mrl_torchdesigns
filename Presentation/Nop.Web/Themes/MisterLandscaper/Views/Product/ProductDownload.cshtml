@@ -1,0 +1,23 @@
+﻿@model ProductDownloads
+@using Nop.Web.Models.Catalog;
+@*Productvideo*@
+
+
+@if (Model.Downloadlist.Count>0)
+{
+    <div style="margin:20px 0px">
+        @foreach (var item in Model.Downloadlist)
+        {
+            <div class="downloadlinkcontainer">
+                <a href="@Url.RouteUrl("GetDownloadfile", new { productid = Model.ProductId,downloadid = @item.DownloadId})">@item.Title</a>
+
+            </div>
+        }
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#productdetail_menu_Product_Download").css("display", "block");
+        });
+    </script>
+  }

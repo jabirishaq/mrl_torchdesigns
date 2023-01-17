@@ -1,0 +1,169 @@
+﻿.storecontainerdiv {
+      font-family:"helvetica";
+    font-size: 14px;
+    /*letter-spacing: 0.5px;*/
+    margin: 0 auto;
+    width: 92%;
+}
+.button {   background: none repeat scroll 0 0 #0e275f;
+    border: medium none;
+    color: white;
+    cursor: pointer;
+    font-family:"helvetica";
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-top: -6px;
+    padding: 8px 10px;
+}
+.searchstorespan {
+}
+    .searchstorespan input {
+        border: 1px solid #0E275F;
+    font-family:"helvetica";
+    font-size: 12px;
+    font-style: italic;
+    letter-spacing: 0px;
+    padding: 5px 4px 7px;
+    width: 95.8%;
+     font-weight: bold;
+    }
+.radius {margin-top:-5px;
+}
+.radius .action {  border: 1px solid #193365;
+    overflow: hidden;
+    width: 57px;}
+/*.radius .action select {
+      background: url("img/droparrow.png") no-repeat scroll 44px 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    font-family: "Myriad Pro";
+    font-size: 17px;
+    font-weight: bold;
+    margin-right: 3px;
+    text-align: left;
+    width: 87px;
+     }
+    .radius .action > select > option {background:#CBD2DC;color:#0E255E;}
+ .radius .action>select>option:hover
+    {
+      background:#7E8EA8;
+        cursor: pointer;
+    }*/
+ .st {margin-top: -5px;margin-left: -4px;
+}
+    .st .storaction {border: 1px solid #193365;
+    overflow: hidden;
+    width: 102px;
+    }
+
+    /*.st .storaction select {
+      background: url("img/droparrow.png") no-repeat scroll 84px 0 rgba(0, 0, 0, 0);
+    border: medium none;
+    font-family: "Myriad Pro";
+    font-size: 14px;
+    margin-right: 3px;
+    /*padding: 4px 0px 1px;
+    text-align: left;
+    width: 127px;
+    }
+   .st .storaction > select > option {background:#CBD2DC;color:#0E255E;padding:4px 0px 1px;}
+ .st .storaction>select>option:hover
+    {
+      background:#7E8EA8;
+        cursor: pointer;
+    }*/
+.storetable {width:82%;margin:0 auto;}
+.didumean { margin-top:10px;}
+.headertext { margin-bottom:14px;}
+.avilablestoretable { width:100%; margin-top:20px;}
+.avilablestoretable  thead tr{color: #0e275f;padding: 5px 0; }
+.avilablestoretable  thead tr th{ /*border:1px solid #0F2561;*/font-size:13px;font-weight:700;/*padding:12px 0 12px 10px;*/}
+.avilablestoretable  tr{ padding:5px 0px; } 
+.avilablestoretable  tr td{ border-bottom: 1px solid #0F2561;font-size:13px;font-weight:700;padding:5px 0 5px 10px; }
+.avilablestoretable  tr td a{ font-size:13px;font-weight:700;color:#0E255E; }
+.numberspan {
+   background: url("img/Location_marker.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #cbd2dc;
+    float: left;
+    font-family:"helvetica";
+    font-size: 20px;
+    font-weight: bold;
+    height: 26px;
+    margin-top: 6%;
+    padding-top: 2px;
+    text-align: center;
+    width: 54px;
+}
+
+.rednumberspan {
+    background: none repeat scroll 0 0 red;
+    border-radius: 100px;
+    color: #cbd2dc;
+    float: left;
+    font-family:"helvetica";
+    font-size: 20px;
+    font-weight: bold;
+    height: 26px;
+    margin-top: 6%;
+    padding-top: 2px;
+    text-align: center;
+    width: 29px;
+    margin-right: 25px;
+}
+ .map-area {
+      border: 1px solid #0E275F;
+    height: 400px;
+    margin: 15px 0;
+    width: 100%;
+    }
+
+    .infoWindow {
+        line-height: normal;
+    }
+.availablelable { margin-top:10px;font-size:18px;color:#0F2561;margin-bottom:5px;}
+.alink {float: right;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {.radius {margin-top:-5px;} .st {margin-top: -5px;margin-left: -9px;} .st .storaction {border: 1px solid #193365;
+    overflow: hidden;
+    width: 117px;
+    }
+    .button {   background: none repeat scroll 0 0 #0e275f;
+    border: medium none;
+    color: white;
+    cursor: pointer;
+    font-family: "helvetica";
+    font-size: 13px;
+    letter-spacing: 1px;
+    margin-top: -6px;
+    padding: 6px 10px;
+}
+
+}
+
+@-moz-document url-prefix() {.radius {margin-top:-5px;} .st {margin-top: -5px;margin-left: -9px;} .st .storaction {border: 1px solid #193365;
+    overflow: hidden;
+    width: 117px;
+    }
+.button {   background: none repeat scroll 0 0 #0e275f;
+    border: medium none;
+    color: white;
+    cursor: pointer;
+    font-family: "helvetica";
+    font-size: 13px;
+    letter-spacing: 0px;
+    margin-top: -6px;
+    padding: 6px 10px;
+    font-weight:bold;
+}
+
+}
+.hederdiv {font-size: 21px;
+    margin-bottom: 6px;
+    text-transform: capitalize;
+}
+.descriptionlocatiordic {color: #000000;
+    margin-bottom: 27px;font-size:13px;
+}
+

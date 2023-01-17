@@ -1,0 +1,76 @@
+﻿@model CheckoutCompletedModel
+@using Nop.Web.Models.Checkout;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+
+
+<!-- Google Code for MRL General Conversions Conversion Page -->
+<script type="text/javascript">
+    /* <![CDATA[ */
+    var google_conversion_id = 929919714;
+    var google_conversion_language = "en";
+    var google_conversion_format = "3";
+    var google_conversion_color = "ffffff";
+    var google_conversion_label = "3rxsCKWm5WMQ4uW1uwM";
+    var google_conversion_value = @Model.Subtotalwithouttaxandship;
+    var google_conversion_currency = "USD";
+    var google_remarketing_only = false;
+    /* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+</script>
+<noscript>
+    <div style="display:inline;">
+        <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/929919714/?value=@Model.Subtotalwithouttaxandship&amp;currency_code=USD&amp;label=3rxsCKWm5WMQ4uW1uwM&amp;guid=ON&amp;script=0" />
+    </div>
+</noscript>
+<!-- Pinterest Code for MRL Conversion Tracking-->
+<script>
+    pintrk('track', 'checkout', {
+    value: @Model.Subtotalwithouttaxandship,
+    order_quantity: 1,
+    currency: 'USD'
+    });
+</script>
+   
+<div class="page checkout-page">
+    
+    @if (!Model.OnePageCheckoutEnabled)
+    {
+        @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Complete })
+    }
+    <div class="page-title">
+        <h1>@T("order.completed")</h1>
+    </div>
+        <div class="o-complete">
+        <div class="title">
+            <strong>@T("Checkout.OrderNumber"): @Model.OrderId</strong>
+        </div>
+        <div class="o-completecontainer">
+           
+             
+                @*<ul class="details">
+                    <li>
+                        @T("Checkout.OrderNumber"): @Model.OrderId
+                    </li>
+                    <li>
+                        <a href="@Url.RouteUrl("OrderDetails", new { orderID = Model.OrderId })">@T("Checkout.PlacedOrderDetails")</a>
+                    </li>
+                </ul>*@
+                  @Html.Widget("checkout_completed_top")
+                <div>
+                    <img  src="~/Themes/MisterLandscaper/Content/images/Thankyou.png" style="width:99%"/>
+                </div>
+                <div class="buttons" style=" margin:10px;float:right">
+                    <input type="button" value="@T("return.to.store")" class="button-2 order-completed-continue-button nextbutton" onclick="setLocation('@Url.RouteUrl("HomePage")')" />
+             
+        </div>
+            <div class="clr"></div>
+            @Html.Widget("checkout_completed_bottom")
+    </div>
+</div>
+</div>

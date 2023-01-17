@@ -1,0 +1,134 @@
+﻿@model LoginModel
+@using Nop.Web.Models.Customer;
+@using Nop.Core;
+@using Nop.Core.Infrastructure;
+@{
+    Html.AddTitleParts(T("PageTitle.Login").Text);
+    var webHelper = EngineContext.Current.Resolve<IWebHelper>();
+    var retUrl = webHelper.GetThisPageUrl(true);
+}
+
+<div class="page login-page">
+    @*<div class="page-title">
+            <h1>@T("Account.Login.Welcome")</h1>
+        </div>*@
+    @Html.Partial("_ExternalAuthentication.AssociateMessage")
+    @Html.Partial("_ExternalAuthentication.Errors")
+    <div class="page-body">
+        <div class="customer-blocks">
+            @*@if (Model.CheckoutAsGuest)
+                {
+                    <div class="new-wrapper checkout-as-guest-or-register-block">
+                        <div class="title">
+                            <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
+                        </div>
+                        <div class="text">
+                            @Html.Action("TopicBlock", "Topic", new { systemName = "CheckoutAsGuestOrRegister" })
+                        </div>
+                        <div class="buttons">
+                            <input type="button" class="button-1 checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
+                            <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="new-wrapper register-block">
+                        <div class="title">
+                            <strong>@T("Account.Login.NewCustomer")</strong>
+                        </div>
+                        <div class="text">
+                            @T("Account.Login.NewCustomerText")
+                        </div>
+                        <div class="buttons">
+                            <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
+                        </div>
+                    </div>
+                }*@
+
+            <div class="title">
+                <strong>@T("Review.Login.title")</strong>
+            </div>
+            <div class="form-fields">
+             @using (Html.BeginForm("LoginReview", "Customer",new { returnUrl = retUrl },FormMethod.Post,new { enctype = "multipart/form-data" }))
+             {
+                    <div class="message-error">
+                        @Html.ValidationSummary(true, T("Account.Login.Unsuccessful").Text)
+                        <span id="errormsg"></span>
+                    </div>
+                    //if (Model.UsernamesEnabled)
+                    //{
+                    <div class="inputs">
+                        @Html.LabelFor(m => m.Username, new { }, ":")
+                        @Html.TextBoxFor(m => m.Username, new { @class = "username" })
+                        @Html.ValidationMessageFor(m => m.Username)
+                    </div>
+                    @*}*@
+                    @*else
+                {
+                <div class="inputs">
+                    @Html.LabelFor(m => m.Email, new { }, ":")
+                    @Html.TextBoxFor(m => m.Email, new { @class = "email", autofocus = "autofocus" })
+                    @Html.ValidationMessageFor(m => m.Email)
+                </div>
+                }*@
+                    <div class="inputs">
+                        @Html.LabelFor(m => m.Password, new { }, ":")
+                        @Html.PasswordFor(m => m.Password, new { @class = "password" })
+                        @Html.ValidationMessageFor(m => m.Password)
+                    </div>
+                    @*<div class="inputs reversed">
+                        @Html.CheckBoxFor(m => m.RememberMe)
+                        @Html.LabelFor(m => m.RememberMe)
+                        <span class="forgot-password">
+                            @Html.RouteLink(T("Account.Login.ForgotPassword").Text, "PasswordRecovery")
+                        </span>
+                    </div>*@
+                    @*if (Model.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            @Html.Raw(Html.GenerateCaptcha())
+                        </div>
+                    }*@
+                    <div class="buttons">
+                        <a href="javascript:void(0)" class="button-1 login-ajax">@T("Account.Login.LoginButton")</a>
+                        @*<input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")" />*@
+                    </div>
+
+                }
+            </div>
+
+
+
+        </div>
+        <div class="external-authentication">
+            @Html.Action("ExternalMethods", "ExternalAuthentication")
+        </div>
+        @* @Html.Action("TopicBlock", "Topic", new { systemName = "LoginRegistrationInfo" })*@
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".login-ajax").click(function () {
+            var user = $("#Username").val();
+            var pass = $("#Password").val();
+            $.ajax({
+                url: "@Url.Action("LoginReviewValidate", "Customer")",
+                type: "POST",
+                data: { "username": user, "password": pass },
+                dataType: "json",
+                success: function (response) {
+
+                    if (response.success == true) {
+                        document.getElementById('errormsg').innerHTML = "";
+                        location.reload(true);
+                    }
+                    else {
+                        document.getElementById('errormsg').innerHTML = response.errormsg;
+                    }
+
+                },
+            });
+        });
+    });
+</script>

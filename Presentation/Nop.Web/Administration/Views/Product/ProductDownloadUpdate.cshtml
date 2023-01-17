@@ -1,0 +1,114 @@
+﻿@model ProductsDownloadsModel
+@using System.Text;
+@{
+    //Html.AppendCssFileParts("~/Content/tagit/jquery.tagit.css");
+    //Html.AppendScriptParts("~/Scripts/tag-it.min.js");
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+  
+}
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+  @*<script type="text/javascript">
+    $(document).ready(function () {
+        @{
+            //TODO move to Model
+            string str = Model.Tags;
+            string[] Tagarray;
+            var videoTagsSb = new StringBuilder();
+            if (Model.Tags!=null)
+            {
+                Tagarray = str.Split(',');
+
+                videoTagsSb.Append("var sampleTags = [");
+                for (int i = 0; i < Tagarray.Count(); i++)
+                {
+                    var videotag = Tagarray[i];
+                    videoTagsSb.Append("'");
+                    videoTagsSb.Append(HttpUtility.JavaScriptStringEncode(videotag));
+                    videoTagsSb.Append("'");
+                    if (i != Tagarray.Count() - 1)
+                    {
+                        videoTagsSb.Append(",");
+                    }
+                }
+                videoTagsSb.Append("]");
+
+            }
+            else
+            {
+                Tagarray = null;
+                videoTagsSb.Append("var sampleTags = [");
+                 videoTagsSb.Append("]");
+            }
+
+
+
+        }
+        //Video tags
+
+        $(document).ready(function () {
+            @Html.Raw(videoTagsSb.ToString())
+            $("#@Html.FieldIdFor(model => model.Tags)").tagit({
+                availableTags:sampleTags,
+                allowSpaces: true
+            });
+
+        });
+    });
+</script>*@
+
+    @using (Html.BeginForm())
+    {
+       // @Html.HiddenFor(model => model.ClonePictureid)
+
+        <table class="adminContent">
+
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.DownloadsId):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.DownloadsId)
+                    @Html.ValidationMessageFor(model => model.DownloadsId)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.DownloadTitle):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.DownloadTitle)
+                    @Html.ValidationMessageFor(model => model.DownloadTitle)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.DownloadDescription):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.DownloadDescription)
+                    @Html.ValidationMessageFor(model => model.DownloadDescription)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.DisplayOrder):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.DisplayOrder)
+                    @Html.ValidationMessageFor(model => model.DisplayOrder)
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="left">
+                    <input type="submit" class="k-button" value="@T("admin.common.save")" />
+                </td>
+            </tr>
+        </table>
+    }

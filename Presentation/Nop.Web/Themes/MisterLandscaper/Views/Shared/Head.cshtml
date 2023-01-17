@@ -1,0 +1,52 @@
+﻿@using Nop.Core;
+@using Nop.Core.Domain
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI
+@{
+    var supportRtl = EngineContext.Current.Resolve<IWorkContext>().WorkingLanguage.Rtl;
+    var supportResponsive = EngineContext.Current.Resolve<StoreInformationSettings>().ResponsiveDesignSupported;
+    //we do not support responsive for RTL yet
+    if (supportRtl)
+    {
+        supportResponsive = false;
+    }
+    //add browser specific CSS files
+    var browser = Request.Browser;
+    if (browser.Browser == "IE" && browser.MajorVersion == 6)
+    {
+        Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/ie6.css");
+    }
+    else if (browser.Browser == "IE" && browser.MajorVersion == 7)
+    {
+        Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/ie7.css");
+    }
+    //responsive design
+    if (supportResponsive)
+    {
+        Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/responsive.css");
+    }
+    //add main CSS file
+    if (supportRtl)
+    {
+        Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/styles.rtl.css");
+    }
+    else
+    {
+        Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/styles.css");
+        //Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/jquery/jRating.jquery.css");
+        Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/Rating/css/rating.css");
+
+
+    }
+    <link href="~/Themes/MisterLandscaper/Content/fancybox/jquery.fancybox.css" rel="stylesheet" />
+    <link href="~/Themes/MisterLandscaper/Content/fancybox/helpers/jquery.fancybox-buttons.css" rel="stylesheet" />
+    Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/swiper.min.css");
+    //Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/carouselengine/initcarousel-1.css");
+    //Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/scss/jcarousel.responsive.css");
+    //Html.AppendCssFileParts("~/Themes/MisterLandscaper/Content/scss/style.css");
+    //responsive design
+    if (supportResponsive)
+    {
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    }
+}

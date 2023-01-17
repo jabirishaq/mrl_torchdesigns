@@ -1,0 +1,115 @@
+﻿@model Nop.Admin.Models.Support.SupportDownloadModel
+
+ @if (Model.Id > 0)
+    {
+            
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="supportDownloadrelatedproducts-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                    	$("#supportDownloadrelatedproducts-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("SupportDownloadRelatedProductList", "Support", new { supportDownloadId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("SupportDownloadRelatedProductDelete", "Support"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                           
+                                            DisplayOrder: {editable: true, type: "number" },
+                                            ProductId: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function(e) {
+                                    if(e.type=="update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "ProductName",
+                                title: "@T("Admin.Support.SupportDownload.RelatedProducts.Fields.Product")"
+                            }, {
+                                field: "DisplayOrder",
+                                title: "@T("Admin.Support.SupportDownload.RelatedProducts.Fields.DisplayOrder")",
+                                //integer format
+                                format: "{0:0}",
+                                width: 150
+                            }, {
+                                field: "ProductId",
+                                title: "@T("Admin.Common.View")",
+                                width: 100,
+                                template: '<a href="@Url.Content("~/Admin/Product/Edit/")#=ProductId#">@T("Admin.Common.View")</a>'
+                            }, {
+                                command: [{
+                                    name: "destroy",
+                                    text: "@T("Admin.Common.Delete")"
+                                }],
+                                width: 200
+                            }]
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td width="100%">
+                <input type="submit" id="btnAddNewRelatedProduct" name="btnAddNewRelatedProduct" value="@T("Admin.Catalog.Products.RelatedProducts.AddNew")" onclick="javascript:OpenWindow('@(Url.Action("SupportDownloadRelatedProductAddPopup", "Support", new { supportDownloadId = Model.Id, btnId = "btnRefreshRelatedProducts", formId = "supportDownload-form" }))    ', 800, 800, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefreshRelatedProducts" name="btnRefreshRelatedProducts" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshRelatedProducts').click(function () {
+                            //refresh grid
+                        	var optionsGrid = $("#supportDownloadrelatedproducts-grid").data('kendoGrid');
+                            optionsGrid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+    }
+    else
+    {
+    @T("Admin.Support.SupportTopic.RelatedProducts.SaveBeforeEdit")
+    }

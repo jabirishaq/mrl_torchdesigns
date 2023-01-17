@@ -1,0 +1,141 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.TorchDesign.CustomerOrigin.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+@{
+    //  Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+}
+<link href="~/Plugins/TorchDesign.Zip2Tax/Content/taxstyle.css" rel="stylesheet" />
+
+<div style="text-align:center"><a href="@Url.RouteUrl("TorchDesignCustomerOriginChart")" class="k-button">@T("Show.Review")</a></div>
+
+<br />
+<table class="adminContent">
+    <tr>
+        <td>
+
+            <div id="productvariantattributes-grid"></div>
+            <script>
+                $(document).ready(function () {
+                    $("#productvariantattributes-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("CustomerOriginList", "TorchDesignCustomerOrigin", new { optionId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                create: {
+                                    url: "@Html.Raw(Url.Action("CustomerOriginInsert", "TorchDesignCustomerOrigin", new { optionId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                update: {
+                                    url: "@Html.Raw(Url.Action("CustomerOriginUpdate", "TorchDesignCustomerOrigin"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                @*destroy: {
+                                    url: "@Html.Raw(Url.Action("CustomerOriginDelete", "TorchDesignCustomerOrigin"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }*@
+                            },
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+                                        OptionName: { editable: true, type: "string" },
+                                        DefaultSelected: { editable: true, type: "boolean" },
+                                        Publish: { editable: true, type: "boolean" },
+                                        Id: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e) {
+                                if (e.type == "create" || e.type == "update") {
+                                    this.read();
+                                }
+                            },
+                            error: function (e) {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        toolbar: ["create"],
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [
+                            {
+                                field: "OptionName",
+                                title: "@T("Plugins.TorchDesign.Customerorigin.Option")",
+                                width: 150
+                            }, {
+                                field: "DefaultSelected",
+                                title: "@T("Plugins.TorchDesign.Customerorigin.isdefaultselected")",
+                                width: 150,
+                                headerAttributes: { style: "text-align:center" },
+                                attributes: { style: "text-align:center" },
+                                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=DefaultSelected#.gif" />'
+                            },
+                             {
+                                 field: "Publish",
+                                 title: "@T("Plugins.TorchDesign.Customerorigin.isactive")",
+                                 width: 150,
+                                 headerAttributes: { style: "text-align:center" },
+                                 attributes: { style: "text-align:center" },
+                                 template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Publish#.gif" />'
+                             },
+                            {
+                                command: [
+                                    {
+                                        name: "edit",
+                                        text: "@T("Admin.Common.Edit")"
+                                    }@*, {
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }*@
+                                ],
+                                width: 200
+                            }
+                        ]
+                    });
+                });
+            </script>
+            <input type="submit" id="btnRefreshProductAttributes" name="btnRefreshProductAttributes" style="display: none" />
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#btnRefreshProductAttributes').click(function () {
+                        //refresh grid
+                        var grid = $("#productvariantattributes-grid").data('kendoGrid');
+                        grid.dataSource.read();
+
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+            </script>
+        </td>
+    </tr>
+</table>

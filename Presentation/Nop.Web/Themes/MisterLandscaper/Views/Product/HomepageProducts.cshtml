@@ -1,0 +1,66 @@
+﻿@model IList<ProductOverviewModel>
+
+@using Nop.Web.Models.Catalog;
+
+@if (Model.Count > 0)
+{
+    <div class="forspacediv"></div>
+    <div class="slidermaindiv">
+        <script>
+            $(function () {
+                $('.mycarousel').jcarousel({
+                    list: '.home-page-category-grid',
+                    items: '.sitem-box'
+                });
+
+            });
+        </script>
+
+
+
+        @*<div class="jcarousel-wrapper">*@
+        <div class="mycarousel">
+            <!--Root element for jcoursal. -->
+
+            <div class="home-page-category-grid">
+                @foreach (var item in Model)
+                {
+                    <div class="sitem-box">
+                        <div class="category-item">
+                            <div class="picture">
+                                <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })" title="@item.DefaultPictureModel.Title">
+                                    <img alt="@item.DefaultPictureModel.AlternateText" src="@item.DefaultPictureModel.ImageUrl"
+                                         title="@item.DefaultPictureModel.Title" />
+                                </a>
+                            </div>
+
+                            <a href="@Url.RouteUrl("Product", new { SeName = item.SeName })" title="@item.Name">
+                                @item.Name
+                            </a>
+
+
+                        </div>
+                    </div>
+                }
+            </div>
+
+        </div>
+
+        <a href="#" class="jcarousel-control-prev"></a>
+        <a href="#" class="jcarousel-control-next"></a>
+        @*</div>*@
+
+    </div>
+
+    @*<div class="product-grid home-page-product-grid">
+        <div class="title">
+            <strong>@T("HomePage.Products")</strong>
+        </div>
+        @foreach (var item in Model)
+        {
+            <div class="sitem-box">
+                @Html.Partial("_ProductBox", item)
+            </div>
+        }
+    </div>*@
+}

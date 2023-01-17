@@ -1,0 +1,32 @@
+﻿
+@{
+    Html.AddCssFileParts("/Plugins/Widgets.TorchDesign_StoreLocator/Content/style.css");
+}
+@model Nop.Plugin.Widgets.TorchDesign_StoreLocator.Models.PublicInfoModel
+@using Nop.Plugin.Widgets.TorchDesign_StoreLocator.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Plugin.Widgets.TorchDesign_StoreLocator;
+@{
+    Layout = "~/Themes/MisterLandscaper/Views/Shared/_ColumnsTwo.cshtml";
+    var storeLocatorSettingAPIKey = EngineContext.Current.Resolve<StoreLocatorSettings>().GoogleAPIKey;
+}
+<script src="https://maps.googleapis.com/maps/api/js?key=@storeLocatorSettingAPIKey"></script>
+
+<a href="@Url.RouteUrl("Plugin.Widgets.TorchDesign_StoreLocator.publicinfo")" class="alink">Back</a>
+@if (Model.getdirecrtion) { 
+
+    <div class="storecontainerdiv" style="margin-top:30px;">
+        <iframe width="100%"
+                height="450px"
+                frameborder="0" style="border:0"
+                src="https://www.google.com/maps/embed/v1/directions?key=@storeLocatorSettingAPIKey&origin=@Model.sourcestoreaddress&destination=@Model.destinationstoreaddress">
+        </iframe>
+    </div>
+
+    }
+
+<script>
+    $("#storesearch").hide();
+</script>

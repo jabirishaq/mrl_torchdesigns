@@ -1,0 +1,221 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.Widgets.Slider.Models;
+@using Nop.Web.Framework;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+
+
+<table class="adminContent">
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.PictureId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.PictureId)
+            @Html.ValidationMessageFor(model => model.PictureId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle"></td>
+        <td class="adminData">
+            @T("Nop.slider.resolution")
+
+        </td>
+    </tr>
+</table>
+@(Html.LocalizedEditor<ConfigurationModel, SliderLangLocalizedModel>("product-info-localized",
+    @<table>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].Title):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Locales[item].Title)
+                @Html.ValidationMessageFor(model => model.Locales[item].Title)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Locales[item].ShortDescription):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Locales[item].ShortDescription, new { style = "Width: 250px; Height: 50px;" })
+                @Html.ValidationMessageFor(model => model.Locales[item].ShortDescription)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.link):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.link, new { style = "Width: 250px; Height: 50px;" })
+                @Html.ValidationMessageFor(model => model.link)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.DisplayOrder, new { style = "Width: 250px; Height: 50px;" })
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOptionid):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DisplayOptionid, Model.AvailableDisplayOption)
+                @*@Html.ValidationMessageFor(model => model.DisplayOption)*@
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                @Html.HiddenFor(model => model.Locales[item].LanguageId)
+            </td>
+        </tr>
+    </table>,
+    @<table>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOptionid):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.DisplayOptionid, Model.AvailableDisplayOption)
+                @*@Html.ValidationMessageFor(model => model.DisplayOption)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Title):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Title)
+                @Html.ValidationMessageFor(model => model.Title)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShortDescription):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.ShortDescription, new { style = "Width: 250px; Height: 50px;" })
+                @Html.ValidationMessageFor(model => model.ShortDescription)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.link):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.link)
+                @Html.ValidationMessageFor(model => model.link)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+         <tr>
+             <td class="adminTitle">
+                 @Html.NopLabelFor(model => model.SlidePushtime):
+             </td>
+             <td class="adminData">
+                 @Html.EditorFor(model => model.SlidePushtime) @T("Plugins.Widgets.Slider.Transitionspeedinmili")
+                 @Html.ValidationMessageFor(model => model.SlidePushtime)
+             </td>
+         </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Slidereffect):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.Slidereffect, Model.AvailableSliderEffect)
+                @*@Html.ValidationMessageFor(model => model.DisplayOption)*@
+            </td>
+        </tr>
+    </table>
+                                                                    ))
+
+<table>
+
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.Published):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.Published)
+            @Html.ValidationMessageFor(model => model.Published)
+        </td>
+
+    </tr>
+
+</table>
+
+<script>
+
+    $(document).ready(function (){
+      
+        var doption =$( "#DisplayOptionid" ).val();
+        if (doption == "1") {
+            document.getElementById("Title").disabled = true;
+            document.getElementById("ShortDescription").disabled = true;
+            document.getElementById("link").disabled = false;
+        }
+        if (doption == "2") {
+            document.getElementById("Title").disabled = true;
+            document.getElementById("ShortDescription").disabled = true;
+            document.getElementById("link").disabled = true;
+        }
+        if (doption == "3") {
+            document.getElementById("Title").disabled = true;
+            document.getElementById("ShortDescription").disabled = true;
+            document.getElementById("link").disabled = true;
+        }
+        if (doption == "4") {
+            document.getElementById("Title").disabled = false;
+            document.getElementById("ShortDescription").disabled = false;
+            document.getElementById("link").disabled = false;
+        }
+
+        $("#DisplayOptionid").change(function(){
+            var doption =$( "#DisplayOptionid" ).val();
+            if (doption == "1") {
+                document.getElementById("Title").disabled = true;
+                document.getElementById("ShortDescription").disabled = true;
+                document.getElementById("link").disabled = false;
+            }
+            if (doption == "2") {
+                document.getElementById("Title").disabled = true;
+                document.getElementById("ShortDescription").disabled = true;
+                document.getElementById("link").disabled = true;
+            }
+            if (doption == "3") {
+                document.getElementById("Title").disabled = true;
+                document.getElementById("ShortDescription").disabled = true;
+                document.getElementById("link").disabled = true;
+            }
+            if (doption == "4") {
+                document.getElementById("Title").disabled = false;
+                document.getElementById("ShortDescription").disabled = false;
+                document.getElementById("link").disabled = false;
+            }
+        });
+    });
+</script>

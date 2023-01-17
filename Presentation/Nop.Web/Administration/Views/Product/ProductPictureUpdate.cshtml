@@ -1,0 +1,97 @@
+﻿@model ProductPictureCombination
+           @{
+               Html.AppendCssFileParts("~/Content/tagit/jquery.tagit.css");
+               Html.AppendScriptParts("~/Scripts/tag-it.min.js");
+               Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+              
+           }
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+    @*<script type="text/javascript">
+
+            $(document).ready(function () {
+                $('#addProductPicture').click(function () {
+                    var pictureId = $("#@Html.FieldIdFor(model => model.PictureId)").val();
+                    var thumbId = $("#@Html.FieldIdFor(model => model.ThumbId)").val();
+                    var displayOrder = $("#@Html.FieldIdFor(model => model.DisplayOrder)").val();
+                    var oldpictureid=$("#@Html.FieldIdFor(model => model.ClonePictureid)").val();
+                    var oldthumbid=$("#@Html.FieldIdFor(model => model.CloneThumbid)").val();
+
+                    if (pictureId == 0) {
+                        alert('Upload picture first');
+                        return;
+                    }
+                    if (thumbId== 0) {
+                        alert('Upload Picture Thumb');
+                        return;
+                    }
+
+
+                    $('#addProductPicture').attr('disabled', true);
+                    $.ajax({
+                        cache:false,
+                        type: "POST",
+                        url: "@(Url.Action("ProductPictureUpdate", "Product"))",
+                        data: { "pictureId": pictureId,"thumbId": thumbId, "displayOrder": displayOrder, "oldpictureid": oldpictureid, "oldthumbid": oldthumbid },
+                        success: function (data) {
+                            var productpicturesGrid = $("#productpictures-grid");
+                            productpicturesGrid.data('kendoGrid').dataSource.read();
+                            $('#addProductPicture').attr('disabled', false);
+                        },
+                        error:function (xhr, ajaxOptions, thrownError){
+                            alert('Failed to add product picture.');
+                            $('#addProductPicture').attr('disabled', false);
+                        }
+                    });
+                });
+            });
+        </script>*@
+
+
+@using (Html.BeginForm())
+{
+    @Html.HiddenFor(model => model.ClonePictureid)
+    @Html.HiddenFor(model => model.CloneThumbid)
+<table class="adminContent">
+
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.PictureId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.PictureId)
+            @Html.ValidationMessageFor(model => model.PictureId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.ThumbId):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.ThumbId)
+            @Html.ValidationMessageFor(model => model.ThumbId)
+        </td>
+    </tr>
+    <tr>
+        <td class="adminTitle">
+            @Html.NopLabelFor(model => model.DisplayOrder):
+        </td>
+        <td class="adminData">
+            @Html.EditorFor(model => model.DisplayOrder)
+            @Html.ValidationMessageFor(model => model.DisplayOrder)
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2" align="left">
+            <input type="submit" class="k-button" value="@T("Admin.Common.Edit")" />
+        </td>
+    </tr>
+</table>
+
+}

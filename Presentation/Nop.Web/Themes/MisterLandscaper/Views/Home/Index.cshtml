@@ -1,0 +1,56 @@
+﻿@model Nop.Web.Models.HomepageImage.PublicInfoModel
+@{
+    Layout = "~/Views/Shared/_ColumnsTwoHome.cshtml";
+}
+@*<script type="text/javascript">
+     
+
+
+            $(window).on('resize', function () {
+
+                //check if the viewport width is less than 950px
+                //if so then set some element's width to 100%
+                      $(document).ready(function () {
+                          if ($(this).width() > 768) {
+
+                            
+                          }
+                          else {
+                              //$(".product-item").tooltip("disable");
+                              //$(".product-item").unbind();
+                         
+                          }
+                    });
+
+
+            }).trigger('resize');
+
+
+
+
+
+
+
+</script>*@
+<div class="page home-page">
+    <div class="page-body">
+        @*@Html.Widget("home_page_top")*@
+        @*@Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })*@
+        @*@Html.Action("TopicBlock", "Topic", new { systemName = "HomePageText" })*@
+        @Html.Action("TopicBlock", "Topic", new { systemName = "HomepageSection" })
+        @*@Html.Action("TopicBlock", "Topic", new { systemName ="garden-watering-landing-page"})*@
+        @Html.Partial("_Hompageimage", Model)
+        @*<div class="topicmaindiv">
+            <span class="topictitalspan">Get Started Here</span>
+            <div class="topicsubdivider"></div>
+            <div class="topicleftimage"><a href="#"><img src="~/Themes/MisterLandscaper/Content/images/What_Is.jpg" class="fullwidth" /></a></div>
+            <div class="topicrightimage"><a href="#"><img src="~/Themes/MisterLandscaper/Content/images/How_To.jpg" class="fullwidth" /></a></div>
+        </div>*@
+        @*@Html.Action("HomepageCategories", "Catalog")*@
+        @*@Html.Action("HomepageProducts", "Product")
+        @Html.Action("HomepageBestSellers", "Product")*@
+        @*@Html.Action("HomePageNews", "News")
+        @Html.Action("HomePagePolls", "Poll")*@
+        @Html.Widget("home_page_bottom")
+    </div>
+</div>

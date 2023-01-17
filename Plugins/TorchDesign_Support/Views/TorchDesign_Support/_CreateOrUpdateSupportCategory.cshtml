@@ -1,0 +1,153 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportCategoryModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@using Nop.Core.Infrastructure;
+@using Nop.Services;
+@using Nop.Services.Events;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.Events;
+
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+@*<div id="supportcategory-edit">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Admin.Support.SupportCategories.Info")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+               @T("Admin.Suport.SupportDownloads.ProductCategory")
+            </li>
+
+        </ul>
+        <div>
+            @TabInfo()
+        </div>
+        <div>
+            @TabProductCategories()
+        </div>
+
+    </div>*@
+<script>
+    $(document).ready(function () {
+        $("#supportcategory-edit").kendoTabStrip({
+            animation: {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+    //custom tabs
+    var eventMessage = new AdminTabStripCreated(this.Html, "supportcategory-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@*@helper TabInfo()
+    {*@
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        @*$("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+            togglePageSize();*@
+    });
+
+    @*function togglePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
+            }
+        }*@
+</script>
+
+<div class="pull-left">
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Title):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Title)
+                @Html.ValidationMessageFor(model => model.Title)
+            </td>
+        </tr>
+        @*<tr>
+               <td class="adminTitle">
+                   @Html.NopLabelFor(model => model.Description):
+            </td>
+            <td class="adminData">
+               @Html.EditorFor(x => x.Description, "RichEditor")
+            @Html.ValidationMessageFor(model => model.Description)
+            </td>
+            </tr>*@
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PictureId)
+                @Html.ValidationMessageFor(model => model.PictureId)
+            </td>
+        </tr>
+        @*<tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.IsActive):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(x => x.IsActive)
+                    @Html.ValidationMessageFor(model => model.IsActive)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.ShowInFooter):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(x => x.ShowInFooter)
+                    @Html.ValidationMessageFor(model => model.ShowInFooter)
+                </td>
+            </tr>*@
+
+    </table>
+</div>
+<div class="pull-left" style="margin-left:30px">
+    @if (Model.AvailableCategories != null && Model.AvailableCategories.Count > 0)
+    {
+        foreach (var productCategory in Model.AvailableCategories)
+        {
+
+            <input type="checkbox" name="SelectedProductCategoryIds" value="@productCategory.Value"
+                   @if (Model.SelectedProductCategoryIds != null && Model.SelectedProductCategoryIds.Contains(int.Parse(productCategory.Value))) { <text> checked="checked" </text>                 } />@productCategory.Text
+
+        <br />
+        }
+    }
+    else
+    {
+        @T("Admin.Support.Fields.ProductCategories.NoProductCategories")
+    }
+</div>
+<div style="clear:both"></div>
+@*}*@
+
+
+
+
+
+
+

@@ -1,0 +1,444 @@
+Baby & Kids - Baby Bath & Body Care
+Baby & Kids - Baby Care & Safety - Baby Monitor
+Baby & Kids - Baby Care & Safety - Bathing & Changing
+Baby & Kids - Baby Care & Safety - Dummy & Pacifier
+Baby & Kids - Baby Care & Safety - Feeding & Mealtimes
+Baby & Kids - Baby Care & Safety - Gates
+Baby & Kids - Baby Care & Safety - Other Safey
+Baby & Kids - Baby Travel & Carriers - Bouncer, Swing & Walker
+Baby & Kids - Baby Travel & Carriers - Car Seat
+Baby & Kids - Baby Travel & Carriers - Carrier
+Baby & Kids - Baby Travel & Carriers - Pushchair & Stroller
+Baby & Kids - Baby Travel & Carriers - Pushchair Accessory
+Baby & Kids - Baby Travel & Carriers - Travel Cot
+Baby & Kids - Nursery Furniture & Acc - Baby Furniture
+Baby & Kids - Nursery Furniture & Acc - Cots & Cribs
+Baby & Kids - Nursery Furniture & Acc - Nursery Bedding
+
+Cars & Other Vehicles - Boats & Acc - Boats
+Cars & Other Vehicles - Boats & Acc - Parts & Accessories
+Cars & Other Vehicles - Camper & Caravan - Accessories and Equipment
+Cars & Other Vehicles - Car Parts & Acc - Accessories, Parts and Styling
+Cars & Other Vehicles - Car Parts & Acc - Wheels (Tyres & Rims)
+Cars & Other Vehicles - MC Parts & Acc - Parts & Accessories
+Cars & Other Vehicles - MC Parts & Acc - Protective Clothing
+Cars & Other Vehicles - Vehicles - ATV (Quad)
+Cars & Other Vehicles - Vehicles - Mopeds
+Cars & Other Vehicles - Vehicles - Scooters
+
+Computing - Acc & Cables - Cable
+Computing - Acc & Cables - Cleaner
+Computing - Acc & Cables - Media Storage/Cases/Folders
+Computing - Acc & Cables - Warranties & Service Deals
+Computing - Components - Computer Case
+Computing - Components - Computer Case Accessory
+Computing - Components - Controller Card
+Computing - Components - Cooling/Fan
+Computing - Components - CPU
+Computing - Components - Graphics Card
+Computing - Components - Motherboard
+Computing - Components - Network Card
+Computing - Components - Power Supply
+Computing - Components - RAM
+Computing - Components - Sound Card
+Computing - Components - TV/Video Card
+Computing - Computer - Barebone
+Computing - Computer - Desktop
+Computing - Computer - Laptops & Acc - Accessory
+Computing - Computer - Laptops & Acc - Bag
+Computing - Computer - Laptops & Acc - Battery & Charger
+Computing - Computer - Laptops & Acc - Laptops, Tablet PCs & Ebooks
+Computing - Computer - Server
+Computing - Computer - Thin Client
+Computing - Network Equip & Acc - Access Point
+
+Computing - Network Equip & Acc - Accessory
+Computing - Network Equip & Acc - Antenna
+Computing - Network Equip & Acc - Firewall & VPN
+Computing - Network Equip & Acc - Hub, Switch & Router
+Computing - Network Equip & Acc - KVM
+Computing - Network Equip & Acc - Network-Attached Storage (NAS)
+Computing - Network Equip & Acc - Power Line
+Computing - Network Equip & Acc - Print & Document Server
+Computing - Network Equip & Acc - UPS
+Computing - Network Equip & Acc - Wireless
+Computing - Peripherals - Computer Speakers
+Computing - Peripherals - Graphics tablet
+Computing - Peripherals - Headset
+Computing - Peripherals - Joystick & PC Controller
+Computing - Peripherals - Key Pad
+Computing - Peripherals - Keyboard
+Computing - Peripherals - Microphone
+Computing - Peripherals - Modem
+Computing - Peripherals - Monitor & Acc - Accessory
+Computing - Peripherals - Monitor & Acc - Monitor
+Computing - Peripherals - Mouse
+Computing - Peripherals - Mouse Pad & Accessories
+Computing - Peripherals - Scanner
+Computing - Peripherals - Webcam & Network/IP/Security Cam
+Computing - Printers & Acc - Inkjet Cartridge
+
+Computing - Printers & Acc - Laser Toner and Drums
+Computing - Printers & Acc - Multifunction Printer
+Computing - Printers & Acc - Paper & Label
+Computing - Printers & Acc - Printer
+Computing - Printers & Acc - Printer Accessory
+Computing - Software
+Computing - Storage & Media - Backup Unit
+Computing - Storage & Media - Blank Media
+Computing - Storage & Media - CD-ROM/(Re-)Writer
+Computing - Storage & Media - DVD (Re-)Writer
+Computing - Storage & Media - DVD Reader
+Computing - Storage & Media - Floppy Drive
+Computing - Storage & Media - Hard Drive & Acc - Accessory
+Computing - Storage & Media - Hard Drive & Acc - Hard Drive
+Computing - Storage & Media - Memory Card
+Computing - Storage & Media - Memory Card Reader
+Computing - Storage & Media - Pen Drive / USB Stick
+
+Electronics - Cable TV & Satellite - Antenna & Acc
+Electronics - Cable TV & Satellite - Set Top Boxes & Receivers
+Electronics - Camera & Image - Analogue Camera
+Electronics - Camera & Image - Binocular
+Electronics - Camera & Image - Camcorder
+Electronics - Camera & Image - Camcorder Accessory
+Electronics - Camera & Image - Camera Accessory - Bag & Protection
+Electronics - Camera & Image - Camera Accessory - Battery & Charger
+
+Electronics - Camera & Image - Camera Accessory - Flash & Light
+Electronics - Camera & Image - Camera Accessory - Other
+Electronics - Camera & Image - Camera Accessory - Tripods
+Electronics - Camera & Image - Camera Accessory - Zoom & Lense
+Electronics - Camera & Image - Digital Camera
+Electronics - Camera & Image - Digital Photo Frame
+Electronics - Camera & Image - DVD & Blu Ray Player
+Electronics - Camera & Image - DVD & Blu Ray Recorder
+Electronics - Camera & Image - Home Cinema System
+Electronics - Camera & Image - Network Player/Streamer
+Electronics - Camera & Image - Projector & Acc - Other Accessory
+Electronics - Camera & Image - Projector & Acc - Projector
+Electronics - Camera & Image - Projector & Acc - Screen
+Electronics - Camera & Image - Telescope
+Electronics - Camera & Image - TVs & Acc - Accessory
+Electronics - Camera & Image - TVs & Acc - TV Combi
+Electronics - Camera & Image - TVs & Acc - TV CRT 16:9
+Electronics - Camera & Image - TVs & Acc - TV LCD
+Electronics - Camera & Image - TVs & Acc - TV LED
+Electronics - Camera & Image - TVs & Acc - TV OLED
+Electronics - Camera & Image - TVs & Acc - TV Plasma
+Electronics - Camera & Image - VCR
+Electronics - DJ Equipment
+Electronics - Generic Batteries
+Electronics - GPS - Accessory & Maps
+Electronics - GPS - Receiver (incl Car Nav)
+
+Electronics - Hifi & Audio - Accessory
+Electronics - Hifi & Audio - Amplifier & Receiver
+Electronics - Hifi & Audio - Cassette Deck
+Electronics - Hifi & Audio - CD Player
+Electronics - Hifi & Audio - Clock Radio
+Electronics - Hifi & Audio - Hifi Audio System
+Electronics - Hifi & Audio - Microphone
+Electronics - Hifi & Audio - Speaker & Subwoofer
+Electronics - Hifi & Audio - Tuner
+Electronics - Hifi & Audio - Turntable
+Electronics - In-Car Entertainment - Accessory
+Electronics - In-Car Entertainment - Amplifier
+Electronics - In-Car Entertainment - Speaker
+Electronics - In-Car Entertainment - Subwoofer
+Electronics - In-Car Entertainment - Units for PDB (Radio, CD,..)
+Electronics - Karaoke
+Electronics - Portable Audio & Video - Cassette Player (Walkman)
+Electronics - Portable Audio & Video - CD player (Discman)
+Electronics - Portable Audio & Video - Dictaphone
+Electronics - Portable Audio & Video - Head Phone & Ear Plug
+Electronics - Portable Audio & Video - MiniDisc Player
+Electronics - Portable Audio & Video - MP3 Players & Acc - Accessory
+Electronics - Portable Audio & Video - MP3 Players & Acc - MP3 & MM Player
+Electronics - Portable Audio & Video - Radio
+Electronics - Portable Audio & Video - Stereo System (Ghettoblastr)
+
+Electronics - Remote Controls
+Electronics - Walkie Talkie
+Electronics - Weather Station
+
+Entertainment - Books
+Entertainment - Gaming - Accessory
+Entertainment - Gaming - Console
+Entertainment - Gaming - Steering Wheel
+Entertainment - Gaming - Video Games
+Entertainment - Movies, TV Series - DVD and Blu-Ray
+Entertainment - Movies, TV Series - UMD
+Entertainment - Movies, TV Series - VHS
+Entertainment - Music - CD, Audio DVD, etc.
+Entertainment - Music - Vinyl
+Entertainment - Musical Instruments - Accessory
+Entertainment - Musical Instruments - Musical Instrument
+Entertainment - Musical Instruments - Sheet Music
+
+Erotic & Sexy - Adult Movies
+Erotic & Sexy - Sex Toys & Sexual Aids
+Erotic & Sexy - Sexy Clothing & Lingerie
+
+Fashion - Acc - Bags & Handbags
+Fashion - Acc - Belts
+Fashion - Acc - Gloves
+Fashion - Acc - Headgear
+Fashion - Acc - Jewellery
+Fashion - Acc - Jewellery Box
+
+Fashion - Acc - Luggage
+Fashion - Acc - Other
+Fashion - Acc - Sunglasses
+Fashion - Acc - Ties
+Fashion - Acc - Wallets
+Fashion - Acc - Watches
+Fashion - Baby
+Fashion - Children - Clothing
+Fashion - Children - Shoes
+Fashion - Man - Clothing
+Fashion - Man - Shoes
+Fashion - Man - Sportswear
+Fashion - Man - Swimwear
+Fashion - Man - Underwear
+Fashion - Woman - Clothing
+Fashion - Woman - Lingerie
+Fashion - Woman - Maternity Clothing
+Fashion - Woman - Shoes
+Fashion - Woman - Sportswear
+Fashion - Woman - Swimwear
+
+Food & Drink - Drink - Beer
+Food & Drink - Drink - Liquor & Spirit
+Food & Drink - Drink - Wine & Champagne
+Food & Drink - Food & Grocery - Breakfast
+Food & Drink - Food & Grocery - Cake & Dessert
+
+Food & Drink - Food & Grocery - Candy & Sweets
+Food & Drink - Food & Grocery - Coffee & Tea
+Food & Drink - Food & Grocery - Dairy & Cheese
+Food & Drink - Food & Grocery - Drink & Juice
+Food & Drink - Food & Grocery - Food Basket/Hamper
+Food & Drink - Food & Grocery - Frozen Food
+Food & Drink - Food & Grocery - Fruit & Vegetable
+Food & Drink - Food & Grocery - Gourmet Food
+Food & Drink - Food & Grocery - Meat & Seafood - Meat
+Food & Drink - Food & Grocery - Meat & Seafood - Seafood
+Food & Drink - Food & Grocery - Other
+Food & Drink - Tobacco
+
+Health & Beauty - Body Alteration
+Health & Beauty - Body Care
+Health & Beauty - Body Care App & Acc - Accessory
+Health & Beauty - Body Care App & Acc - Electric Shaver, Trimmer & Epilator
+Health & Beauty - Body Care App & Acc - Electric Toothbrush
+Health & Beauty - Body Care App & Acc - Hair Dryer
+Health & Beauty - Body Care App & Acc - Other
+Health & Beauty - Body Care App & Acc - Wake-up Light
+Health & Beauty - Cosmetics & Perfumes - After-shave
+Health & Beauty - Cosmetics & Perfumes - Cosmetic Tool & Case
+Health & Beauty - Cosmetics & Perfumes - Deodorant
+Health & Beauty - Cosmetics & Perfumes - Make-up
+Health & Beauty - Cosmetics & Perfumes - Perfume
+
+Health & Beauty - Face Care
+Health & Beauty - Hair Care
+Health & Beauty - Health - Diet
+Health & Beauty - Health - Medical Supply
+Health & Beauty - Health - Medicine & Remedy
+Health & Beauty - Hygiene - Intimacy & Condom
+Health & Beauty - Hygiene - Oral Care
+Health & Beauty - Hygiene - Women's Hygiene
+Health & Beauty - Opticals - Contact Lenses
+Health & Beauty - Opticals - Prescription Glasses
+Health & Beauty - Other
+Health & Beauty - Sun Care
+
+Hobby & Toys - Arts & Crafts
+Hobby & Toys - Baby Toys
+Hobby & Toys - Children's Toys & Games
+Hobby & Toys - Collectables
+Hobby & Toys - Experiences
+Hobby & Toys - Games for Grown-ups
+Hobby & Toys - Gift Wrapping & Cards
+Hobby & Toys - Medals, Prizes & Cups
+Hobby & Toys - Merchandising
+Hobby & Toys - Party Dresses, Costumes & Accessories
+Hobby & Toys - Pet Supplies & Acc
+Hobby & Toys - School Supplies
+
+House & Home - Art and Posters
+House & Home - Flowers
+House & Home - Solar Power
+House & Home - Garden & DIY - Barbecue & Plancha
+House & Home - Garden & DIY - Barbecue Accessory
+House & Home - Garden & DIY - Flowers, Plants & Trees
+House & Home - Garden & DIY - Garden Decorations
+House & Home - Garden & DIY - Garden Furniture
+House & Home - Garden & DIY - Garden Shed
+House & Home - Garden & DIY - Garden Tools & Acc - Hand/Manual
+House & Home - Garden & DIY - Garden Tools & Acc - Powered
+House & Home - Garden & DIY - Garden Treatments
+House & Home - Garden & DIY - Hand Tools
+House & Home - Garden & DIY - Home Security
+House & Home - Garden & DIY - Landscaping
+House & Home - Garden & DIY - Lawn Mower
+House & Home - Garden & DIY - Pool & Supplies
+House & Home - Garden & DIY - Power Tools
+House & Home - Garden & DIY - Pressure Washers
+House & Home - Garden & DIY - Sauna, Spa & Hot Tub
+House & Home - Garden & DIY - Swing & Hammock
+House & Home - Home & Furniture - Accessory
+House & Home - Home & Furniture - Bedding
+House & Home - Home & Furniture - Carpets & Rugs
+House & Home - Home & Furniture - Decoration
+House & Home - Home & Furniture - Home Furniture - Bed Frame
+House & Home - Home & Furniture - Home Furniture - Cabinet & Drawer
+House & Home - Home & Furniture - Home Furniture - Chair
+House & Home - Home & Furniture - Home Furniture - Mattress
+House & Home - Home & Furniture - Home Furniture - Other
+House & Home - Home & Furniture - Home Furniture - Sofa
+
+House & Home - Home & Furniture - Home Furniture - Storage
+House & Home - Home & Furniture - Home Furniture - Table
+House & Home - Home & Furniture - Home Furniture - TV & Stereo Racks
+House & Home - Home & Furniture - Household Linen
+House & Home - Home & Furniture - Kitchen Utensils and Acc
+House & Home - Home & Furniture - Lighting
+House & Home - Home & Furniture - Tableware/Cutlery
+House & Home - Home Acc - Alarm Clock
+House & Home - Home Acc - Clock
+House & Home - Home Acc - Curtains & Blinds
+House & Home - Home Acc - Mirror
+House & Home - Home Acc - Photo Frames & Albums
+House & Home - Home Improvement - Bathroom - Accessory
+House & Home - Home Improvement - Bathroom - Components
+House & Home - Home Improvement - Bathroom - Mats & Rugs
+House & Home - Home Improvement - Building Supplies
+House & Home - Home Improvement - Electric Components
+House & Home - Home Improvement - Flooring
+House & Home - Home Improvement - Hardware / Ironmongery
+House & Home - Home Improvement - Kitchen - Accessory
+House & Home - Home Improvement - Kitchen - Components
+House & Home - Home Improvement - Paint & Wall Paper
+House & Home - Home Improvement - Plumbing
+House & Home - Non-Electric Cleaning Equipment & Remedies
+
+Household Apps - Cleaning & Drying - Accessory
+Household Apps - Cleaning & Drying - Carpet (Steam) Cleaner
+Household Apps - Cleaning & Drying - Combo (Wash & Tumble)
+Household Apps - Cleaning & Drying - Dishwasher
+Household Apps - Cleaning & Drying - Drying Cabinet
+Household Apps - Cleaning & Drying - Floor Cleaner/Shiner
+Household Apps - Cleaning & Drying - Iron
+Household Apps - Cleaning & Drying - Steam Press
+Household Apps - Cleaning & Drying - Tumble Dryer
+Household Apps - Cleaning & Drying - Vacuum Cleaners & Acc - Accessory
+Household Apps - Cleaning & Drying - Vacuum Cleaners & Acc - Vacuum Cleaner
+Household Apps - Cleaning & Drying - Washing Machine
+Household Apps - Cooking - Accessory
+Household Apps - Cooking - Cooker
+Household Apps - Cooking - Cooker Hood
+Household Apps - Cooking - Grill
+Household Apps - Cooking - Hob
+Household Apps - Cooking - Microwave
+Household Apps - Cooking - Oven
+Household Apps - Indoor Climate - Accessory
+Household Apps - Indoor Climate - Air Purifier
+Household Apps - Indoor Climate - Air-Conditioner & Fan
+Household Apps - Indoor Climate - Dehumidifier
+Household Apps - Indoor Climate - Heating
+Household Apps - Indoor Climate - Humidifier
+Household Apps - Industrial Appliances
+Household Apps - Refrigeration - Accessory
+
+Household Apps - Refrigeration - Freezer
+Household Apps - Refrigeration - Fridge
+Household Apps - Refrigeration - Fridge Freezer
+Household Apps - Refrigeration - Wine Cooler
+Household Apps - Small Appliances - Accessory
+Household Apps - Small Appliances - Blender
+Household Apps - Small Appliances - Bread Baker Machine
+Household Apps - Small Appliances - Citrus Press & Fruit Juicer
+Household Apps - Small Appliances - Coffee & Espresso Maker
+Household Apps - Small Appliances - Deep Fryer
+Household Apps - Small Appliances - Egg Cooker
+Household Apps - Small Appliances - Electric Kettle
+Household Apps - Small Appliances - Fondue & Wok
+Household Apps - Small Appliances - Food Processor
+Household Apps - Small Appliances - Ice-cream Maker
+Household Apps - Small Appliances - Kitchen Scale
+Household Apps - Small Appliances - Meat Slicer
+Household Apps - Small Appliances - Mixer
+Household Apps - Small Appliances - Other
+Household Apps - Small Appliances - Sandwich, Crêpe & Waffle Maker
+Household Apps - Small Appliances - Sewing Machine
+Household Apps - Small Appliances - Steam/Rice Cooker
+Household Apps - Small Appliances - Toaster
+Household Apps - Small Appliances - Water purifier
+
+Internet & Telecom - Mobile Phones, PDA & Acc - Accessory
+Internet & Telecom - Mobile Phones, PDA & Acc - Mobile Phone & PDA
+Internet & Telecom - Telephones & Faxes - Answering Machine
+Internet & Telecom - Telephones & Faxes - Fax Machine
+Internet & Telecom - Telephones & Faxes - Telephone
+Internet & Telecom - Telephones & Faxes - Telephone Accessory
+Internet & Telecom - Telephones & Faxes - Video Conferencing
+Internet & Telecom - Telephones & Faxes - VoIP Telephone
+
+Sport & Outdoor - Bikes, Parts & Acc - Bikes
+Sport & Outdoor - Bikes, Parts & Acc - Parts & Accessories
+Sport & Outdoor - Boxing & Wrestling
+Sport & Outdoor - Darts
+Sport & Outdoor - Extreme Sports
+Sport & Outdoor - Fitness & Weight
+Sport & Outdoor - Formula 1
+Sport & Outdoor - Golf
+Sport & Outdoor - Horseback Riding
+Sport & Outdoor - Inline Skating
+Sport & Outdoor - Nautical/Sailing
+Sport & Outdoor - Other Sports
+Sport & Outdoor - Outdoor & Camping - Camping & Hiking
+Sport & Outdoor - Outdoor & Camping - Climbing
+Sport & Outdoor - Outdoor & Camping - Fishing
+Sport & Outdoor - Outdoor & Camping - Hunting
+Sport & Outdoor - Racket Sports - Badminton
+Sport & Outdoor - Racket Sports - Squash
+Sport & Outdoor - Racket Sports - Table Tennis
+Sport & Outdoor - Racket Sports - Tennis
+Sport & Outdoor - Running
+Sport & Outdoor - Skateboarding
+Sport & Outdoor - Sled Dog Equipment & Acc
+Sport & Outdoor - Snooker, Pool & Billiard
+Sport & Outdoor - Sports Supports
+Sport & Outdoor - Sports Watches & Heart Rate Monitors
+Sport & Outdoor - Team Sports - American Football
+Sport & Outdoor - Team Sports - Bandy & Hockey
+Sport & Outdoor - Team Sports - Basketball
+Sport & Outdoor - Team Sports - Cricket
+Sport & Outdoor - Team Sports - Football
+Sport & Outdoor - Team Sports - Rugby
+Sport & Outdoor - Trampolines
+Sport & Outdoor - Vitamins & Supplements
+Sport & Outdoor - Water Sports - Kayak & Canoe
+Sport & Outdoor - Water Sports - Other
+Sport & Outdoor - Water Sports - Scuba Diving & Snorkling
+Sport & Outdoor - Water Sports - Surf & Ski
+Sport & Outdoor - Weight Training
+Sport & Outdoor - Winter Sports - Other
+Sport & Outdoor - Winter Sports - Skiing
+Sport & Outdoor - Winter Sports - Snowboarding
+
+Work & Professional - Electronics - Components
+Work & Professional - Laboratory Equipment
+Work & Professional - Office Furniture - Accessory
+Work & Professional - Office Furniture - Chair
+Work & Professional - Office Furniture - Other
+Work & Professional - Office Machines - Calculator
+Work & Professional - Office Machines - Cash Register
+Work & Professional - Office Machines - Copy Machine
+Work & Professional - Office Machines - Other
+Work & Professional - Office Machines - Shredder
+Work & Professional - Office Stationery
+Work & Professional - Safety Gear & Protective Clothing
+Work & Professional - Work Clothes & Uniforms

@@ -1,0 +1,224 @@
+﻿@model CheckoutShippingAddressModel
+@using Nop.Web.Models.Checkout;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+<div class="page checkout-page">
+    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Address })
+    <div class="page-title">
+        <h1>@T("Checkout.ShippingAddress")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @using (Html.BeginRouteForm("CheckoutShippingAddress", FormMethod.Post))
+        {
+            <div class="shipping-addresses" id="shipping-addresses-form">
+                @Html.Widget("checkout_shipping_address_top")
+                @if (Model.ExistingAddresses.Count > 0)
+                {
+                    <div class="section select-shipping-address">
+                        <div class="title">
+                            <strong>@T("Checkout.SelectShippingAddress")</strong>
+                        </div>
+                        <div class="address-grid">
+
+
+                            @{int i = 1;}
+                            @foreach (var item in Model.ExistingAddresses)
+                            {
+                                <div class="address-item @( (i % 2 == 0) ? @Html.Raw("evenborder") : @Html.Raw(""))">
+                                    <table style="width:100%">
+                                        <tr>
+                                            <td class="aligntextright"><strong>@T("admin.affiliates.customers.name"):</strong></td>
+                                            <td><strong>@item.FirstName @item.LastName</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="aligntextright"><strong>@T("Address.Fields.Email"):</strong></td>
+                                            <td><strong>@item.Email</strong></td>
+                                        </tr>
+                                        @if (item.PhoneEnabled)
+                                        {
+                                            <tr>
+                                                <td class="aligntextright"><strong>@T("account.fields.phone"):</strong></td>
+                                                <td><strong>@item.PhoneNumber</strong></td>
+                                            </tr>
+                                        }
+                                        @if (item.FaxEnabled)
+                                        {
+                                            <tr>
+                                                <td class="aligntextright"><strong>@T("account.fields.fax"):</strong></td>
+                                                <td><strong>@item.FaxNumber</strong></td>
+                                            </tr>
+
+                                        }
+                                        @if (item.CompanyEnabled && !String.IsNullOrEmpty(item.Company))
+                                        {
+                                            <tr>
+                                                <td class="aligntextright"><strong>@T("admin.address.fields.company"):</strong></td>
+                                                <td><strong>@item.Company</strong></td>
+                                            </tr>
+                                        }
+                                        @if (item.StreetAddressEnabled)
+                                        {
+                                            <tr>
+                                                <td class="aligntextright"><strong>@T("account.fields.streetaddress")1:</strong></td>
+                                                <td><strong>@item.Address1</strong></td>
+                                            </tr>
+                                        }
+                                        @if (item.StreetAddress2Enabled && !String.IsNullOrEmpty(item.Address2))
+                                        {
+                                            <tr>
+                                                <td class="aligntextright"><strong>@T("account.fields.streetaddress")2:</strong></td>
+                                                <td><strong>@item.Address2</strong></td>
+                                            </tr>
+
+                                        }
+                                        @if (item.CityEnabled || item.StateProvinceEnabled || item.ZipPostalCodeEnabled)
+                                        {
+                                            <tr>
+                                                <td class="aligntextright"><strong>@T("account.fields.streetaddress")2:</strong></td>
+                                                <td>
+                                                    <strong>
+
+                                                        @if (item.CityEnabled)
+                                                        {
+                                                            @item.City
+                                                        }
+                                                        @if (item.CityEnabled && (item.StateProvinceEnabled || item.ZipPostalCodeEnabled))
+                                                        {
+                                                            <text>,</text>
+                                                        }
+                                                        @if (item.StateProvinceEnabled)
+                                                        {
+                                                            @item.StateProvinceName
+                                                        }
+                                                        @if (item.ZipPostalCodeEnabled)
+                                                        {
+                                                            @item.ZipPostalCode
+                                                        }
+
+                                                    </strong>
+                                                </td>
+                                            </tr>
+
+                                        }
+                                        @if (item.CountryEnabled && !String.IsNullOrEmpty(item.CountryName))
+                                        {
+                                            <tr>
+                                                <td></td>
+                                                <td>
+                                                    <strong>
+                                                        @item.CountryName
+                                                    </strong>
+                                                </td>
+                                            </tr>
+
+                                        }
+                                    </table>
+                                    <div class="select-button">
+                                        <input type="button" value="@T("Checkout.ShipToThisAddress")" class="button-1 select-shipping-address-button" onclick="setLocation('@Url.RouteUrl("CheckoutSelectShippingAddress", new { addressid = item.Id })') " />
+
+                                    </div>
+                                </div>
+                                        i = i + 1;
+                                        if (i == 4)
+                                        {
+                                            i = 1;
+                                        }
+                            }
+                        </div>
+                    </div>
+                }
+                @Html.Widget("checkout_shipping_address_middle")
+                <div class="section new-shipping-address">
+                    <div class="title">
+                        @if (Model.ExistingAddresses.Count > 0)
+                        {
+                            <strong>@T("Checkout.OrEnterNewAddress")</strong>
+                        }
+                        else
+                        {
+                            <strong>@T("Checkout.EnterShippingAddress")</strong>
+                        }
+                    </div>
+                    <div class="enter-address">
+                        <div class="enter-address-body">
+                            @{
+                        var dataDictAddress = new ViewDataDictionary();
+                        //Merge ModelState (required for validation)
+                        dataDictAddress.ModelState.Merge(ViewData.ModelState);
+                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "NewAddress";
+                        @Html.Partial("_CreateOrUpdateAddress", Model.NewAddress, dataDictAddress)
+                            }
+                        </div>
+                        <div class="buttons fltright" style="margin: 0 10px 0 0;">
+                            <input type="button" id="nextBtn" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button nextbutton" />
+                            <input type="submit" style="display:none" id="nextStep" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 new-address-next-step-button nextbutton" />
+                        </div>
+                        <div class="clr"></div>
+                    </div>
+
+                </div>
+                @Html.Widget("checkout_shipping_address_bottom")
+
+            </div>
+            if (Model.AllowPickUpInStore)
+            {
+                <div class="section pickup-in-store">
+                    <p class="selector">
+                        @Html.CheckBoxFor(x => x.PickUpInStore)
+                        <label for="@Html.FieldIdFor(model => model.PickUpInStore)">@T("Checkout.PickUpInStore")</label>
+                    </p>
+                    <p class="description"><i>@T("Checkout.PickUpInStore.Description")</i></p>
+
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+
+                            $("#@Html.FieldIdFor(model => model.PickUpInStore)").change(togglePickUpInStore);
+
+                            togglePickUpInStore();
+                        });
+
+                        function togglePickUpInStore() {
+                            if ($('#@Html.FieldIdFor(model => model.PickUpInStore)').is(':checked')) {
+                                $('#shipping-addresses-form').hide();
+                            } else {
+                                $('#shipping-addresses-form').show();
+                            }
+                        }
+                    </script>
+                </div>
+            }
+
+        }
+        <div class="section order-summary-body">
+            <div class="title specialtitle">
+                <strong>@T("Checkout.OrderSummary")</strong>
+            </div>
+            @Html.Action("OrderSummary", "ShoppingCart")
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#taxtr").css("display", "none");
+
+        $("#nextBtn").click(function () {
+            var countryId = $("#NewAddress_CountryId").val();
+            var stateId = $("#NewAddress_StateProvinceId").val();
+            if (countryId == "2147483647") {
+                if (stateId == "0") {
+                    alert("Please select your state.");
+                }
+                else {
+                    $("#nextStep").click();
+                }
+            }
+            else {
+                $("#nextStep").click();
+            }
+        });
+    });
+</script>

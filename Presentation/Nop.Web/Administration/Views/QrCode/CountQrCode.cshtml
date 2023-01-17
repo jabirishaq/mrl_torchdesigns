@@ -1,0 +1,284 @@
+﻿@{
+
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+}
+@model QrCodeDiaplay
+@using Nop.Core.Domain.Catalog;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+            @T("Admin.qrcode.headertext")
+        </div>
+
+    </div>
+    @*<table class="adminContent">
+        <tr>
+            <td>
+                <div id="Qrcode-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#Qrcode-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ListofQrCode", "QrCode"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                        //data: additionalData
+                                    },
+                                    create: {
+                                        url: "@Html.Raw(Url.Action("QrcodeInsert", "QrCode", new { optionId = Model.id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            QrCodeName: { editable: true, type: "string" },
+                                            QrCodeUrl: { editable: true, type: "string" },
+                                            Count: { editable: true, type: "number" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "create" || e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            toolbar: ["create"],
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            //dataBound: onDataBound,
+                            columns: [
+                                {
+                                    field: "QrCodeName",
+                                    title: "@T("admin.qrcode")",
+                                    width: 200
+                                },
+                                {
+                                    field: "QrCodeUrl",
+                                    title: "@T("admin.qrcodeurl")",
+                                    width: 200
+                                },
+                                {
+                                    field: "Count",
+                                    title: "@T("admin.salesreport.incomplete.count")",
+                                    width: 300,
+
+                                }
+                            ]
+                        } );
+                    });
+                </script>
+                <input type="submit" id="btnRefreshProductAttributes" name="btnRefreshProductAttributes" style="display: none" />
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshProductAttributes').click(function () {
+                            //refresh grid
+                            var grid = $("#Qrcode-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+
+                @*<script type="text/javascript">
+
+                        var selectedIds = [];
+                        var reportAggregates = "";
+
+                        $(document).ready(function () {
+
+                            //search button
+                            $('#btnSearch').click(function () {
+                                //search
+                                var grid = $('#taxcall-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                grid.dataSource.read();
+                                //clear selected checkboxes
+                                $('.checkboxGroups').attr('checked', false).change();
+                                selectedIds = [];
+                                return false;
+                            });
+
+
+                        });
+
+                    </script>
+            </td>
+        </tr>
+    </table>*@
+
+
+
+    <table class="adminContent">
+        <tr>
+            <td>
+
+                <div id="productvariantattributes-grid"></div>
+                <script>
+                    $(document).ready(function () {
+                        $("#productvariantattributes-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ListofQrCode", "QrCode"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    create: {
+                                        url: "@Html.Raw(Url.Action("QrcodeInsert", "QrCode"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("QrcodeUpdate", "QrCode"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    @*destroy: {
+                                    url: "@Html.Raw(Url.Action("CustomerOriginDelete", "TorchDesignCustomerOrigin"))",
+                                    type: "POST",
+                                    dataType: "json"
+                                }*@
+
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "id",
+                                        fields: {
+                                            //OptionName: { editable: true, type: "string" },
+                                            //DefaultSelected: { editable: true, type: "boolean" },
+                                            //Publish: { editable: true, type: "boolean" },
+                                            //Id: { editable: false, type: "number" }
+                                            QrCodeName: { editable: true, type: "string" },
+                                            QrCodeUrl: { editable: true, type: "string" },
+                                            Count: { editable: false, type: "number" },
+                                            id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "create" || e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true,
+
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                               
+                            },
+                            
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            toolbar: ["create"],
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                 {
+                                     field: "QrCodeName",
+                                     title: "@T("admin.qrcode")",
+                                     width: 200
+                                 },
+                                {
+                                    field: "QrCodeUrl",
+                                    title: "@T("admin.qrcodeurl")",
+                                    width: 200
+                                },
+                                 {
+                                     field: "Count",
+                                     title: "@T("admin.salesreport.incomplete.count")",
+                                     width: 300,
+
+                                 }, 
+
+                            {
+                            command: [
+                                {
+                                   
+                                    name: "edit",
+                                    text: "@T("Admin.Common.Edit")"
+                                }@*, {
+                                        name: "destroy",
+                                        text: "@T("Admin.Common.Delete")"
+                                    }*@
+                            ],
+                        width: 200
+                    }
+                    ]
+                    });
+                    });
+                </script>
+                <input type="submit" id="btnRefreshProductAttributes" name="btnRefreshProductAttributes" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshProductAttributes').click(function () {
+                            //refresh grid
+                            var grid = $("#productvariantattributes-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+}

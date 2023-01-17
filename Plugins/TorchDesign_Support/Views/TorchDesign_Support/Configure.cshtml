@@ -1,0 +1,31 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.Widgets.TorchDesign_Support.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework;
+@using System.Globalization;
+
+
+@using (Html.BeginForm())
+{
+
+
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.SupportEnabled_OverrideForStore, model => model.SupportEnabled, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.SupportEnabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.SupportEnabled)
+                @Html.ValidationMessageFor(model => model.SupportEnabled)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="1">
+            <td>
+                <input type="submit" id="Savesettingbtn" name="Savesettingbtn" class="k-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+}

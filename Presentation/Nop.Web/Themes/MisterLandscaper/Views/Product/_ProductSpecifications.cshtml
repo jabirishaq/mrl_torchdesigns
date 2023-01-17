@@ -1,0 +1,45 @@
+﻿@model IList<ProductSpecificationModel>
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    <div class="product-specs-box">
+         <div>
+            @foreach (var item in Model)
+            {
+                <div>
+                    @foreach (var grlist in @item.Grouplist)
+                    {
+                        <div class="specificationgroup"> @grlist.GroupName</div>
+                        int i = 1;
+                        foreach (var specification in @grlist.SpecificatioAttribute)
+                        {
+                            if (i % 2 == 0)
+                            { <div class="specificationpaddding">
+                                <span>@specification.SpecificationAttributeName</span>
+                                <span class="fltright">@specification.SpecificationAttributeOption</span>
+                            </div>
+                            }
+                            else
+                            { <div class="specificationpaddding specificationalternatecolor">
+                                <span>@specification.SpecificationAttributeName</span>
+                                <span class="fltright">@specification.SpecificationAttributeOption</span>
+                            </div>
+                            }
+                            i++;
+                        }
+                            <script>
+                                $(document).ready(function () {
+                                    $("#productdetail_menu_features").css("display", "block")
+                                });
+                            </script>
+                    }
+                    
+                </div>
+    
+            }
+        </div>
+
+    </div>
+   
+    
+}

@@ -1,0 +1,153 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportDownloadModel
+@Html.ValidationSummary(false)
+@using Nop.Core.Infrastructure;
+@using Nop.Services;
+@using Nop.Services.Events;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.Events;
+
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+<script type="text/javascript">
+    $(document).ready(function () {
+
+    });
+
+</script>
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.redirect)
+
+@*<div id="supportDownload-edit">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportDownloads.Info")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportDownloads.ProductCategory")
+            </li>
+            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportDownloads.RelatedProducts")
+            </li>
+
+        </ul>
+        <div>
+            @TabInfo()
+        </div>
+        <div>
+            @TabProductCategories()
+        </div>
+        <div>
+            @TabRelatedProducts()
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function ()
+        {
+            $("#supportDownload-edit").kendoTabStrip({
+                animation: {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>
+
+    @{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "supportDownload-edit");
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }
+
+    @*save selected tab index
+    <input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+    @helper TabInfo()
+    {*@
+<div class="InfoTab">
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Title):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Title)
+                @Html.ValidationMessageFor(model => model.Title)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Description):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Description)
+                @Html.ValidationMessageFor(model => model.Description)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="RelatedProducts">
+                <div class="RelatedProductTab">
+                    <div class="title">
+                        <strong>@T("Admin.Suport.SupportDownloads.RelatedProducts"):</strong>
+                        @*<input type="button" id="delete-selected" class="k-button" value="@T("Admin.Common.Delete.Selected")" />*@
+                    </div>
+                    @Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdate.SupportDownloadRelatedProducts.cshtml", Model)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="title">
+                    <strong>Download:</strong>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DownloadId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DownloadId)
+                @Html.ValidationMessageFor(model => model.DownloadId)
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+@*}
+
+
+    @helper TabProductCategories()
+    {*@
+<div class="productCategoryTab">
+    @if (Model.AvailableCategories != null && Model.AvailableCategories.Count > 0)
+    {
+        <div class="title">
+            <strong>@T("Admin.Suport.SupportDownloads.ProductCategory"):</strong><br />
+        </div>
+        foreach (var productCategory in Model.AvailableCategories)
+        {
+            <input type="checkbox" name="SelectedProductCategoryIds" value="@productCategory.Value"
+                   @if (Model.SelectedProductCategoryIds != null && Model.SelectedProductCategoryIds.Contains(int.Parse(productCategory.Value))) { <text> checked="checked" </text>         } />@productCategory.Text
+                <br />
+        }
+    }
+    else
+    {
+        @T("Admin.Support.Fields.ProductCategories.NoProductCategories")
+    }
+</div>
+<div class="clr"></div>
+@*}
+
+        @helper TabRelatedProducts()
+        {
+    @Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdate.SupportDownloadRelatedProducts.cshtml", Model)
+    }*@
+

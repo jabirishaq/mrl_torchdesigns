@@ -1,0 +1,135 @@
+﻿@model Nop.Plugin.Widgets.Slider.Models.SliderDetailModel
+@{
+    Layout = "";
+
+    Html.AddScriptParts("~/Plugins/Widgets.Slider/Scripts/jquery.nivo.slider.js");
+    Html.AddCssFileParts("~/Plugins/Widgets.Slider/Content/nivoslider/nivo-slider.css");
+    Html.AddCssFileParts("~/Plugins/Widgets.Slider/Content/nivoslider/themes/default/default.css");
+}
+@using Nop.Plugin.Widgets.Slider.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System
+@using Nop.Web.Framework.UI
+
+@{  
+  
+    string[] names = new string[Model.Slider.Count];
+    int i = 0;
+    string speed="";
+    int count=Model.Slider.Count;
+}
+
+@foreach(var item in Model.Slider)
+{
+
+    if (Model.Slider.Count == 1)
+    {
+        speed = speed + item.SlidePushtime;
+    }
+    else
+    {
+        if (i == (count - 1))
+        {
+            speed = speed + item.SlidePushtime + "]";
+        }
+        else
+        {
+            if (i == 0)
+            {
+                speed = "[" + item.SlidePushtime + ",";
+            }
+            else
+            {
+                speed = speed + item.SlidePushtime + ",";
+            }
+
+        }
+    }
+   // names[i]=item.SlidePushtime;
+    i++;
+}
+    
+
+@helper RenderSliderLine(string pictureUrl, string text, string description, string link, string dataTransition = "")
+{
+    if (!string.IsNullOrEmpty(pictureUrl))
+    {
+        if (!string.IsNullOrEmpty(link))
+        {
+            if (!string.IsNullOrEmpty(description))
+            {
+                <a href="@link">
+                    <img id="@link" src="@pictureUrl" data-thumb="@pictureUrl" data-transition="@dataTransition" alt="@description" title="@text" />
+                </a>
+
+            }
+            else
+            {
+                <a href="@link">
+                    <img id="@link" src="@pictureUrl" data-thumb="@pictureUrl" data-transition="@dataTransition" alt="" title="@text" />
+                </a>
+            }
+        }
+
+        else
+        {
+            if (!string.IsNullOrEmpty(description))
+            {
+                <img src="@pictureUrl" data-thumb="@pictureUrl" data-transition="@dataTransition" alt="@description" title="@text" />
+
+            }
+            else
+            {
+                <img src="@pictureUrl" data-thumb="@pictureUrl" data-transition="@dataTransition" alt="" title="@text" />
+            }
+
+        }
+    }
+}
+<div class="slider-wrapper theme-default">
+    <div id="nivo-slider" class="nivoSlider">
+
+        @foreach (var item in Model.Slider)
+        {
+            @RenderSliderLine(@item.PictureUrl, @item.Title, @item.ShortDescription, @item.link, @item.SliderEffect)
+
+        }
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+  
+    var sTimer;
+    $('.nivoSlider').on('mouseover', function() {stopOnHover=1;clearInterval(sTimer);});
+    $('.nivoSlider').on('mouseout', function() {stopOnHover=0;pauseSlides ();});
+    function pauseSlides () {
+
+        var slideTimes=@speed;
+
+        var slideNo=jQuery('#nivo-slider').data('nivo:vars').currentSlide;
+        // Bellow Code For Hide Navigation Arrow
+        //if(slideTimes[slideNo]<=2000) 
+        //{jQuery('#nivo-slider .nivo-directionNav a').css('visibility','hidden')}
+        //else {jQuery('#nivo-slider .nivo-directionNav a').css('visibility','visible')};
+
+        if(slideTimes[slideNo]==0) return
+
+        clearInterval(sTimer);
+        sTimer=setInterval(function() {
+            jQuery('#nivo-slider .nivo-nextNav').trigger('click');
+        }, slideTimes[slideNo]);
+
+    };
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+             $('#nivo-slider').nivoSlider({@*animSpeed: @Model.TransitionSpeed ,*@afterLoad:function(){
+            jQuery('#nivo-slider').data('nivo:vars').stop=true;
+            pauseSlides ()},
+            afterChange:function(){pauseSlides ()}
+        });});
+</script>

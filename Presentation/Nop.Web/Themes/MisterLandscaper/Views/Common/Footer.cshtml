@@ -1,0 +1,211 @@
+﻿@model FooterModel
+@using Nop.Core
+@using Nop.Core.Domain.Tax
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Common;
+@using Nop.Web.Models.Catalog;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Catalog;
+@using Nop.Services.Seo;
+@using Nop.Core.Domain;
+
+@{ 
+    var _pluginFinder = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>();
+    var _settingService = EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>();
+
+    var pluginFinder = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>();
+
+    // check Testimonial plugin is installed
+    var pluginDescriptortestimonial = pluginFinder.GetPluginDescriptorBySystemName("Widgets.Testimonials");
+    bool TestimonialEnabledsetting = false;
+    if (pluginDescriptortestimonial != null)
+    {
+        //var pluginField = _pluginFinder.GetPluginDescriptors(false)
+        //    .FirstOrDefault(x => x.SystemName.Equals("Widgets.Testimonials", StringComparison.InvariantCultureIgnoreCase));
+        TestimonialEnabledsetting = true;
+
+    }
+
+    // check TorchDesign_Support plugin is installed
+    var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("TorchDesign_Support");
+    bool SupportEnabledsetting = false;
+    if (pluginDescriptor != null)
+    {
+        var pluginField = _pluginFinder.GetPluginDescriptors(false)
+            .FirstOrDefault(x => x.SystemName.Equals("TorchDesign_Support", StringComparison.InvariantCultureIgnoreCase));
+        SupportEnabledsetting = _settingService.LoadSetting<Nop.Plugin.Widgets.TorchDesign_Support.TorchDesignSupportSettings>().SupportEnabled;
+
+    }
+}
+
+
+<div class="footer">
+    <div class="leftsideimagediv"><a href="@Url.RouteUrl("storelocator")"><img src="~/Themes/MisterLandscaper/Content/images/Lowes_Finder.jpg" class="topicbellowimage" />@*<div class="contantofimage">We're in Lowe's! Finad a location near you.</div>*@</a></div>
+    <div class="rightsideimagediv"><a href="@Url.RouteUrl("Madeinusa")"><img src="~/Themes/MisterLandscaper/Content/images/American_Made.jpg" class="topicbellowimage" />@*<div class="contantofimage">Buy American. Find out more.</div>*@</a></div>
+    @Html.Action("HomepageProducts", "Product")
+
+    <div class="footer-menu-wrapper">
+        <div class="footerproduct">
+            <div class="column ">
+                <h3>@T("footer.product")</h3>
+                @{ var _storeinfosetting = EngineContext.Current.Resolve<StoreInformationSettings>();
+                 var _categoryService = EngineContext.Current.Resolve<ICategoryService>();
+                 var cat = _categoryService.GetAllCategories().Where(x => !x.Deleted && x.Published);
+                 if (cat.Count() > 0)
+                 {
+                <ul>
+                    @foreach (var category in cat)
+                    {
+                        <li><a href="@Url.RouteUrl("Category", new { SeName = category.GetSeName() })"> @category.Name</a></li>
+                    }
+                    <li><a href="~/Themes/MisterLandscaper/Content/Mister_Landscaper_Catalog.pdf" target="_blank">@T("footer.product.item.Download.Product.Catalog")</a></li>
+                    <li><a href="@Url.RouteUrl("Madeinusa")">@T("header.menu.madeinamerica")</a></li>
+                </ul>
+
+                 }
+                }
+
+
+                @*<h3>@T("Footer.Information")</h3>
+                    <ul>
+                        @if (Model.SitemapEnabled)
+                        {
+                            <li><a href="@Url.RouteUrl("Sitemap")">@T("Sitemap")</a></li>
+                        }
+                        <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("shippinginfo") })">@T("ShippingReturns")</a></li>
+                        <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("privacyinfo") })">@T("PrivacyNotice")</a></li>
+                        <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("conditionsofuse") })">@T("ConditionsOfUse")</a></li>
+                        <li><a href="@Url.RouteUrl("Topic", new {SeName = Html.GetTopicSeName("aboutus") })">@T("AboutUs")</a></li>
+                        <li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>
+                    </ul>*@
+            </div>
+            <div class="column customer-service">
+                <h3>@T("footer.educationndsupport")</h3>
+                <ul>
+                    @if (SupportEnabledsetting)
+                    {
+
+                        <li><a href="@Url.RouteUrl("Support")">@T("menu.productsupport")</a></li>
+
+                    }
+                    @*<li><a href="@Url.RouteUrl("Topic", new { Seame = Html.GetTopicSeName("product-support") })">@T("menu.productsupport")</a></li>*@
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("what_is_drip_irrigation_and_micro_spray") })">@T("menu.WhatisDripIrrigation")</a></li>
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("how-to-get-started") })">@T("menu.HowtoGetStarted")</a></li>
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("Maximumruns") })">@T("menu.Maximumruns")</a></li>
+                    <li><a href="@Url.RouteUrl("Faqpublicinfo")">@T("menu.CommonQuestions")</a></li>
+                    <li><a href="@Url.RouteUrl("Wateringtips")">@T("menu.WateringTips")</a></li>
+                    <li><a href="@Url.RouteUrl("DownloadPDFInstruction")">@T("menu.DownloadPDFInstruction")</a></li>
+                    @*<li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("system-design-help") })">@T("menu.SystemDesignHelp")</a></li>*@
+                    @if (Model.SystemDesignEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("systemdesigndhelpstep1")">@T("menu.SystemDesignHelp")</a></li>
+                    }
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("warranties") })">@T("menu.Warranties")</a></li>
+
+                    @*<li class="footerDownloadPDFInstruction"><a href="@Url.RouteUrl("DownloadPDFInstruction")">@T("menu.DownloadPDFInstruction")</a></li>
+                    <li><a href="@Url.RouteUrl("Wateringtips")">@T("footer.wateringtips")</a> </li>
+                    @if (Model.SystemDesignEnabled)
+                    {
+                        <li><a href="@Url.RouteUrl("systemdesigndhelpstep1")">@T("footer.systemdesign")</a> </li>
+                    }
+                    <li><a href="~/Themes/MisterLandscaper/Content/Mister_Landscaper_Catalog.pdf" target="_blank">@T("footer.downloads")</a> </li>*@
+                </ul>
+            </div>
+            <div class="column my-account">
+                <h3>@T("footer.community")</h3>
+                <ul>
+
+                    @*<li><a href="@Url.RouteUrl("Blog")">@T("footer.blog")</a> </li>*@
+                    <li><a href="http://facebook.com/misterlandscaper" target="_blank">@T("footer.followus.facebook")</a></li>
+                    @if (TestimonialEnabledsetting)
+                    {
+                        <li><a href="@Url.RouteUrl("testimonials")">@T("header.topmenu.menuitem.Testimonials")</a></li>
+                    }
+                </ul>
+            </div>
+            <div class="column lastdiv">
+                <h3>@T("footer.company")</h3>
+                <ul>
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("history") })">@T("footer.history")</a> </li>
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("mission") })">@T("footer.mission")</a> </li>
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("made-in-america") })">@T("header.menu.madeinamerica")</a></li>
+                    @*<li><a href="@Url.RouteUrl("Blog")">@T("footer.blog")</a></li>*@
+                    @*<li><a href="@Url.RouteUrl("ContactUs")">@T("footer.contact")</a></li>*@
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("PrivacyInfo") })">@T("footer.PrivacyInfo")</a></li>
+                </ul>
+            </div>
+            @*<div class="column follow-us">
+                <h3>@T("footer.support")</h3>
+                <ul>
+                    <li><a href="@Url.RouteUrl("Faqpublicinfo")">@T("footer.commonquestions")</a> </li>
+                    <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("warranties") })">@T("footer.warranties")</a> </li>
+                    <li><a href="@Url.RouteUrl("ContactUs")">@T("footer.contact")</a> </li>
+
+                </ul>
+            </div>*@
+            <div class="column follow-us">
+                <h3>@T("footer.videos")</h3>
+                <ul>
+                    <li><a href="https://www.youtube.com/user/MisterLandscaper1" target="_blank">@T("footer.searchforvideos")</a> </li>
+                </ul>
+            </div>
+            <div class="column lastdiv">
+                <h3>@T("footer.stores")</h3>
+                <ul>
+                    <li><a href="@Url.RouteUrl("storelocator")">@T("footer.findalocation")</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="fltright footer-shareblock">
+            <div class="fltleft footer-icon">
+
+                @* @Html.Partial("_ShareButton", Model)*@
+                <div class="pfollow-us">
+                    <a href="@_storeinfosetting.TwitterLink" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/Twitter_Icon.jpg" /></a>
+                    <a href="@_storeinfosetting.FacebookLink" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/Facebook_Icon.jpg" /></a>
+                    <a href="@_storeinfosetting.YoutubeLink" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/Youtube_Icon.jpg" /></a>
+                    <a href="https://www.pinterest.com/mistrlandscape/" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/Pinterest.png" /></a>
+                </div>
+
+            </div>
+            <div class="newsletter">@Html.Action("NewsletterBox", "Newsletter")</div>
+            <div class="footerlogo">
+                <a href="@Url.RouteUrl("HomePage")"><img src="~/Themes/MisterLandscaper/Content/images/footerlogo.png" class="topicbellowimage" /></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-poweredby">
+        Powered by <a href="http://www.nopcommerce.com/">nopCommerce</a>
+        @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
+            Find more info here http://www.nopcommerce.com/copyrightremoval.aspx*@
+    </div>
+    @if (Model.DisplayTaxShippingInfoFooter)
+    {
+        var inclTax = EngineContext.Current.Resolve<IWorkContext>().TaxDisplayType == TaxDisplayType.IncludingTax;
+        <div class="footer-tax-shipping">
+            @T(inclTax ? "Footer.TaxShipping.InclTax" : "Footer.TaxShipping.ExclTax", Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("shippinginfo") }))
+        </div>
+    }
+    <div class="footer-disclaimer">
+        @T("Content.CopyrightNotice", DateTime.Now.Year, Model.StoreName)
+    </div>
+    <div class="footer-store-theme">
+        @Html.Action("StoreThemeSelector", "Common")
+    </div>
+
+
+
+    @Html.Widget("footer")
+</div>
+<!-- Start of LiveChat (www.livechatinc.com) code -->
+<script type="text/javascript">
+    window.__lc = window.__lc || {};
+    window.__lc.license = 7489691;
+    (function () {
+        var lc = document.createElement('script'); lc.type = 'text/javascript'; lc.async = true;
+        lc.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'cdn.livechatinc.com/tracking.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(lc, s);
+    })();
+</script>
+<!-- End of LiveChat code -->

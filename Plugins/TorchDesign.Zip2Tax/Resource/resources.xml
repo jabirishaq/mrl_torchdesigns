@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="plugins.torchdesign.zip2tax.url">
+    <Value>Url</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.url.hint">
+    <Value>Zip2Tax url</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.allowedstateids.hint">
+    <Value>Allowed State</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.zipcodetext.hint">
+    <Value>ZipCode</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.defaultzipcode.hint">
+    <Value>Default ZipCode</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.defaulttaxrate.hint">
+    <Value>Default Tax Rate</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.username.hint">
+    <Value>UserName</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.password.hint">
+    <Value>Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.password.hint">
+    <Value>Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.updatetimestamp.hint">
+    <Value>Update Time Stamp</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.databaseserver.hint">
+    <Value>Zip2Tax Database Server</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.databaseusername.hint">
+    <Value>Zip2Tax Database UserName</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.databasepassword.hint">
+    <Value>Zip2Tax Database Password</Value>
+  </LocaleResource>
+  <LocaleResource Name="plugins.torchdesign.zip2tax.databasename.hint">
+    <Value>Zip2Tax Database Name</Value>
+  </LocaleResource>
+</Language>

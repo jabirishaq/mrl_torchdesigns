@@ -1,0 +1,217 @@
+﻿@model SystemDesignHelpModel
+@using Nop.Web.Models.SystemDesignHelp;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Html.AddCssFileParts("~/Scripts/fineuploader/fineuploader-4.2.2.min.css");
+    Html.AddScriptParts("~/Scripts/fineuploader/jquery.fineuploader-4.2.2.min.js");
+   
+    //title
+    // Html.AddTitleParts(T("PageTitle.ContactUs").Text);
+}
+
+@using (Html.BeginForm("Step2", "SystemDesignHelp", FormMethod.Post, new { enctype = "multipart/form-data"}))
+{
+  
+<div id="ph-title">
+    <div class="page-title">
+        <h1></h1>
+    </div>
+</div>
+<div class="clr topiccontainer SystemDesignHelpStepTwo">
+    <div class="header-details">
+        <div class="fltleft header-icon">
+            <img src="~/Themes/MisterLandscaper/Content/images/System-Design-Help_03.png" style="width: 100%;"/>
+        </div>
+        <div class="fltleft header-description">
+            <span class="topicmaintitlespan">System Design Help</span>
+            <div class="topicpageheaderdiv">Follow the instructions below and fill out the form to get personalized, micro spray and drip irrigation system design help.</div>
+        </div>
+    </div>
+    <div class="forline"></div>
+ 
+    <div class="clr systemdesign"> 
+        <div>
+            <div class="message-error">
+                @Html.ValidationSummary(true)
+            </div>
+            <span class="titlespan">Important Information</span>
+            <div class="simpletextcontainer" style="min-height:10px">To complete your request for system design help, we just need a couple more pieces of important information. These final bits of information will help give us a more complete understanding of your irrigation needs.</div>
+            <div class="name">
+                <div class="fltleft">
+                    @Html.LabelFor(model => model.FirstName)
+                    @Html.EditorFor(model => model.FirstName)
+                    @* @Html.ValidationMessageFor(model => model.FirstName)*@
+                </div>
+                <div class="fltleft LastNameStepTwo">
+                    @Html.LabelFor(model => model.LastName)
+                    @Html.EditorFor(model => model.LastName)
+                    @*  @Html.ValidationMessageFor(model => model.LastName)*@
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <div class="email">
+                @Html.LabelFor(model => model.Email)
+                @Html.EditorFor(model => model.Email)
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div> 
+        <div class="nextdiv">
+            <span class="titlespan">In which part of the country do you live? What soil type do you have?</span>
+            <div class="simpletextcontainer" style="min-height:10px">Where you live and what soil type you have can be a determining factor in what products we recommend you use. If you are unsure of your soil type, download this <a href="~/Themes/MisterLandscaper/Content/Graph_Checklist.pdf" target="_blank" class="redfont">PDF</a> for instructions on a simple way to find out.</div>
+
+
+            <div>
+                <div class="ddl1 fltleft">
+                    @Html.DropDownListFor(model => model.StateId, Model.AvailableStates)
+                   <span id="validationspan" class="redfont" style="display:none">Please Select State</span>
+                </div>
+                <div class="ddl2">
+                    @Html.DropDownListFor(model => model.SoilTypeId, Model.AvailableSoilType)
+                </div>
+                <div class="cleardiv"></div>
+            </div>
+        </div>
+        <div class="nextdiv">
+            <span class="titlespan">Are you on city water or well water?</span>
+            <div class="simpletextcontainer" style="min-height:10px">Water source can help determine the need for filters and pressure regulators.</div>
+            <div class="ddl2">
+                @Html.DropDownListFor(model => model.CityWellId, Model.AvailableCityWell)
+            </div>
+            <div class="cleardiv"></div>
+        </div>
+        <div class="nextdiv">
+            <span class="titlespan">What is your water pressure? What is your flow rate?</span>
+            <div class="simpletextcontainer" style="min-height:10px">Insert the water pressure and/or flow rate data you obtained in step one. As a reminder, if you do not have the actual PSI, utilize the simple flow rate test described in step one. </div>
+            <div>
+                <span class="titlespan fltleft waterPressureTitle">Water Pressure: My household water pressure is:</span>
+                <div class="fltleft psitext">
+                    @Html.EditorFor(model => model.PSI)
+                </div>
+                <span class="titlespan fltleft">PSI</span>
+                <div class="fltright flowRateTitle">
+                    <span class="titlespan fltleft">Flow Rate: My 1 gallon container was filled in</span>
+                    <div class="fltleft psitext">
+                        @Html.EditorFor(model => model.Second)
+                    </div>
+                    <span class="titlespan fltleft">seconds.</span>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+        </div>
+        <div class="nextdiv">
+            <span class="titlespan">How many faucets do you have? And how many are you wanting to use?</span>
+            <div class="simpletextcontainer">Keep in mind, whether using just one faucet or all of them, a “Y” fitting can be connected first. This way, hoses etc. can be used without having to disconnect the Mister Landscaper system. Note: If you desire to USE fewer faucets than actually exist, be sure to note on your drawing which faucets you DO want to utilize.</div>
+            <div>
+                <span class="titlespan fltleft">I have </span>
+                <div class="ddl4 fltleft">
+                    @Html.DropDownListFor(model => model.HaveFaucetsId, Model.AvailableHaveFaucets)
+                </div>
+                <span class="titlespan fltleft">faucets. </span>
+                <div class="faucetTitle">
+                    <span class="titlespan fltleft">I want to use</span>
+                    <div class="ddl4 fltleft">
+                        @Html.DropDownListFor(model => model.UseFaucetsId, Model.AvailableUseFaucets)
+                    </div>
+
+                    <span class="titlespan fltleft">faucets.</span>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+        </div>
+        <div class="nextdiv">
+            <span class="titlespan">Drippers or Micro Sprays?</span>
+            <div class="simpletextcontainer"style="min-height:10px;">There are a number of options when it comes to Mister landscaper low-volume irrigation. We will design a system that meets your needs and wants. If you prefer to use one form of low-volume irrigation over another, indicate that here. Otherwise, choose “Both” for the most optimal solution.</div>
+            <div class="ddl1">
+                @Html.DropDownListFor(model => model.DrippersId, Model.AvailableDrippers)
+            </div>
+            <div class="cleardiv"></div>
+         </div>
+        <div class="nextdiv">
+            <span class="titlespan">@T("SystemDesign.ImageUpload")</span>
+            <div class="simpletextcontainer"style="min-height:10px;margin-bottom: -2px;">@T("SystemDesign.ImageUpload.Content")</div>
+            <div class="file-upload ">
+                @*@Html.EditorFor(model => model.PictureId)*@
+                @*@Html.EditorFor(model=>model.PictureId)*@
+
+                <div class="outer">
+                    <div class="upload_button_outer clearfix">
+                        
+                        <div class="uploadbtn">
+                            <div class="upload">Search</div>
+                            <input type="file" id="file" name="file" />
+                        </div>
+                        <div class="filename"></div>
+                    </div>
+                </div>
+
+                @*<input type="file" name="file" id="file" style="width: 100%;" />
+                <input id="submit" type="submit" name="save" class="button-1" value="Search" style="margin-left:-97px" />*@
+
+            </div>
+       </div>
+        <div class="nextdiv">
+            <span class="titlespan">Request Complete</span>
+            <div class="simpletextcontainer" style="min-height:10px;margin-bottom: -2px;">Once you submit your information, we will send a confirmation email. A drawing and shopping list will be emailed within 3-5 business days.<span class="redfont"> Please be advised that, while we do attempt to provide accurate and complete irrigation system solutions, the drawings and lists provided are only recommendations.</span></div>
+            <div class="captcha-box">
+                @Html.Raw(Html.GenerateCaptcha())
+            </div>
+            <div class="button">
+                <input id="submit" type="submit" name="save" class="button-1" value="@T("contactus.button")" style="margin-left:0px" />
+            </div>
+
+        </div>
+        </div>
+        <div class="step-two">
+            <a href="@Url.RouteUrl("systemdesigndhelpstep1")" class="prev-step">Return to Step One</a>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#file').change(function () {
+                $('.filename').html($(this).val());
+            });
+
+            $('.adminTitle').css('display', 'none');
+            //$('#file').css('width', '81px');
+              $("[id^=cbUseDownloadURL]").each(function (index) {
+                var id = "#" + this.id;
+                $(id).css("display", "none");
+
+              });
+              $('.adminContent').css('margin-top', '10px');
+              //$("[id^=download]").each(function (index) {
+              //    var id = "#" + this.id;
+              //    $(id).css("display", "none");
+
+              //});
+        });
+      
+        $('#submit').click(function () {
+            var country = $("#CountryId").val();
+            if (country == "0") {
+                alert('Please Select State');
+                $("#validationspan").css("display", "block");
+                return false;
+            }
+            else
+            {
+                $("#validationspan").css("display", "none");
+            }
+            var a = $('.filename').html();
+            if (a.length < 1)
+            {
+                alert('Upload picture first');
+                return false;
+            }
+        @*var PictureId = $("#@Html.FieldIdFor(model => model.PictureId)").val();
+
+        if (PictureId == 0) {
+            alert('Upload picture first');
+            return false;
+        }*@
+    });
+
+    </script>
+}
+
+

@@ -1,0 +1,294 @@
+﻿@model AddressModel
+@using Nop.Web.Models.Common;
+
+@if (Model.CountryEnabled && Model.StateProvinceEnabled)
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#@Html.FieldIdFor(model => model.CountryId)").change(function () {
+                var selectedItem = $(this).val();
+                var ddlStates = $("#@Html.FieldIdFor(model => model.StateProvinceId)");
+                var statesProgress = $("#states-loading-progress");
+                statesProgress.show();
+                $.ajax({
+                    cache: false,
+                    type: "GET",
+                    url: "@(Url.RouteUrl("GetStatesByCountryIdCustome"))",
+                    data: { "countryId": selectedItem, "addEmptyStateIfRequired": "true" },
+                    success: function (data) {
+                        ddlStates.html('');
+                        $.each(data, function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                        statesProgress.hide();
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to retrieve states.');
+                        statesProgress.hide();
+                    }
+                });
+            });
+        });
+    </script>
+}
+@Html.HiddenFor(model => model.Id)
+
+<div class="edit-address">
+
+    <div class="fltleft">
+        <div class="addressTypeBlock" style="">
+            <div class="inputs" style=" padding-bottom:5px;">
+                <span>What type of address is this?</span>
+            </div>
+            <div class="inputs radio-btns-addr">
+                <div class="fltleft individualRbtDiv">
+                    @*<input id="Individual" class="address-radiobtn" type="radio" value="20" name="check" group="a" checked="checked" style="">*@
+                    
+                    @Html.RadioButton("AddressType", "I", (Model.AddressType == "I"), new { id = "Individual",@class="address-radiobtn", @checked="checked" })
+                    Individual
+                </div>
+                <div class="fltleft companyRbtDiv" style="">
+                    @*<input id="Companyrad" class="address-radiobtn" type="radio" value="20" name="check" group="a">*@
+                    @Html.RadioButton("AddressType", "C", (Model.AddressType == "C"), new { id = "Companyrad",@class="address-radiobtn" })
+                    Company
+                </div>
+            </div>
+        </div>
+        <div class="cleardiv"></div>
+        @if (Model.CompanyEnabled)
+        {
+            <div id="cmpn" class="inputs">
+                @Html.LabelFor(model => model.Company, new { }, ":")
+                @Html.EditorFor(model => model.Company)
+                @if (Model.CompanyRequired)
+                {
+                    @Html.RequiredHint()
+                }
+                @*@Html.ValidationMessageFor(model => model.Company)*@
+            </div>
+        }
+        <div class="inputs">
+            @Html.LabelFor(model => model.FirstName, new { }, ":")
+            @Html.EditorFor(model => model.FirstName)
+            @Html.RequiredHint()
+            @*@Html.ValidationSummary(Model.FirstName)*@
+        </div>
+        <div class="inputs">
+            @Html.LabelFor(model => model.LastName, new { }, ":")
+            @Html.EditorFor(model => model.LastName)
+            @Html.RequiredHint()
+            @*@Html.ValidationMessageFor(model => model.LastName)*@
+
+        </div>
+        <div class="inputs">
+            @Html.LabelFor(model => model.Email, new { }, ":")
+            @Html.EditorFor(model => model.Email)
+            @Html.RequiredHint()
+            @*@Html.ValidationMessageFor(model => model.Email)*@
+        </div>
+
+        @if (Model.PhoneEnabled)
+        {
+            <div class="inputs">
+                @Html.LabelFor(model => model.PhoneNumber, new { }, ":")
+                @Html.EditorFor(model => model.PhoneNumber)
+                @if (Model.PhoneRequired)
+                {
+                    @Html.RequiredHint()
+                }
+                @*@Html.ValidationMessageFor(model => model.PhoneNumber)*@
+            </div>
+        }
+        @if (Model.FaxEnabled)
+        {
+            <div class="inputs">
+                @Html.LabelFor(model => model.FaxNumber, new { }, ":")
+                @Html.EditorFor(model => model.FaxNumber)
+                @if (Model.FaxRequired)
+                {
+                    @Html.RequiredHint()
+                }
+                @*@Html.ValidationMessageFor(model => model.FaxNumber)*@
+            </div>
+        }
+
+    </div>
+    <div class="fltright">
+        @if (Model.CountryEnabled)
+        {
+            <div class="inputs">
+                @Html.LabelFor(model => model.CountryId, new { @class = "marginlablflotleftforcity" }, ":")
+                @Html.DropDownListFor(model => model.CountryId, Model.AvailableCountries)
+                @Html.RequiredHint()
+                @*@Html.ValidationMessageFor(model => model.CountryId)*@
+            </div>
+        }
+
+        @if (Model.StreetAddressEnabled)
+        {
+            <div class="inputs clr">
+                @Html.LabelFor(model => model.Address1, new { }, ":")
+                @Html.EditorFor(model => model.Address1)
+                @if (Model.StreetAddressRequired)
+                {
+                    @Html.RequiredHint()
+                }
+                @*@Html.ValidationMessageFor(model => model.Address1)*@
+            </div>
+        }
+        @if (Model.StreetAddress2Enabled)
+        {
+            <div class="inputs">
+                @Html.LabelFor(model => model.Address2, new { }, ":")
+                @Html.EditorFor(model => model.Address2)
+                @if (Model.StreetAddress2Required)
+                {
+                    @Html.RequiredHint()
+                }
+                @*@Html.ValidationMessageFor(model => model.Address2)*@
+            </div>
+        }
+        @if (Model.CityEnabled)
+        {
+            <div class="inputs clr">
+                @Html.LabelFor(model => model.City, new { @class = "marginlablflotleftforcity" }, ":")
+                @Html.EditorFor(model => model.City)
+
+                @if (Model.CityRequired)
+                {
+                    @Html.RequiredHint()
+                }
+                @*@Html.ValidationMessageFor(model => model.City)*@
+            </div>
+        }
+        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+        {
+            <div class="inputs">
+                @Html.LabelFor(model => model.StateProvinceId, new { @class = "marginlablflotleftforcity" }, ":")
+                @Html.DropDownListFor(model => model.StateProvinceId, Model.AvailableStates)
+                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait...")</span>
+                @*@Html.ValidationMessageFor(model => model.StateProvinceId)*@
+            </div>
+        }
+
+        @if (Model.ZipPostalCodeEnabled)
+        {
+            <div class="inputs clr">
+                @Html.LabelFor(model => model.ZipPostalCode, new { style = "margin-top:-5px;" }, ":")
+                @Html.EditorFor(model => model.ZipPostalCode)
+                @if (Model.ZipPostalCodeRequired)
+                {
+                    @Html.RequiredHint()
+                }
+                @*@Html.ValidationMessageFor(model => model.ZipPostalCode)*@
+            </div>
+        }
+
+    </div>
+    <div class="clr"></div>
+</div>
+<div>
+
+    @*@Html.ValidationSummary(true, "")*@
+    @Html.ValidationSummary("Some required fields have not been populated")
+    @*<script>
+            $('#newaddress').click(function () {
+                var valsummary = document.getElementsByClassName('validation-summary-errors');
+                if (valsummary != null) {
+                    alert("hi");
+                    $('validation-summary-errors').css('display', 'none');
+                }
+            })
+        </script>*@
+
+</div>
+
+@*<script>
+        $(document).ready(function () {
+            var select = $('select');
+            //alert("call1");
+            $('select').each(function () {
+                var newDiv = $('<div />').addClass('action-select');
+                $(this).before(newDiv);
+                newDiv.append(this)
+            });
+        });
+    </script>*@
+<script>
+    $(document).ready(function () {
+        $(".spacediv").css("display", "none");
+        if ($("#Individual").attr("checked")) {
+            $('#cmpn').css('display', 'none');
+            if (document.getElementById("NewAddress_Company")) {
+                document.getElementById("NewAddress_Company").value = "";
+            }
+            else {
+                document.getElementById("Address_Company").value = "";
+
+            }
+        }
+        else {
+            $('#cmpn').css('display', 'block');
+            if ($('#cmpn span').hasClass("required")) { }
+            else {
+                $('#cmpn').append('<span class="required">*</span>');
+            }
+            
+        }
+
+    })
+    $('#Individual').change(function () {
+        if ($("#Individual").attr("checked")) {
+            $('#cmpn').css('display', 'none');
+            //   document.getElementById("NewAddress_Company").value = "";
+            if (document.getElementById("NewAddress_Company")) {
+                document.getElementById("NewAddress_Company").value = "";
+            }
+            else {
+                document.getElementById("Address_Company").value = "";
+
+            }
+        }
+        else {
+            $('#cmpn').css('display', 'block');
+            if ($('#cmpn span').hasClass("required")) { }
+            else {
+                $('#cmpn').append('<span class="required">*</span>');
+            }
+        }
+    });
+    $('#Companyrad').change(function () {
+        if ($("#Companyrad").attr("checked")) {
+            $('#cmpn').css('display', 'block');
+            if ($('#cmpn span').hasClass("required")) {}
+            else {
+                $('#cmpn').append('<span class="required">*</span>');
+            }
+        }
+        else {
+            $('#cmpn').css('display', 'none');
+
+            // document.getElementById("NewAddress_Company").value = "";
+            if (document.getElementById("NewAddress_Company")) {
+                document.getElementById("NewAddress_Company").value = "";
+            }
+            else {
+                document.getElementById("Address_Company").value = "";
+
+            }
+        }
+    });
+    //$("form").submit(function (e) {
+    //    if ($("#Companyrad").attr("checked")) {
+    //        var company = $("#NewAddress_Company").val();
+    //        if (company == undefined || company == "") {
+    //            $(".validation-summary-errors").show();
+    //            $(".validation-summary-errors").append("<p>Company name is required</p>");
+    //            e.preventDefault();
+    //        }
+    //    }
+
+    //})
+    //$('#Individual').change
+    //$('#Company')
+</script>

@@ -1,0 +1,153 @@
+﻿@model NewsCommentModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    int? filterByNewsItemId = ViewBag.FilterByNewsItemId;
+
+    //page title
+    ViewBag.Title = T("Admin.ContentManagement.News.Comments").Text;
+}
+
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+        @T("Admin.ContentManagement.News.Comments")
+    </div>
+    <div class="options">
+    </div>
+</div>
+@if (Model.Isapprove)
+{
+    <div class="newscommentapproved">@Model.CommentTitle is Approved Now</div>
+}
+<table class="adminContent">
+    <tr>
+        <td>
+
+            <div id="comments-grid"></div>
+            @{
+                string readUrl = "";
+                if (filterByNewsItemId.HasValue)
+                {
+                    readUrl = Url.Action("Comments", "News", new { filterByNewsItemId = filterByNewsItemId.Value });
+                }
+                else
+                {
+                    readUrl = Url.Action("Comments", "News");
+                }
+            }
+            <script>
+    $(document).ready(function () {
+        $("#comments-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@readUrl",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    update: {
+                        url: "@Html.Raw(Url.Action("CommentUpdate", "News"))",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    destroy: {
+                        url: "@Html.Raw(Url.Action("CommentDelete", "News"))",
+                        type: "POST",
+                        dataType: "json"
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Isapprove: { editable: true, type: "boolean" },
+                            NewsItemTitle: { editable: false, type: "string" },
+                            CommentText: { editable: false, type: "string" },
+                            CommentTitle: { editable: false, type: "string" },
+                            CustomerId: { editable: false, type: "number" },
+                            Id: { editable: false, type: "number" },
+                            CreatedOn: {editable: false,type: "date" }
+                            //do not implicitly specify all fields
+                            //we do it only for fields which implicitly require it
+                            //otherwise, they'll be formatted wrong way
+
+                        }
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Id",
+                title: "ID",
+                width: 50
+            }, {
+                field: "NewsItemTitle",
+                title: "@T("Admin.ContentManagement.News.Comments.Fields.NewsItem")",
+                width: 200,
+                template: '<a href="@Url.Content("~/Admin/News/Edit/")#=NewsItemId#">#:NewsItemTitle#</a>'
+            }, {
+                field: "CustomerId",
+                title: "@T("Admin.ContentManagement.News.Comments.Fields.Customer")",
+                width: 200,
+                template: '<a href="@Url.Content("~/Admin/Customer/Edit/")#=CustomerId#">#:CustomerInfo#</a>'
+            }, {
+                field: "CommentTitle",
+                title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentTitle")"
+            }, {
+                field: "CommentText",
+                title: "@T("Admin.ContentManagement.News.Comments.Fields.CommentText")",
+                encoded: false
+            }, {
+                field: "Isapprove",
+                title: "@T("admin.catalog.productreviews.fields.isapproved")",
+                width: 150,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=Isapprove#.gif" />'
+            },{
+                field: "CreatedOn",
+                title: "@T("Admin.ContentManagement.News.Comments.Fields.CreatedOn")",
+                width: 200,
+                type: "date",
+                format: "{0:G}"
+            }, {
+                command: [
+                    {
+                        name: "edit",
+                        text: "@T("Admin.Common.Edit")"
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }
+                ],
+                width: 200
+            }]
+        });
+    });
+            </script>
+        </td>
+    </tr>
+</table>

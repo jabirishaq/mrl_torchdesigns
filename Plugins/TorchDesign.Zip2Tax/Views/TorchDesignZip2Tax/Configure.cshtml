@@ -1,0 +1,319 @@
+﻿@{
+    //  Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+    //var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+}
+@model ConfigurationModel
+@using Nop.Plugin.TorchDesign.Zip2Tax.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+<link href="~/Plugins/TorchDesign.Zip2Tax/Content/taxstyle.css" rel="stylesheet" />
+
+@* Bellow Code For Find Taxrate*@
+<div style="text-align:center"><a href="@Url.RouteUrl("TorchDesignZip2TaxCounter")" class="k-button">@T("Show.callcount")</a></div>
+
+@using (Html.BeginForm())
+{
+    <br />
+    <div class="tax">
+        <div class="settigndiv">
+            <div class="taxtitle">
+                <strong>@T("Plugins.TorchDesign.Zip2Tax.Taxprovidersetting")</strong>
+            </div>
+            <table class="adminContent">
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.DatabaseServer):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.DatabaseServer)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.DatabaseUserName):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.DatabaseUserName)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.DatabasePassword):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.DatabasePassword)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.DatabaseName):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.DatabaseName)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.UserName):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.UserName)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Password):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.Password)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.Zip2TaxApiUrl):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.Zip2TaxApiUrl)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.UpdateTimeStemp):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.UpdateTimeStemp)@T("Plugins.TorchDesign.Zip2Tax.Hour")
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.DefaultZipcode):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.DefaultZipcode)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.DefaultTaxRate):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.DefaultTaxRate)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.AllowedStateIds):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.AllowedStateIds)
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="1">
+                    <td>
+                        <input type="submit" id="Savesettingbtn" name="Savesettingbtn" class="k-button" value="@T("Admin.Common.Save")" />
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+        <div class="searchtext">
+            <div class="taxtitle">
+                <strong>@T("Plugins.TorchDesign.Zip2Tax.Searchtaxrate")</strong>
+            </div>
+            <table class=" admincontent">
+                <tr>
+                    <td class="adminTitle">
+                        @Html.NopLabelFor(model => model.ZipcodeText):
+                    </td>
+                    <td class="adminData">
+                        @Html.EditorFor(model => model.ZipcodeText)
+
+                    </td>
+                    <td><input type="submit" id="Getlivetax" name="Getlivetax" class="k-button" value="@T("Admin.Common.Go")" /></td>
+                </tr>
+                @if (Model.IsTaxFound)
+                {
+                    <tr>
+                        <td class="adminTitle">
+                            Tax Is: <span>@Model.Msglable</span>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+        </div>
+    </div>
+    <div style="clear:both"></div>
+}
+
+ </br>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Widgets-Zip2Tax-form" }))
+{
+    @*<table>
+            <tr>
+                <td>
+                    @{
+        var addNewUrl = Url.RouteUrl("Plugin.Widgets.Slider.AddPopup") + "?btnId=btnRefresh&formId=Widgets-Zip2Tax-form";
+                    }
+                    <br />
+                    <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Widgets.Slider.AddSlider")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 500, true); return false;" class="k-button" />
+                    <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#btnRefresh').click(function () {
+                                //refresh grid
+                                var optionsGrid = $("#event-grid").data('kendoGrid');
+                                //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                                optionsGrid.dataSource.read();
+
+                                //return false to don't reload a page
+                                return false;
+                            });
+                        });
+                    </script>
+                </td>
+            </tr>
+        </table>*@
+    <hr />
+    <br />
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="taxcall-grid"></div>
+
+                <script>
+                    $(document).ready(function() {
+                        $("#taxcall-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read:{
+                                        url: "@Html.Raw(Url.Action("TaxList", "TorchDesignZip2Tax"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    @*update: {
+                                            url: "@Html.Raw(Url.Action("TaxUpdate", "TorchDesignZip2Tax"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },*@
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("TaxDelete", "TorchDesignZip2Tax"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "read") {
+                                        var response = e.response;
+
+                                    }
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            dataBound: onDataBound,
+                            columns: [{
+                                field: "Taxcategoryid",
+                                title: "@T("Plugins.TorchDesign.Zip2Tax.Taxcategoryid")",
+                                width: 150
+                            },
+                                 {
+                                     field: "Zipcode",
+                                     title: "@T("Plugins.TorchDesign.Zip2Tax.Zipcode")",
+                                     width: 200
+                                 },
+                    {
+                        field: "TaxRate",
+                        title: "@T("Plugins.TorchDesign.Zip2Tax.TaxRate")",
+                        width: 150
+                    },
+                    {
+                        field: "County",
+                        title: "@T("Plugins.TorchDesign.Zip2Tax.County")",
+                        width: 150
+                    },
+                    {
+                        field: "CreateOn",
+                        title: "@T("Plugins.TorchDesign.Zip2Tax.CreateOn")",
+                        width: 150,
+                        type: "date",
+                        format: "{0:G}"
+                    },
+                    {
+
+                        field: "ModifyOn",
+                        title: "@T("Plugins.TorchDesign.Zip2Tax.ModifyOn")",
+                        width: 150,
+                        type: "date",
+                        format: "{0:G}"
+
+                    },
+                                @*{
+                        field: "Id",
+                        title: "@T("Admin.Common.Edit")",
+                        width: 100,
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.TorchDesign.Zip2Tax.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=Widgets-Zip2Tax-form', 800, 500, true); return false;\" class='k-button' />"
+                                },*@
+                                   {
+                                       command: [{
+                                           name: "destroy",
+                                           text: "@T("Admin.Common.Delete")"
+                                       }],
+                                       width: 200
+                                   }]
+                        } );
+                    });
+                </script>
+
+                <script type="text/javascript">
+
+
+                    function onDataBound(e) {}
+
+
+                </script>
+            </td>
+        </tr>
+    </table>
+}
+
+

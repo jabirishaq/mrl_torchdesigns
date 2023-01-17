@@ -1,0 +1,111 @@
+﻿@model Nop.Admin.Models.Support.SupportDownloadModel
+@Html.ValidationSummary(false)
+
+<script type="text/javascript">
+	$(document).ready(function ()
+	{
+
+	});
+
+</script>
+@Html.HiddenFor(model => model.Id)
+
+<div id="supportDownload-edit">
+	<ul>
+		<li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+			@T("Admin.Suport.SupportDownloads.Info")
+		</li>
+		<li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+			@T("Admin.Suport.SupportDownloads.ProductCategory")
+		</li>
+		<li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+			@T("Admin.Suport.SupportDownloads.RelatedProducts")
+		</li>
+
+	</ul>
+	<div>
+		@TabInfo()
+	</div>
+	<div>
+		@TabProductCategories()
+	</div>
+	<div>
+		@TabRelatedProducts()
+	</div>
+
+</div>
+<script>
+	$(document).ready(function ()
+	{
+		$("#supportDownload-edit").kendoTabStrip({
+			animation: {
+				open: {
+					effects: "fadeIn"
+				}
+			},
+			select: tabstrip_on_tab_select
+		});
+	});
+</script>
+
+@{
+	//custom tabs
+	var eventMessage = new AdminTabStripCreated(this.Html, "supportDownload-edit");
+	EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+	foreach (var eventBlock in eventMessage.BlocksToRender)
+	{
+		@eventBlock
+	}
+}
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@helper TabInfo()
+{
+	<table class="adminContent">
+		<tr>
+			<td class="adminTitle">
+				@Html.NopLabelFor(model => model.Title):
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(model => model.Title)
+				@Html.ValidationMessageFor(model => model.Title)
+			</td>
+		</tr>
+		<tr>
+			<td class="adminTitle">
+				@Html.NopLabelFor(model => model.DownloadId):
+			</td>
+			<td class="adminData">
+				@Html.EditorFor(model => model.DownloadId)
+				@Html.ValidationMessageFor(model => model.DownloadId)
+			</td>
+		</tr>
+	</table>
+
+}
+
+
+@helper TabProductCategories()
+{
+	if (Model.AvailableCategories != null && Model.AvailableCategories.Count > 0)
+	{
+		foreach (var productCategory in Model.AvailableCategories)
+		{
+			<input type="checkbox" name="SelectedProductCategoryIds" value="@productCategory.Value"
+					 @if (Model.SelectedProductCategoryIds != null && Model.SelectedProductCategoryIds.Contains(int.Parse(productCategory.Value))) { <text> checked="checked" </text>    } />@productCategory.Text
+					<br />
+		}
+	}
+	else
+	{
+		@T("Admin.Support.Fields.ProductCategories.NoProductCategories")
+	}
+}
+
+@helper TabRelatedProducts()
+{
+	@Html.Partial("_CreateOrUpdate.SupportDownloadRelatedProducts", Model)
+}
+

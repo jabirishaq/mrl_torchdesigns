@@ -1,0 +1,29 @@
+﻿@model ProductVideos
+@using Nop.Web.Models.Catalog;
+@*Productvideo*@
+
+
+@if (Model.Videolist.Count > 0)
+{
+    <div>
+        @foreach (var item in Model.Videolist)
+        {
+            <div class="vediosubdiv">
+                <a href="http://vimeo.com/@item.VideoUrl" class="fancybox fancybox.iframe" data-fancybox-group='gallery'>
+                    <img src="@item.PictureUrl" />
+                </a>
+                          
+           </div>
+        }
+        
+    </div>
+    <div class="clr"></div>
+    <script>
+
+        $(document).ready(function () {
+            $("#productdetail_menu_Product_Videos").css("display", "block");
+          
+             
+        });
+    </script>
+}

@@ -1,0 +1,292 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_StoreLocator.Models.PublicInfoModel
+@using Nop.Plugin.Widgets.TorchDesign_StoreLocator.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using Nop.Web.Framework.UI;
+@using Nop.Plugin.Widgets.TorchDesign_StoreLocator;
+@{
+    Layout = "~/Themes/MisterLandscaper/Views/Shared/_ColumnsTwo.cshtml";
+    Html.AddCssFileParts("/Plugins/Widgets.TorchDesign_StoreLocator/Content/style.css");
+    var storeLocatorSettingAPIKey = EngineContext.Current.Resolve<StoreLocatorSettings>().GoogleAPIKey;
+}
+
+<script type="text/javascript">
+    var currentlyOpenedInfoWindow = null;
+
+    function init_map(map_canvas_id, lat, lng, zoom, markers, infoWindowContents) {
+        var myLatLng = new google.maps.LatLng(lat, lng);
+
+        var options = {
+            zoom: zoom,
+            center: myLatLng,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        var map_canvas = document.getElementById(map_canvas_id);
+
+        var map = new google.maps.Map(map_canvas, options);
+
+        if (markers && markers.length > 0) {
+            var bounds = new google.maps.LatLngBounds();
+
+            for (var i = 0; i < markers.length; i++) {
+                var marker = new google.maps.Marker(markers[i]);
+                marker.setMap(map);
+
+                bounds.extend(marker.getPosition());
+
+                if (infoWindowContents && infoWindowContents.length > i)
+                    createInfoWindow(map, marker, infoWindowContents[i]);
+            }
+
+            map.fitBounds(bounds);
+            map.setCenter(bounds.getCenter());
+            zoomChangeBoundsListener =
+                google.maps.event.addListenerOnce(map, 'bounds_changed', function (event) {
+                    if (this.getZoom()) {
+                        this.setZoom(zoom);
+                    }
+                });
+            setTimeout(function () { google.maps.event.removeListener(zoomChangeBoundsListener) }, 2000);
+
+        }
+    }
+
+    function createInfoWindow(map, marker, infoWindowProperties) {
+        var info = new google.maps.InfoWindow(infoWindowProperties);
+
+        google.maps.event.addListener(marker, 'click', function () {
+            if (currentlyOpenedInfoWindow != null)
+                currentlyOpenedInfoWindow.close();
+
+            info.open(map, marker);
+            currentlyOpenedInfoWindow = info;
+        });
+    }
+</script>
+@using (Html.BeginForm())
+{
+
+    if (Model != null)
+    {
+        if (Model.SearchContant == null)
+        {
+            <script src="https://maps.googleapis.com/maps/api/js?key=@storeLocatorSettingAPIKey">
+            </script>
+
+            <script type="text/javascript">
+                if (navigator.geolocation) {
+
+                    navigator.geolocation.getCurrentPosition(showPosition);
+                }
+                else {
+                    latitudeAndLongitude.innerHTML = "Geolocation is not supported by this browser.";
+                }
+
+                function showPosition(position) {
+                    location.latitude = position.coords.latitude;
+                    location.longitude = position.coords.longitude;
+                    var lat = parseFloat(position.coords.latitude);
+                    var lng = parseFloat(position.coords.longitude);
+                    var latlng = new google.maps.LatLng(lat, lng);
+                    var geocoder = geocoder = new google.maps.Geocoder();
+                    geocoder.geocode({ 'latLng': latlng }, function (results, status) {
+                        if (status == google.maps.GeocoderStatus.OK) {
+                            if (results[1]) {
+                                var x = results[1].formatted_address;
+                                $("#SearchContant").val(x);
+                                $("#collapseAll").click();
+
+                            }
+                        }
+                    });
+                }
+            </script>
+        }
+
+        <div id="storesearch" class="storecontainerdiv">
+            <div class="hederdiv">@T("storelocator.title")</div>
+            <div class="descriptionlocatiordic">@Model.Description</div>
+            <div>
+                <div class="headertext"> @T("Plugins.Widgets.Storelocator.header")</div>
+                <div>
+                    <div>
+                        <span>@T("Plugins.Widgets.Storelocator.youraddress")</span>
+                    </div>
+                    <div>
+                        <span class="searchstorespan">@Html.TextBoxFor(model => model.SearchContant, new { @placeholder = @T("placeholdertext") })</span>
+                    </div>
+                </div>
+
+                <div class="storelocator-searchblock">
+                    <div><span>@T("Plugins.Widgets.Storelocator.Distance")</span></div>
+
+                    <div class="action"> @Html.DropDownListFor(model => model.radius, Model.Radiusoption)</div>
+                </div>
+                <div class="storelocator-searchblock">
+                    <div><span>@T("Plugins.Widgets.Storelocator.Store")</span></div>
+
+                    <div class="storaction">
+                        @Html.DropDownListFor(model => model.SearchStoreOptionId, Model.SearchStoreOption)
+
+                    </div>
+
+                </div>
+                <div class="storelocator-searchblock btnblock">
+
+                    <div class="">
+                        <input type="submit" id="collapseAll" class="button searchlocation-btn" value="Search" />
+                    </div>
+
+                </div>
+
+            </div>
+            <div>
+                @if (Model.AvailableLocation.Count > 0)
+                {
+                    <div class="didumean">@T("Plugins.Widgets.Storelocator.Didyoumean")</div>
+                }
+                <table>
+                    @{
+                        int j = 0;
+                    }
+                    @foreach (var item in Model.AvailableLocation)
+                    {
+                        var rid = "relatedaddress-" + j;
+                        j++;
+                        <tr>
+                            <td class="adminTitle tdstyle">
+                                <a id="@rid" href="javascript:void(0)" title="@Server.UrlDecode(@item)">@Server.UrlDecode(@item)</a>
+                            </td>
+
+                        </tr>
+                    }
+                </table>
+                <script>
+                    $("[id^=relatedaddress-]").click(function () {
+
+                        var curId = "#" + this.id;
+                        var title = $(curId).attr("title");
+
+                        $("#SearchContant").val(title);
+                        $("#collapseAll").click();
+
+                    });
+                </script>
+            </div>
+
+            @if (Model.resultfound)
+            {
+                <script src="https://maps.googleapis.com/maps/api/js?key=@storeLocatorSettingAPIKey"></script>
+                <script type="text/javascript">
+
+                $( document ).ready(function() {
+                    init_map('map_canvas', @Model.firstLatitude,@Model.firstLongitude,(@Model.radius > 10 )? 8:12, @Html.Raw(Model.locationsjson), @Html.Raw(Model.infoWindowContentsjson));
+                });
+
+                </script>
+                <div id="GoogleMap">
+                    <div id="map_canvas" class="map-area"></div>
+                </div>
+                <div>
+                    <div class="availablelable">@T("Plugins.Widgets.Storelocator.AvailableStoreslist")</div>
+                    <table class="avilablestoretable">
+                        <thead>
+                            <tr><th scope="col">@T("Plugins.Widgets.Storelocator.StoreId")</th><th scope="col">@T("Plugins.Widgets.Storelocator.Distance")</th><th scope="col">@T("Plugins.Widgets.Storelocator.Address")</th></tr>
+                        </thead>
+                        @{int i = 1;
+                            string ad = Model.SearchContant;
+                        }
+                        @foreach (var item in Model.Availablestores)
+                        {
+                            var url = "/TorchDesign_StoreLocator/Getlet" + "?id=" + @item.Id + "&address=" + ad;
+                            var id = "address-" + i;
+
+                            <tr>
+                                <td class="adminTitle" style="background:#CBD2DC;color:#0E255E;">
+                                    @if (item.StoreType != "Other")
+                                    {
+                                        <a id="@id" href="@url">@item.StoreNumber</a>
+                                    }
+                                </td>
+                                <td class="adminTitle">
+                                    @item.DistanceFromAddress <span>@T("Plugins.Widgets.Storelocator.Miles")</span>
+                                </td>
+                                <td class="adminTitle" style="background:#CBD2DC;color:#0E255E;">
+                                    @{if (item.StoreType == "Other")
+                                        {
+                                            <span class="rednumberspan">
+                                                @i
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class=" numberspan">
+                                                @i
+                                            </span>
+                                        }
+
+                                    }
+                                    <table style="float:left">
+                                        <tr>
+                                            <td style="border:none">  @item.Address <br /> @item.City, @item.Region <br />@item.CountryCode @item.PostalCode <br /> @item.PhoneNumber</td>
+                                        </tr>
+                                    </table>
+                                    <div style=" float: right;margin-right: 13px;">
+                                        <iframe width="150" height="100" frameborder="0" style="border:0"
+                                                src="https://maps.google.com/maps?ll=@item.Latitude,@item.Longitude&t=&z=14&ie=UTF8&iwloc=&output=embed" allowfullscreen></iframe>
+                                    </div>
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </table>
+
+                </div>
+            }
+            @if (!Model.resultfound)
+            {
+                <div>
+                    <img src="~/Plugins/Widgets.TorchDesign_StoreLocator/Content/img/defaultimage.png" style="width:100%" />
+
+                </div>
+            }
+            @if (!Model.storefound)
+            {
+                <p>@T("Plugins.Widgets.Storelocator.storenotfound")</p>
+            }
+
+        </div>
+    }
+}
+<script>
+    $(document).ready(function(){
+
+        if(@Model.radius == 5)
+        {
+            document.getElementById("radius").options[0].selected=true;
+
+        }
+        else if(@Model.radius == 10)
+        {
+            document.getElementById("radius").options[1].selected=true;
+        }
+        else if(@Model.radius == 25)
+        {
+            document.getElementById("radius").options[2].selected=true;
+        }
+        else if(@Model.radius == 50)
+        {
+            document.getElementById("radius").options[3].selected=true;
+        }
+        else if (@Model.radius == 100)
+        {
+            document.getElementById("radius").options[4].selected=true;
+        }
+        else
+        {
+            document.getElementById("radius").options[0].selected=true;
+        }
+
+    });
+</script>

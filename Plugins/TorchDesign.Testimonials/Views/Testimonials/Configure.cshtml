@@ -1,0 +1,340 @@
+﻿@model TestimonialsModel
+@using Nop.Plugin.TorchDesign.Testimonials.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+@{
+    //  Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+}
+<link href="~/Plugins/TorchDesign.Testimonials/Content/Testimonials.css" rel="stylesheet" />
+<div class="testotital">
+    <span>Testimonials Approval Queue</span>
+</div>
+
+<div class="msgdisplay">
+    @if (Model.Appprovebymail)
+    {
+        <span>@Model.ApproveValue</span>
+    }
+</div>
+<div class="optioncontainer">
+    <a href="javascript:void(0)" onclick="importData()">Import Data</a>
+    <ul>
+        <li>Show:</li>
+        <li><input id="radio_all" type="radio" name="shippingoption" group="a" value="12" style="margin-right:6px;cursor:pointer"/>All</li>
+        <li><input id="radio_pending" type="radio" name="shippingoption" group="a" value="Pending Approval" style="margin-right:6px;cursor:pointer" checked="checked" />Pending Approval</li>
+        <li><input id="radio_approve" type="radio" name="shippingoption" group="a" value="Approved" style="margin-right:6px;cursor:pointer" />Approved</li>
+        <li><input id="radio_rejected" type="radio" name="shippingoption" group="a" value="Rejected" style="margin-right:6px;cursor:pointer" />Rejected</li>
+    </ul>
+</div>
+<script>
+</script>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Widgets-event-form" }))
+{
+    <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefresh').click(function () {
+                //refresh grid
+                var optionsGrid = $("#productvariantattributes-grid").data('kendoGrid');
+                //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                optionsGrid.dataSource.read();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+
+    @Html.HiddenFor(model => model.filterby)
+    <table class="adminContent">
+        <tr>
+            <td>
+
+                <div id="productvariantattributes-grid"></div>
+                <script>
+                    $(document).ready(function () {
+                        $("#productvariantattributes-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("TestomonialList", "Testimonials", new { optionId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData
+                                    },
+                                    @*create: {
+                                            url: "@Html.Raw(Url.Action("CustomerOriginInsert", "TorchDesignCustomerOrigin", new { optionId = Model.Id }))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },*@
+                                    @*update: {
+                                            url: "@Html.Raw(Url.Action("TestomonialUpdate", "Testimonials"))",
+                                type: "POST",
+                                dataType: "json"
+                            },*@
+                                    @*destroy: {
+                                url: "@Html.Raw(Url.Action("CustomerOriginDelete", "TorchDesignCustomerOrigin"))",
+                                type: "POST",
+                                dataType: "json"
+                                        }*@
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            CustomerName: { editable: false, type: "string" },
+                                            Email: { editable: false, type: "string" },
+                                            Location: { editable: false, type: "string" },
+                                            Message: { editable: false, type: "string" },
+                                            CreateOn: { editable: false, type: "date" },
+                                            IsPublished: { editable: true, type: "boolean" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "create" || e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+
+                                pageSize: 10,
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true,
+
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+
+                            },
+
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            //toolbar: ["create"],
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [
+                                {
+                                    field: "CreateOn",
+                                    title: "@T("Plugins.TorchDesign.Testimonial.CreateOn")",
+                                    type: "date",
+                                    format: "{0:G}",
+                                    width: 150,
+                                },
+                        {
+                            field: "CustomerName",
+                            title: "@T("plugins.torchdesign.testimonial.name")",
+                            width: 150
+                        },
+                        {
+                            field: "Email",
+                            title: "@T("Plugins.TorchDesign.Testimonial.Email")",
+                            width: 150,
+                            template: "<a href='mailto:#=Email#'>#=Email#</a>"
+
+                        },
+                        {
+                            field: "IsPublished",
+                            title: "@T("plugins.torchdesign.testimonial.approved")",
+                            width: 150,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsPublished#.gif" />'
+                        },
+                        {
+                            field: "IsRejected",
+                            title: "@T("plugins.torchdesign.testimonial.rejected")",
+                            width: 150,
+                            headerAttributes: { style: "text-align:center" },
+                            attributes: { style: "text-align:center" },
+                            template: '<img src="@Url.Content("~/Administration/Content/images/")active-#=IsRejected#.gif" />'
+                        },
+                        {
+                            field: "Id",
+                            title: "@T("plugins.torchdesign.testimonial.Action")",
+                            headerAttributes: { style: "text-align:center" },
+                            width: 80,
+                            attributes: { style: "text-align:center" },
+                            template: "<input type='submit' value='@T("Admin.Common.View")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Widgets.Testimonials.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=Widgets-event-form', 900, 400, true); return false;\" class='buttonsameaslink' /></br> <a href='javascript:void(0)' onclick='makeactive(#=Id#)'>Approve</a> </br><a href='javascript:void(0)' onclick='makeReject(#=Id#)'>Reject</a>"
+                        }
+                        @*{
+                            command: [
+                                {
+                                    name: "edit",
+                                    text: "@T("Admin.Common.Edit")"
+                            }@*, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                        }
+                        ],
+                        width: 200
+                        }*@
+                            ]
+                        });
+                    });
+                </script>
+                <input id="btnSearch" type="button" style="display:none;" />
+                <input type="submit" id="btnRefreshProductAttributes" name="btnRefreshProductAttributes" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        //search button
+                        $('#btnSearch').click(function () {
+                            //search
+                            var grid = $('#productvariantattributes-grid').data('kendoGrid');
+                            grid.dataSource.page(1); //new search. Set page size to 1
+                            grid.dataSource.read();
+                            //clear selected checkboxes
+                            return false;
+                        });
+
+
+                        $('#btnRefreshProductAttributes').click(function () {
+                            //refresh grid
+                            var grid = $("#productvariantattributes-grid").data('kendoGrid');
+                            grid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+
+                    function additionalData() {
+                        return {
+                            filterby: $('#@Html.FieldIdFor(model => model.filterby)').val(),
+
+                        };
+                    }
+                </script>
+            </td>
+        </tr>
+    </table>
+}
+<script>
+    $(document).ready(function () {
+
+        var all = document.getElementById('radio_all');
+        var radio_pending = document.getElementById('radio_pending');
+        var radio_approve = document.getElementById('radio_approve');
+        var radio_rejected = document.getElementById('radio_rejected');
+
+        all.onchange = function () {
+            if (this.checked) {
+                document.getElementById('filterby').value = parseInt(0);
+                $('#btnSearch').click();
+            }
+        }
+        radio_pending.onchange = function () {
+            if (this.checked) {
+                document.getElementById('filterby').value = parseInt(1);
+                $('#btnSearch').click();
+            }
+
+        }
+        radio_approve.onchange = function () {
+            if (this.checked) {
+                document.getElementById('filterby').value = parseInt(2);
+                $('#btnSearch').click();
+            }
+
+        }
+        radio_rejected.onchange = function () {
+            if (this.checked) {
+                document.getElementById('filterby').value = parseInt(3);
+                $('#btnSearch').click();
+            }
+
+        }
+
+
+    });
+</script>
+
+<script type="text/javascript">
+
+    function makeactive(id) {
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.RouteUrl("Plugin.ActiveTestimonial")",
+            data: { "id": id },
+            success: function (data) {
+                var productpicturesGrid = $("#productvariantattributes-grid");
+                productpicturesGrid.data('kendoGrid').dataSource.read();
+                alert("This Testimonial Has Been Approved ")
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error In Approve ")
+                //alert('Failed to add product picture.');
+                //$('#addProductPicture').attr('disabled', false);
+            }
+        });
+
+    }
+
+    function makeReject(id) {
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.RouteUrl("Plugin.RejectTestimonial")",
+            data: { "id": id },
+            success: function (data) {
+                if (data.Result) {
+                    var productpicturesGrid = $("#productvariantattributes-grid");
+                    productpicturesGrid.data('kendoGrid').dataSource.read();
+                    alert("This Testimonial Has Been Rejected ")
+                } else
+                {
+                    alert("Error In Rejection ");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error In Rejection ");
+                //alert('Failed to add product picture.');
+                //$('#addProductPicture').attr('disabled', false);
+            }
+        });
+
+    }
+
+    function importData()
+    {
+        $.ajax({
+            url: "@Url.RouteUrl("Plugin.Testimonial.Import")",
+            type: "POST",
+        dataType: "json",
+        success: function (response) {
+
+            if (response.Result == true) {
+
+                alert("Data Imported Successfully")
+            }
+            else {
+                alert("Error while importing data")
+            }
+
+        },
+            });
+    }
+
+</script>

@@ -1,0 +1,361 @@
+﻿@model PublicInfoModel
+@using Nop.Plugin.TorchDesign.Testimonials.Models;
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Nop.Web.Framework.UI;
+@using Nop.Web.Framework.UI.Captcha
+
+@{
+
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+    Html.AddTitleParts("Testimonials");
+    string curl = Request.Url.ToString();
+    curl = curl.Substring(0, curl.Length - 1) + "/";
+    string imageurl = curl.Substring(0, curl.Length - 13);
+    Html.AddHeadCustomParts("<meta property=\"og:image\" content=\"" + @imageurl + "/plugins/TorchDesign.Testimonials/Content/img/thumb.png" + "\" />");
+}
+<link href="~/Plugins/TorchDesign.Testimonials/Content/magnific-popup.css" rel="stylesheet" />
+<script src="~/Plugins/TorchDesign.Testimonials/Content/jquery.magnific-popup.js"></script>
+<link href="~/Plugins/TorchDesign.Testimonials/Content/Testimonials.css" rel="stylesheet" />
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+
+@*@Html.Partial("_TestimonialImages", Model)*@
+<div class="testimonialscontainer">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "paging-form" }))
+    {
+
+        @Html.HiddenFor(model => model.testiMonialListModel.pageindex)
+        <div class="testhead">
+            <div class="thumb">
+                <img src="~/plugins/TorchDesign.Testimonials/Content/img/thumb.png" height="120" width="120" />
+            </div>
+            <div class="heading">Customer Testimonials</div>
+            <div class="heading-text">
+                See what our awesome customers
+                are saying about Mister Landscaper
+                products & how they are using them
+            </div>
+        </div>
+        <div class="line" style="margin-top:25px;"></div>
+        <div class="testimonials">Testimonials</div>
+        <div class="line"></div>
+        <div>
+
+            @if (Model.addTestiMonialModel.IsInserted)
+            {
+                @*<span>Testomonial Added Succsesfully</span>*@
+                <script>
+                    alert("Your testimonial was successfully submitted.  Next, we will review your testimonial and then post it to the site.  Thank you for choosing Mister Landscaper!");
+                    $(document).ready(function () {
+                        document.getElementById("addTestiMonialModel_CustomerName").value = "";
+                        document.getElementById("addTestiMonialModel_Email").value = "";
+                        document.getElementById("addTestiMonialModel_Location").value = "";
+                        document.getElementById("addTestiMonialModel_Message").value = "";
+                    });
+                </script>
+            }
+        </div>
+
+        <div class="testimonialcontiner">
+            @foreach (var item in Model.testiMonialListModel.AvailableTestomonials)
+            {
+                <div class="message"><a href="@Url.RouteUrl("Plugin.SingleTestimonial", new { testimonialid = @item.tId })">@item.Message</a></div>
+
+                <div class="middle">
+                    <div class="mtext">
+                        <a href="@Url.RouteUrl("Plugin.SingleTestimonial", new { testimonialid=@item.tId })"><span class="cname">@item.CustomerName</span></a>
+                        <a href="@Url.RouteUrl("Plugin.SingleTestimonial", new { testimonialid=@item.tId })"><span class="location"><i>@item.Location</i></span></a>
+                    </div>
+                    <div class="social">
+                        <ul class="sociallinkul" style="list-style:none;display:none;">
+                            <li class="social-img"><a target="_blank" href="http://www.facebook.com/sharer/sharer.php?s =100&amp;p[url] =@curl@item.tId"><img src="~/plugins/TorchDesign.Testimonials/Content/img/fb.png" height="30" width="30" /></a></li>
+                            <li class="social-img"><a target="_blank" href="https://twitter.com/intent/tweet?url=@curl@item.tId&amp;text=Testimonial&amp;via=MisterLandscaper"><img src="~/plugins/TorchDesign.Testimonials/Content/img/twitter.png" height="30" width="30" /></a></li>
+                            <li class="social-img pin"><a class="pinit" target="_blank" href="http://pinterest.com/pin/create/button/?url=@curl@item.tId&media=@imageurl/plugins/TorchDesign.Testimonials/Content/img/thumb.png"><img src="~/plugins/TorchDesign.Testimonials/Content/img/p.png" height="30" width="30" /></a></li>
+
+                        </ul>
+                    </div>
+                </div>
+                if (@item.PictureList.Count() > 0)
+                {
+                    <div class="viewlargediv">
+
+                        <a id="fancyCarausal-@item.tId" data-fancybox-group='gallery-@item.tId' href="#gallarypopup-@item.tId">
+
+                            <span class="viewlarge">@T("view.large")</span>
+                        </a>
+
+                    </div>
+                }
+                foreach (var pic in @item.PictureList)
+                {
+                    <a href="@pic.FullSizeImageUrl" class="bigphoto_@item.tId">
+
+                        <img src="@pic.PictureUrl" height="100" width="100" class="testImages" itemprop="image" />
+
+                    </a>
+
+
+                }
+                <script>
+                    $(document).ready(function () {
+                        $('.bigphoto_@item.tId').magnificPopup(
+                            {
+                                type: 'image',
+                                removalDelay: 300,
+                                gallery: {
+                                    enabled: true
+                                }
+                            });
+                    });
+                </script>
+
+
+                <div class="gallery-@item.tId">
+                    <div id="gallarypopup-@item.tId" class="picture picturecotainer">
+
+                        @if (item.PictureList.Count > 1)
+                        {
+                            <h5 class="popuptext">@T("alternate.view")</h5>
+                            <div style="float:left; width:20%;">
+                                <div class="productdetailpopupslidermaindiv">
+                                    <div class="swiper-container">
+                                        <div class="swiper-wrapper">
+                                            @for (int i = 0; i < @item.PictureList.Count; i++)
+                                            {
+                                                var picture = item.PictureList[i];
+                                                <div class="swiper-slide">
+                                                    <a id="image-anchor-@item.tId-@i" class="" href="javascript:void(0)">
+                                                        <img id="thumb_popup_@item.tId-@i" src="@picture.PictureUrl" onclick="changepopupImage('@item.DifaultPicture', '@picture.FullSizeImageUrl', 'main-product-popup-img-@item.tId', 'main-product-img-lightbox-anchor-@Model.Id')" data-img="@picture.FullSizeImageUrl" />
+                                                    </a>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                    <div class="swiper-button-prev"></div>
+                                    <div class="swiper-button-next"></div>
+                                </div>
+                            </div>
+
+                        }
+                        <div class="largeimg">
+                            <img src="@item.DifaultPicture" itemprop="image" id="main-product-popup-img-@item.tId" style="width:100%" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="line"></div>
+
+            }
+
+        </div>
+
+        if (Model.testiMonialListModel.AvailableTestomonials.Count == 10 || Model.testiMonialListModel.pageindex > 0)
+        {
+            <div id="nextPrev" class="navigation">
+                @if (Model.testiMonialListModel.pageindex > 0)
+                {
+                    <a id="prev" class="previous">PREVIOUS</a>
+                }
+                else
+                {
+                    <a class="previous1" href="javascript:void(0)">PREVIOUS</a>
+                }
+                @if (Model.testiMonialListModel.AvailableTestomonials.Count == 10)
+                {
+                    <a id="next" class="next">NEXT</a>
+                }
+                else
+                {
+                    <a class="next1" href="javascript:void(0)">NEXT</a>
+                }
+
+            </div>
+            <div class="line"></div>
+
+        }
+        <input type="submit" id="pagingbutton" name="pagingbutton" class="k-button" value="@T(" admin.common.go")" style="display:none" />
+        <script>
+        $("#prev").click(function () {
+            var currentpageindex = $("#testiMonialListModel_pageindex").val();
+            currentpageindex = parseInt(currentpageindex) - parseInt(1);
+            document.getElementById('testiMonialListModel_pageindex').value = currentpageindex;
+
+            $("#pagingbutton").click();
+        });
+        $("#next").click(function () {
+            var currentpageindex = $("#testiMonialListModel_pageindex").val();
+            currentpageindex = parseInt(currentpageindex) + parseInt(1);
+            document.getElementById('testiMonialListModel_pageindex').value = currentpageindex;
+            //$("#pageindex").val() = currentpageindex;
+            $("#pagingbutton").click();
+        });
+        </script>
+
+    }
+
+    <div>
+        <span class="titlespan">Add A Testimonial</span>
+        <div class="simpletextcontainer desc">If you have an incredible story about Mister Landscaper to share, please fill out the form below. Also you can post photos of your Mister Landscaper projects and share them with others.</div>
+    </div>
+
+    <div>
+        @using (Html.BeginForm())
+        {
+            @*@Html.HiddenFor(model => model.pageindex)*@
+            <div class="message-error">
+                @Html.ValidationSummary(true)
+            </div>
+            <div class="form-fields">
+
+                <div class="fltleft leftsidetext">
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.addTestiMonialModel.CustomerName)
+                        <div class="input-box">
+                            @Html.EditorFor(model => model.addTestiMonialModel.CustomerName)
+                        </div>
+                        @Html.ValidationMessageFor(model => model.addTestiMonialModel.CustomerName)
+                    </div>
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.addTestiMonialModel.Email)
+                        <div class="input-box">
+                            @Html.EditorFor(model => model.addTestiMonialModel.Email)
+                        </div>
+                        @Html.ValidationMessageFor(model => model.addTestiMonialModel.Email)
+                    </div>
+                    <div class="inputs">
+                        @Html.LabelFor(model => model.addTestiMonialModel.Location)
+                        <div class="input-box">
+                            @Html.EditorFor(model => model.addTestiMonialModel.Location)
+                        </div>
+                        @Html.ValidationMessageFor(model => model.addTestiMonialModel.Location)
+                    </div>
+
+                </div>
+                <div class="fltleft marginleft26" style="position:relative;"><div>@T("Plugin.Fields.Photos")</div>@Html.EditorFor(model => model.addTestiMonialModel.PictureId)</div>
+                <div class="cleardiv"></div>
+                <div class="inputs fortextarea">
+                    @Html.LabelFor(model => model.addTestiMonialModel.Message)
+                    <div class="input-box">
+                        @Html.TextAreaFor(model => model.addTestiMonialModel.Message, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.addTestiMonialModel.Message)
+                </div>
+            </div>
+            <div class="tearmcontainar">
+                <span>*Email addresses will only be used by Mister Landscaper and will not be posted to the website.</span>
+            </div>
+            <div class="captcha-box">
+                @Html.Raw(Html.GenerateCaptcha())
+            </div>
+            <div class="buttons fltright">
+
+                <input type="submit" id="Savesettingbtn" name="Savesettingbtn" class="button-1 contact-us-button" value="@T(" contactus.button")" />
+            </div>
+
+
+            <div class="cleardiv"></div>
+        }
+    </div>
+
+
+    <script>
+
+        function changepopupImage(imgUrl, fullimgUrl, mainId, zoomId) {
+            var mainImage = "#" + mainId;
+            $(mainImage).attr("src", fullimgUrl);
+        }
+
+        $("#thumb_popup_0").click();
+
+        (function ($) {
+
+            $(function () {
+
+                $("[id^=fancyCarausal-]").click(function () {
+                    var getid = "#" + this.id;
+
+                    $(getid).attr('rel', 'media-gallery').fancybox({
+                        openEffect: 'none',
+                        closeEffect: 'none',
+                        prevEffect: 'none',
+                        nextEffect: 'none',
+                        arrows: false,
+                        helpers: {
+                            media: {},
+                            buttons: {}
+                        },
+                        afterShow: function (current, previous) {
+
+                            var swiper = new Swiper('.swiper-container', {
+                                slidesPerView: 3,
+                                spaceBetween: 0,
+                                mousewheelControl: true,
+                                direction: 'vertical',
+                                loop: true,
+                                nextButton: '.swiper-button-next',
+                                prevButton: '.swiper-button-prev'
+                            });
+                        }
+                    });
+
+                })
+
+
+
+            });
+
+        })(jQuery);
+
+        $(window).bind("load", function () {
+            $(".pin a").removeClass();
+            $(".pin a").addClass("pinit");
+            $(".sociallinkul").css("display", "block");
+
+            //$(".pin a").css("width", "30px!important");
+            //$(".pin a").css("height", "30px!important");
+        });
+        $(document).ready(function () {
+
+            $(".pin a").removeClass();
+            $(".pin a").addClass("pinit");
+
+            $(".fancybox").fancybox({
+                width: '70%',
+                height: '70%',
+                helpers: {
+                    media: {}
+                },
+                afterShow: function (current, previous) {
+
+                    var swiper = new Swiper('.swiper-container', {
+                        slidesPerView: 3,
+                        spaceBetween: 0,
+                        mousewheelControl: true,
+                        direction: 'vertical',
+                        loop: true,
+                        nextButton: '.swiper-button-next',
+                        prevButton: '.swiper-button-prev'
+                    });
+                }
+                //onComplete: function () {
+                //    $(".test").click();// or whatever you html object is
+                //}
+            });
+
+
+            $("[id^=image-anchor-]").each(function (index) {
+                var id = "#" + this.id;
+                $(id).css('display', 'block');
+            });
+
+            $("[id^=gallarypopup-]").each(function (index) {
+                var id = "#" + this.id;
+                $(id).css('display', 'none');
+            });
+
+        });
+    </script>
+
+</div>

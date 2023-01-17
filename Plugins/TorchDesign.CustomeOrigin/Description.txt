@@ -1,0 +1,8 @@
+﻿Group: Widget
+FriendlyName: CustomerOrigin
+SystemName:TorchDesignCustomerOrigin
+Version: 1.00
+SupportedVersions: 3.40
+Author: Torch Designs, LLC
+DisplayOrder: 1
+FileName: Nop.Plugin.TorchDesign.CustomerOrigin.dll

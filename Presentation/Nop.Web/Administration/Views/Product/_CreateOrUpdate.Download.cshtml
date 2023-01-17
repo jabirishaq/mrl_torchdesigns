@@ -1,0 +1,245 @@
+﻿@model ProductModel
+@using System.Text;
+@if (Model.Id > 0)
+{
+
+    <div>
+        <div id="productdownload-grid"></div>
+
+
+        <input type="submit" id="downloadbtnRefresh" name="downloadbtnRefresh" style="display: none" />
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#downloadbtnRefresh').click(function () {
+                    //refresh grid
+                    var optionsGrid = $("#productdownload-grid").data('kendoGrid');
+                    //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                    optionsGrid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+        <div id="productdownload-grid"></div>
+        <script>
+            $(document).ready(function () {
+                $("#productdownload-grid").kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ProductDownloadList", "Product", new { productId = Model.Id }))",
+                                type: "POST",
+                                dataType: "json"
+                            },
+                            update: {
+                                url:"@Html.Raw(Url.Action("ProductDownloadUpdate", "Product"))",
+                                type: "POST",
+                                dataType: "json"
+                            }@*,
+                            destroy: {
+                                url: "@Html.Raw(Url.Action("ProductDownloadDelete", "Product"))",
+                                type: "POST",
+                                dataType: "json"
+                            }*@
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    //PictureUrl: {editable: false, type: "string" },
+                                    DisplayOrder: {editable: true, type: "number" }
+                                }
+                            }
+                        },
+                        requestEnd: function(e) {
+                            if(e.type=="update") {
+                                this.read();
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+                            // Cancel the changes
+                            this.cancelChanges();
+                        },
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        numeric: false,
+                        previousNext: false,
+                        info: false
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    scrollable: false,
+                    columns: [
+
+                     {
+                         field: "FileName",
+                         title: "@T("admin.orders.ordernotes.fields.download")",
+                         width: 300
+                     },
+                     {
+                         field: "DownloadTitle",
+                         title: "@T("admin.catalog.productreviews.fields.title")",
+                         width: 300
+                     },{
+                         field: "DownloadDescription",
+                         title: "@T("admin.catalog.categories.fields.description")",
+                         width: 300
+                     },
+                    {
+                        field: "DisplayOrder",
+                        title: "@T("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")",
+                        //integer format
+                        format: "{0:0}",
+                        width: 20
+                    },
+                    {
+                            field: "Id",
+                            title: "@T("Admin.Common.Edit")",
+                            width: 100,
+                            template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('/Admin/Product/ProductDownloadUpdate/#=Id#?btnId=downloadbtnRefresh&formId=product-form', 800, 400, true); return false;\" class='k-button' />"
+                   },
+                   {
+                             field: "Id",
+                             title: "@T("Admin.Common.Delete")",
+                             headerAttributes: { style: "text-align:center" },
+                             width: 150,
+                             attributes: { style: "text-align:center" },
+                             template: "<a href='javascript:void(0)'class='k-button k-button-icontext k-grid-delete' onclick='deletedownloadfunction(#=Id#,@Model.Id)'>Delete</a>"
+                     },@* {
+                command: [{
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Widgets.Slider.EditPopup")?id=#=Id#&btnId=videobtnRefresh&formId=Widgets-slider-form', 800, 400, true); return false;\" class='k-button' />"
+            }, {
+                name: "destroy",
+                text: "@T("Admin.Common.Delete")"
+            }],
+            width: 200
+            }*@]
+                });
+            });
+        </script>
+
+    </div>
+    <p>
+        <strong>@T("Admin.Catalog.Products.Video.AddNew")</strong>
+    </p>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#addProductDownloadsbt').click(function () {
+                var downloadid = $("#@Html.FieldIdFor(model => model.AddDownloads.DownloadsId)").val();
+                var title = $("#@Html.FieldIdFor(model => model.AddDownloads.DownloadTitle)").val();
+                var description = $("#@Html.FieldIdFor(model => model.AddDownloads.DownloadDescription)").val();
+                var displayOrder = $("#@Html.FieldIdFor(model => model.AddDownloads.DisplayOrder)").val();
+                if (downloadid == 0) {
+                    alert('Upload File First');
+                    return;
+                }
+
+                $('#addProductDownloadsbt').attr('disabled', true);
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("ProductDownloadAdd", "Product"))",
+                    data: { "downloadid": downloadid,"description": description, "displayOrder": displayOrder, "productId": @Model.Id ,"title":title},
+                    success: function (data) {
+                        var productpicturesGrid = $("#productdownload-grid");
+                        productpicturesGrid.data('kendoGrid').dataSource.read();
+                        $('#addProductDownloadsbt').attr('disabled', false);
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to add Downloadfile.');
+                        $('#addProductDownloadsbt').attr('disabled', false);
+                    }
+                });
+            });
+        });
+
+
+        function deletedownloadfunction(id,productId) {
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.Action("ProductDownloadDelete", "Product")",
+                data: { "id": id,"productId":productId },
+                success: function (data) {
+
+                    var productpicturesGrid = $("#productdownload-grid");
+                    productpicturesGrid.data('kendoGrid').dataSource.read();
+                    //  alert("This Step Has Been MoveDown ")
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error In Delete");
+                    //alert('Failed to add product picture.');
+                    //$('#addProductPicture').attr('disabled', false);
+                }
+            });
+        }
+    </script>
+    <table class="adminContent">
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddDownloads.DownloadsId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddDownloads.DownloadsId)
+                @Html.ValidationMessageFor(model => model.AddDownloads.DownloadsId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddDownloads.DownloadTitle):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddDownloads.DownloadTitle)
+                @Html.ValidationMessageFor(model => model.AddDownloads.DownloadTitle)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddDownloads.DownloadDescription):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddDownloads.DownloadDescription)
+                @Html.ValidationMessageFor(model => model.AddDownloads.DownloadDescription)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddDownloads.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddDownloads.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.AddDownloads.DisplayOrder)
+            </td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" id="addProductDownloadsbt" class="k-button" value="@T("admin.common.addnew")" />
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+}
+
+

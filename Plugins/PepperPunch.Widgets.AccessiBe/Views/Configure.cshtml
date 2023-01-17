@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "";
+}
+@model PepperPunch.Widgets.AccessiBe.Models.ConfigurationModel
+@using Nop.Web.Framework;
+@Html.Action("StoreScopeConfiguration", "Setting", new { area = "Admin" })
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.Enabled)").click(toggleEnabled);
+        toggleEnabled();
+    });
+
+    function toggleEnabled() {
+        if ($('#@Html.IdFor(model => model.Enabled)').is(':checked')) {
+            $('#script-field').showElement();
+        } else {
+            $('#script-field').hideElement();
+        }
+    }
+</script>
+
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle" colspan="2">
+                <p>
+                    Follow these steps to configure the accessiBe plugin:<br />
+                    1. Go to <a href="https://accessibe.com/?utm_source=nopcommerce_plugin&utm_medium=plugin&utm_campaign=module_link" target="_blank">accessiBe</a>, login or create a new account.<br />
+                    2. Click on the tab called <b>My Websites</b>. At this point, all you have to do is enter your site's address <em>@Model.Url</em> in the field.<br />
+                    3. Click on the <b>Installation</b> tab. Find your unique Installation script and copy it into the field below on this configuration page.<br />
+                    4. Save the configuration.<br />
+                    <br />
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.Enabled_OverrideForStore, model => model.Enabled, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.Enabled):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.Enabled)
+                @Html.ValidationMessageFor(model => model.Enabled)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.OverrideStoreCheckboxFor(model => model.Script_OverrideForStore, model => model.Script, Model.ActiveStoreScopeConfiguration)
+                @Html.NopLabelFor(model => model.Script):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Script)
+                @Html.ValidationMessageFor(model => model.Script)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+
+}

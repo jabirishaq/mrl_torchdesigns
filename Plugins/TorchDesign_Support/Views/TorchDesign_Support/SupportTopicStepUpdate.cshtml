@@ -1,0 +1,58 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportTopicStepModel
+@{
+
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+
+}
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){}
+        window.close();
+    </script>
+}
+
+@using (Html.BeginForm())
+{
+    <table class="adminContent">
+
+        <tr>
+            <td class="adminTitle">
+                @Html.LabelFor(model => model.Title):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Title)
+            </td>
+        </tr>
+
+        <tr>
+            <td class="adminTitle">
+                @Html.LabelFor(model => model.Description):
+            </td>
+            <td class="adminData">
+
+                @Html.TextAreaFor(model => model.Description, new { @class = "enquiry", placeholder = T("ContactUs.Enquiry.Hint") })
+
+
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.LabelFor(model => model.PictureId)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PictureId)
+                @Html.ValidationMessageFor(model => model.PictureId)
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2" align="left">
+                <input type="submit" id="addSupportTopic" class="k-button" value="@T("Admin.Common.Edit")" />
+            </td>
+        </tr>
+
+    </table>
+
+}

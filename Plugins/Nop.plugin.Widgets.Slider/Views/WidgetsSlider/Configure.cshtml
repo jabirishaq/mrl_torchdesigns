@@ -1,0 +1,214 @@
+﻿@{
+
+    var gridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+}
+@model ConfigurationModel
+@using Nop.Plugin.Widgets.Slider.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "Widgets-slider-form" }))
+{
+    <table>
+        <tr>
+            <td>
+                @{
+    var addNewUrl = Url.RouteUrl("Plugin.Widgets.Slider.AddPopup") + "?btnId=btnRefresh&formId=Widgets-slider-form";
+                }
+                <br />
+                <input type="submit" id="btnAddNewOption" name="btnAddNewOption" value="@T("Plugins.Widgets.Slider.AddSlider")" onclick="javascript:OpenWindow('@(addNewUrl)', 800, 500, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefresh').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#event-grid").data('kendoGrid');
+                            //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                            optionsGrid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <hr />
+    <br />
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div>
+                    <div id="event-grid"></div>
+                    <script>
+                        $(document).ready(function () {
+                            $("#event-grid").kendoGrid({
+                                dataSource: {
+                                    type: "json",
+                                    transport: {
+                                        read: {
+                                            url: "@Html.Raw(Url.Action("SliderList", "WidgetsSlider"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },
+                                        update: {
+                                            url: "@Html.Raw(Url.Action("SliderUpdate", "WidgetsSlider"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        },
+                                        destroy: {
+                                            url: "@Html.Raw(Url.Action("SliderDelete", "WidgetsSlider"))",
+                                            type: "POST",
+                                            dataType: "json"
+                                        }
+                                    },
+                                    schema: {
+                                        data: "Data",
+                                        total: "Total",
+                                        errors: "Errors",
+                                        model: {
+                                            id: "Id",
+                                            fields: {
+                                                PictureUrl: { editable: false, type: "string" },
+                                                //LanguageName: { editable: false, type: "string" },
+                                                //Height: { editable: true, type: "number" },
+                                                //Width: { editable: true, type: "number" }
+                                            }
+                                        }
+                                    },
+                                    requestEnd: function (e) {
+                                        if (e.type == "update") {
+                                            this.read();
+                                        }
+                                    },
+                                    error: function (e) {
+                                        display_kendoui_grid_error(e);
+                                        // Cancel the changes
+                                        this.cancelChanges();
+                                    },
+                                    pagesize:@(gridPageSize),
+                                    serverPaging: true,
+                                    serverFiltering: true,
+                                    serverSorting: true
+                                },
+                                pageable: {
+                                    refresh: true,
+                                    numeric: false,
+                                    previousNext: false,
+                                    info: false
+                                },
+                                editable: {
+                                    confirmation: false,
+                                    mode: "inline"
+                                },
+                                scrollable: false,
+                                columns: [{
+                                    field: "PictureUrl",
+                                    title: "@T("Plugins.Widgets.Slider.PictureId")",
+                                    template: '<a href="#=PictureUrl#" target="_blank"><img alt="#=PictureId#" src="#=PictureUrl#" width="150" /><a/>',
+                                    width: 100
+                                }, {
+                                    field: "Title",
+                                    title: "@T("Plugins.Widgets.Slider.Title")",
+                                    width: 150
+                                },
+                                 {
+                                     field: "ShortDescription",
+                                     title: "@T("Plugins.Widgets.Slider.ShortDescription")",
+                                     width: 200
+                                 },
+                                  {
+                                      field: "link",
+                                      title: "@T("Plugins.Widgets.Slider.Link")",
+                                    width: 150
+                                 },
+                                 {
+                                     field: "DisplayOption",
+                                     title: "@T("Plugins.widgets.slider.Displayoption")",
+                                    width: 150
+                                 },
+                                 {
+                                    field: "SlidePushtime",
+                                    title: "@T("Plugins.Widgets.Slider.transitionspeed")",
+                                     width: 150
+                                 },
+                                 {
+                                     field: "Slidingeffect",
+                                     title: "@T("Plugins.Widgets.Slider.Effect")",
+                                    width: 150
+                                 },
+                                 {
+                                     field: "DisplayOrder",
+                                     title: "@T("Plugins.Widgets.Slider.Displayorder")",
+                                    width: 150
+                                 },
+                                 {
+                                      field: "Published",
+                                      title: "@T("Plugins.Widgets.Slider.Published")",
+                                      width: 100,
+                                      headerAttributes: { style: "text-align:center" },
+                                      attributes: { style: "text-align:center" },
+                                      template: '<img   alt="#=PictureId#"  src="@Url.Content("~/Administration/Content/images/")active-#=Published#.gif"   />'
+                                  },
+                                {
+                                    field: "Id",
+                                    title: "@T("Admin.Common.Edit")",
+                                    width: 100,
+                                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Widgets.Slider.EditPopup")?id=#=Id#&btnId=btnRefresh&formId=Widgets-slider-form', 800, 500, true); return false;\" class='k-button' />"
+                                },
+                                   {
+                                       command: [{
+                                           name: "destroy",
+                                           text: "@T("Admin.Common.Delete")"
+                                       }],
+                                       width: 200
+                                   }]
+                            });
+                        });
+                    </script>
+                </div>
+            </td>
+
+        </tr>
+    </table>
+}
+
+
+@* Bellow Code For Global Trasition Spped*@
+@*@using (Html.BeginForm())
+{
+    <br />
+    <hr />
+    <br />
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.transitionSpeed):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.transitionSpeed) @T("Plugins.Widgets.Slider.Transitionspeedinmili")
+
+            </td>
+        </tr>
+        @*<tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Slidereffect):
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.Slidereffect, Model.AvailableSliderEffect)
+
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            </td>
+        </tr>
+    </table>
+}*@
+
+
+

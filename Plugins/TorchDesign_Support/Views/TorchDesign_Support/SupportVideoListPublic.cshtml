@@ -1,0 +1,221 @@
+﻿@model SupportTopicListModel
+@using Nop.Plugin.Widgets.TorchDesign_Support.Models;
+@using Nop.Web.Framework;
+@using Nop.Core;
+@using Nop.Web.Framework.UI;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain.Customers;
+@using Nop.Services.Seo;
+@using Nop.Web.Extensions;
+
+@{
+
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+    Html.AddTitleParts("Support");
+    var _workcontext = EngineContext.Current.Resolve<IWorkContext>();
+    int productcatid = 0;
+    string productcatname = "";
+    string ProductCatSename = "";
+    if (Session["ProductCategoryId"] != null)
+    {
+        productcatid = Convert.ToInt32(Session["ProductCategoryId"].ToString());
+        var _productcategory = EngineContext.Current.Resolve<Nop.Services.Catalog.ICategoryService>();
+        ProductCatSename = _productcategory.GetCategoryById(productcatid).GetSeName();
+        productcatname = Session["ProductCategoryName"].ToString();
+    }
+}
+
+
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+
+<div class="breadcrumbcustome">
+
+    @if (productcatid > 0)
+    {   <span class="arrowspan"><a href="@Url.RouteUrl("Support")">Support</a></span>
+        <span class="arrowspan"><a href="@Url.RouteUrl("Public.SupportCategory", new { productCategorsename = @ProductCatSename })">@productcatname</a></span><span>Video</span>
+    }
+
+</div>
+
+<div class="productmenu-titles">
+
+    <div class="img">
+        <img src="~/plugins/Widgets.TorchDesign_Support/Content/img/thumb.png" />
+    </div>
+    <div class="detail">
+        <h3>@T("admin.support")</h3>
+        <p>@T("support.description")</p>
+    </div>
+
+</div>
+@if (_workcontext.CurrentCustomer.IsAdmin())
+{
+    <div class="supports_links">
+        <a id="topicadd" href="@Url.RouteUrl("CreateSupportTopic", new { redirect = 1 })">@T("admin.support.supporttopics.addnewcustom")</a>
+        <a id="topicvideo" href="@Url.RouteUrl("CreateSupportVideo", new { redirect = 1 })">@T("admin.support.supportvideo.addnewcustom")</a>
+        <a id="topicdownload" href="@Url.RouteUrl("CreateSupportDownload", new { redirect = 1 })">@T("admin.support.supportdownloads.addnewcustom")</a>
+    </div>
+    @*<script>
+            $(document).ready(function () {
+                var href = $("#topicadd").attr("href");
+                var ln = parseInt(href.length) - parseInt(1);
+                var path = (window.location.pathname);
+                path = path.substr(1, path.length)
+                path = path.replace("/", "-");
+                href = href.substr(0, ln);
+                href = href + path;
+                //href = href.replace("/", "-");
+                $("#topicadd").attr("href", href);
+
+                var href = $("#topicvideo").attr("href");
+                var ln = parseInt(href.length) - parseInt(1);
+                var path = (window.location.pathname);
+                path = path.substr(1, path.length)
+                path = path.replace("/", "-");
+                href = href.substr(0, ln);
+                href = href + path;
+                $("#topicvideo").attr("href", href);
+
+                var href = $("#topicdownload").attr("href");
+                var ln = parseInt(href.length) - parseInt(1);
+                var path = (window.location.pathname);
+                path = path.substr(1, path.length)
+                path = path.replace("/", "-");
+                href = href.substr(0, ln);
+                href = href + path;
+                $("#topicdownload").attr("href", href);
+
+
+            })
+        </script>*@
+}
+<div class="forlines">
+</div>
+
+
+<div class="product-supportcategory">
+    <div class="fltleft supportcatproductcatcontainer">
+        <img src="/Themes/MisterLandscaper/Content/images/videolargicon.png" @*width="140px" height="136px"*@><br />
+
+    </div>
+    <div class="fltleft" style="width:100%;">
+        <div><span class="titlefont">Videos</span></div>
+        <div class="supportTopiccontainer">
+
+            @foreach (var item in Model.AvailableSupportVideo)
+            {
+
+                <div class="vediosubdiv">
+                    <a href="http://vimeo.com/@item.VimeoInformation" class="fancybox fancybox.iframe" data-fancybox-group='gallery'>
+                        <div class="videoimage">
+                            <img src="@item.PictureUrl" />
+                        </div>
+                        @* <div class="PlayLink" style="display: block; padding-top: 40px;"></div>*@
+                        <div class="productdetailicontitle videotitlecontainer"> @item.Title</div>
+                    </a>
+
+                </div>
+
+
+
+            }
+
+            @*</ul>*@
+        </div>
+    </div>
+</div>
+
+<div class="forlines"></div>
+<div class="below_links">
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("what_is_drip_irrigation_and_micro_spray") })">
+            <div>
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_drip.png" />
+
+            </div>
+            <div class="productdetailicontitle">What is Drip Irrigation</div>
+        </a>
+    </div>
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("Wateringtips")">
+            <div>
+
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_watering.png" />
+            </div>
+            <div class="productdetailicontitle">Watering Tips</div>
+        </a>
+    </div>
+    @if (Model.SystemDesignEnabled)
+    {
+        <div class="supportcat">
+            <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("systemdesigndhelpstep1")">
+                <div>
+
+                    <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_system.png" />
+                </div>
+                <div class="productdetailicontitle">System Design Help</div>
+            </a>
+        </div>
+    }
+    <div class="supportcat">
+        <a id="productdetail_menu_Product_Videos" href="@Url.RouteUrl("ContactUs")">
+            <div>
+
+                <img src="~/Plugins/Widgets.TorchDesign_Support/Content/img/support_contact.png" />
+            </div>
+            <div class="productdetailicontitle">Contact</div>
+        </a>
+    </div>
+</div>
+<script>
+
+    (function ($) {
+
+        $(function () {
+
+            $(".fancyYoutube").fancybox({
+                'transitionIn': 'elastic',
+                'transitionOut': 'fade',
+                'width': '680',
+                'height': '495',
+                'type': 'swf'
+            });
+
+            // $('.fancybox').fancybox();
+
+            $('.fancyCarausal')
+            .attr('rel', 'media-gallery')
+            .fancybox({
+                openEffect: 'none',
+                closeEffect: 'none',
+                prevEffect: 'none',
+                nextEffect: 'none',
+
+                arrows: false,
+                helpers: {
+                    media: {},
+                    buttons: {}
+                }
+            });
+
+
+        });
+
+    })(jQuery);
+
+    $(document).ready(function () {
+        @*$(".forvideoicon").css("width", "100px");
+
+            var videourl = $("#@Html.FieldIdFor(model => model.VimeoInformation)").val();
+            $(".forvideoicon").append("<a href='" + videourl + "' class='fancybox fancybox.iframe' data-fancybox-group='gallery'><div class='PlayLink'></div></a>");*@
+        $("#tabs").tabs();
+        $(".fancybox").fancybox({
+            width: '70%',
+            height: '70%',
+            helpers: {
+                media: {}
+            }
+        });
+
+    });
+</script>

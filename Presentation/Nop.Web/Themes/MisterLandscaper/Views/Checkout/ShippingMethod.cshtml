@@ -1,0 +1,209 @@
+﻿@model CheckoutShippingMethodModel
+@using Nop.Web.Models.Checkout;
+@using Nop.Core.Domain.Shipping;
+@using Nop.Core.Infrastructure;
+@using Nop.Services.Orders;
+@using Nop.Core;
+@using Nop.Core.Domain.Orders;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+<div class="page checkout-page">
+    @Html.Action("CheckoutProgress", "Checkout", new { step = CheckoutProgressStep.Shipping })
+    <div class="page-title">
+        <h1>@T("admin.configuration.shipping.methods")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @Html.Widget("checkout_shipping_method_top")
+        <div>
+            <div class="section shipping-method">
+                <div class="title"><strong>@T("Checkout.SelectShippingMethod")</strong></div>
+                @using (Html.BeginRouteForm("CheckoutShippingMethod", FormMethod.Post))
+                {
+                    if (Model.Warnings.Count == 0 && Model.ShippingMethods.Count > 0)
+                    {
+                        string freeShippingRateComputationMethodSystemName = string.Empty;
+                        string freeShippingMethodName = string.Empty;
+
+                        var freeShippingMethods = Model.ShippingMethods.Where(s => !string.IsNullOrEmpty(s.Fee) && s.Fee.Equals("$0.00"));
+                        if (freeShippingMethods != null && freeShippingMethods.Count() > 0 && !Model.IsShippingOutsideUSA)
+                        {
+                            freeShippingRateComputationMethodSystemName = freeShippingMethods.FirstOrDefault().ShippingRateComputationMethodSystemName;
+                            freeShippingMethodName = freeShippingMethods.FirstOrDefault().Name;
+                        }
+                        var shippingMethodsGroupedBySystemName = Model.ShippingMethods.GroupBy(s => s.ShippingRateComputationMethodSystemName);
+                        if (shippingMethodsGroupedBySystemName != null && shippingMethodsGroupedBySystemName.Count() > 0)
+                        {
+                            <div class="shippingMethodNote">
+                                <strong>@T("Checkout.SelectShippingMethod.ShippingMethodNote")</strong>
+                            </div>
+
+                            <div class="maincontainership">
+                                <div class="cleardiv middeldiv">
+                                    @for (int i = 0; i < shippingMethodsGroupedBySystemName.Count(); i++)
+                                    {
+                                        <div class="shippingmethodsepratediv">
+                                            @if (i > 0)
+                                            {
+                                                <div class="orcontainer">or</div>
+                                            }
+                                            <div class="fltleft">
+                                                <ul class="method-list">
+                                                    @{var shippingMethod = shippingMethodsGroupedBySystemName.ToList()[i];}
+                                                    <li><img style="max-width: 159px;" src="@shippingMethod.FirstOrDefault().ImageURL" /></li>
+
+                                                    @foreach (var item in shippingMethodsGroupedBySystemName.ToList()[i])
+                                                    {
+                                                        <li>
+
+                                                            @if (item.ShippingRateComputationMethodSystemName == "Shipping.FixedRate")
+                                                            {
+                                                                if (item.Description == "EligibleForFreeShipping")
+                                                                {
+                                                                    <div class="method-name" style="text-align: center">
+                                                                        <input type="submit" name="continueshopping" value="@T("ShoppingCart.ContinueShopping")" class="button-2 continue-shopping-button" />
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="method-name">
+                                                                        <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(item.Name)___@(item.ShippingRateComputationMethodSystemName)" checked="@item.Selected" />
+                                                                        <label for="shippingoption_@(i)"><span><span></span></span>@T("Checkout.SelectShippingMethod.MethodAndFee", "Free Shipping", item.Fee)</label>
+                                                                    </div>
+
+
+                                                                    if (!String.IsNullOrEmpty(item.Description))
+                                                                    {
+                                                                        <div class="method-description">
+                                                                            @Html.Raw(item.Description)
+                                                                        </div>
+                                                                    }
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <div class="method-name">
+                                                                    <input id="shippingoption_@(i)" type="radio" name="shippingoption" value="@(item.Name)___@(item.ShippingRateComputationMethodSystemName)" checked="@item.Selected" />
+
+
+                                                                    <label for="shippingoption_@(i)"><span><span></span></span>@T("Checkout.SelectShippingMethod.MethodAndFee", item.Name, item.Fee)</label>
+                                                                </div>
+
+
+                                                                if (!String.IsNullOrEmpty(item.Description))
+                                                                {
+                                                                    <div class="method-description">
+                                                                        @Html.Raw(item.Description)
+                                                                    </div>
+                                                                }
+
+                                                            }
+
+                                                        </li>
+
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    }
+
+
+                                </div>
+                            </div>
+                            <div class="clr"></div>
+
+                            //if (shippingMethodsGroupedBySystemName.Count() <= 2)
+                            //{
+                            <div class="buttons shippingnextbuttondiv">
+                                <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 shipping-method-next-step-button nextbutton" />
+                            </div>
+                            //}
+                        }
+                        else
+                        {
+                            <div class="shippingMethodNote">
+                                <strong>@T("Checkout.SelectShippingMethod.ShippingMethodNote")</strong>
+                            </div>
+                            <div class="maincontainership">
+                                <div class="cleardiv middeldiv">
+                                    <div class="shippingmethodsepratediv shippingmethodsepratedivWithWhiteSpace">
+                                        @*@if (i > 0)
+                                            {
+                                                <div class="orcontainer">or</div>
+                                            }*@
+                                        @*<div class="fltleft">
+                                            <ul class="method-list">
+                                                <li><img src="~/Themes/MisterLandscaper/Content/images/free_shipping_graphic_new.png" style="width: 159px;" /></li>
+                                                <li>
+                                                    <div class="method-name">
+
+                                                        <input id="shippingoption_0" type="radio" name="shippingoption" value="@(freeShippingMethodName)___@(freeShippingRateComputationMethodSystemName)" checked="checked" />
+                                                        <label for="shippingoption_0"><span><span></span></span>@T("Checkout.SelectShippingMethod.MethodAndFee", "Free Shipping", "$0.00")</label>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>*@
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="clr"></div>
+
+                            <div class="buttons shippingnextbuttondiv">
+                                <input type="submit" name="nextstep" value="@T("Checkout.NextButton")" class="button-1 shipping-method-next-step-button nextbutton" />
+                            </div>
+
+
+                        }
+                    }
+                    else
+                    {
+                        <div class="message-error">
+                            <ul>
+                                @foreach (var warning in Model.Warnings)
+                                {
+                                    <li>@warning</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                }
+            </div>
+
+            @Html.Widget("checkout_shipping_method_bottom")
+        </div>
+        <div class="section order-summary-body">
+            <div class="title">
+                <strong style="color:#0E265F">@T("Checkout.OrderSummary")</strong>
+            </div>
+            @Html.Action("OrderSummary", "ShoppingCart")
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var height = $(".shippingmethodsepratediv").height();
+        var marg = (height - 7) / 2;
+        //$(".orcontainer").css("margin-top", marg);
+
+        @*if ('@isEligibleForFreeshipping' == 'True') {
+            $(':radio:not(:checked)').attr('disabled', true);
+        }*@
+    });
+
+    @*$(window).load(function () {
+        if ('@isEligibleForFreeshipping' == 'True')
+        {
+            $(':radio:not(:checked)').attr('disabled', true);
+        }
+
+    });*@
+
+</script>

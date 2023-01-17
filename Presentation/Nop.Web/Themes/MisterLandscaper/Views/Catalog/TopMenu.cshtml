@@ -1,0 +1,349 @@
+﻿@model TopMenuModel
+@using Nop.Core
+@using Nop.Core.Domain
+@using Nop.Core.Infrastructure
+@using Nop.Web.Models.Catalog;
+@using Nop.Core.Domain.Customers;
+
+@{
+    var isRtl = this.ShouldUseRtlTheme();
+    var supportResponsive = EngineContext.Current.Resolve<StoreInformationSettings>().ResponsiveDesignSupported;
+    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var IsCustomerRegistered = workContext.CurrentCustomer.IsRegistered();
+
+    var _pluginFinder = EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>();
+    var _settingService = EngineContext.Current.Resolve<Nop.Services.Configuration.ISettingService>();
+
+
+    //var pluginDescriptor = _pluginFinder.GetPluginDescriptors(false)
+    //.FirstOrDefault(x => x.SystemName.Equals("TorchDesign_Support", StringComparison.InvariantCultureIgnoreCase));
+
+    var pluginFinder = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>();
+
+    // check plugin is installed
+    var pluginDescriptor = pluginFinder.GetPluginDescriptorBySystemName("TorchDesign_Support");
+    bool SupportEnabledsetting = false;
+    if (pluginDescriptor != null)
+    {
+        var pluginField = _pluginFinder.GetPluginDescriptors(false)
+            .FirstOrDefault(x => x.SystemName.Equals("TorchDesign_Support", StringComparison.InvariantCultureIgnoreCase));
+        SupportEnabledsetting = _settingService.LoadSetting<Nop.Plugin.Widgets.TorchDesign_Support.TorchDesignSupportSettings>().SupportEnabled;
+
+    }
+
+    // check plugin is installed
+    var pluginDescriptortestimonial = pluginFinder.GetPluginDescriptorBySystemName("Widgets.Testimonials");
+    bool TestimonialEnabledsetting = false;
+    if (pluginDescriptortestimonial != null)
+    {
+        //var pluginField = _pluginFinder.GetPluginDescriptors(false)
+        //    .FirstOrDefault(x => x.SystemName.Equals("Widgets.Testimonials", StringComparison.InvariantCultureIgnoreCase));
+        TestimonialEnabledsetting = true;
+
+    }
+
+
+
+}
+@helper RenderCategoryLine(CategorySimpleModel category, int level, bool responsiveMobileMenu)
+{
+    <li>
+        <a href="@Url.RouteUrl("Category", new { SeName = category.SeName })">
+            @category.Name
+            @if (category.NumberOfProducts.HasValue)
+            {
+                <text> </text>@T("Categories.TotalProducts", category.NumberOfProducts.Value)
+            }
+        </a>
+        @{
+            var levelClass = "";
+            if (level == 0)
+            {
+                levelClass = "firstLevel";
+                @*<div class="top-menu-triangle"></div>*@
+            }
+            if (category.SubCategories.Count > 0)
+            {
+                if (responsiveMobileMenu)
+                {
+                    <span class="expand">&nbsp;</span>
+                }
+                <ul class="sublist @levelClass">
+                    @foreach (var subCategory in category.SubCategories)
+                    {
+                        @RenderCategoryLine(subCategory, level + 1, responsiveMobileMenu)
+                    }
+                </ul>
+            }
+        }
+    </li>
+}
+
+    <ul class="top-menu">
+        @Html.Widget("header_menu_before")
+        @*@if (Model.Categories.Count > 0)
+        {
+            foreach (var category in Model.Categories)
+            {
+                @RenderCategoryLine(category, 0, false)
+            }
+        }
+        else
+        {*@
+        @*//no categories to display? in this case let's diplay some default menu items (should we?)*@
+        @*<li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>*@
+        <li>
+            <a href="@Url.RouteUrl("HomePage")">@T("header.topmenu.menuitem.home")</a>
+        </li>
+        <li>
+            <a href="@Url.RouteUrl("productcategory")">Products</a>
+            <ul class="sublist">
+                @foreach (var item in Model.Categories)
+                {
+                    <li><a href="@Url.RouteUrl("Category", new { SeName = @item.SeName})">@item.Name</a></li>
+                }
+                <li><a href="~/Themes/MisterLandscaper/Content/Mister_Landscaper_Catalog.pdf" target="_blank">Download Product Catalog</a></li>
+                <li><a href="@Url.RouteUrl("Madeinusa")">@T("header.menu.madeinamerica")</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">@T("footer.educationndsupport")</a>
+            <ul class="sublist">
+                @if (SupportEnabledsetting)
+                {
+
+                    <li><a href="@Url.RouteUrl("Support")">@T("menu.productsupport")</a></li>
+
+                }
+                @*<li><a href="@Url.RouteUrl("Topic", new { Seame = Html.GetTopicSeName("product-support") })">@T("menu.productsupport")</a></li>*@
+                <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("what_is_drip_irrigation_and_micro_spray") })">@T("menu.WhatisDripIrrigation")</a></li>
+                <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("how-to-get-started") })">@T("menu.HowtoGetStarted")</a></li>
+                <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("Maximumruns") })">@T("menu.Maximumruns")</a></li>
+                <li><a href="@Url.RouteUrl("Faqpublicinfo")">@T("menu.CommonQuestions")</a></li>
+                <li><a href="@Url.RouteUrl("Wateringtips")">@T("menu.WateringTips")</a></li>
+                <li><a href="@Url.RouteUrl("DownloadPDFInstruction")">@T("menu.DownloadPDFInstruction")</a></li>
+                @*<li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("system-design-help") })">@T("menu.SystemDesignHelp")</a></li>*@
+                @if (Model.SystemDesignEnabled)
+                {
+                    <li><a href="@Url.RouteUrl("systemdesigndhelpstep1")">@T("menu.SystemDesignHelp")</a></li>
+                }
+                @*<li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("downloads") })">@T("menu.Downloads")</a></li>*@
+                <li><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("warranties") })">@T("menu.Warranties")</a></li>
+                @*<li><a href="@Url.RouteUrl("ContactUs")">@T("footer.contact")</a></li>*@
+            </ul>
+        </li>
+        <li><a href="https://www.youtube.com/user/MisterLandscaper1" target="_blank">@T("footer.videos")</a></li>
+        <li>
+            <a href="#">@T("footer.community")</a>
+            <ul class="sublist">
+                <li><a href="http://facebook.com/misterlandscaper" target="_blank">@T("footer.followus.facebook")</a></li>
+                @if (TestimonialEnabledsetting)
+                {
+                    <li><a href="@Url.RouteUrl("testimonials")">Testimonials</a></li>
+                }
+                <li>
+                    <a href="https://www.pinterest.com/mistrlandscape/" target="_blank">@T("header.topmenu.menuitem.Pinterest")</a>
+                </li>
+            </ul>
+
+        </li>
+        <li>
+            <a href="#">@T("footer.company")</a>
+            <ul class="sublist">
+                <li><a href="@Url.RouteUrl("CompanyHistory")">@T("footer.history")</a></li>
+                <li><a href="@Url.RouteUrl("Mission")">@T("footer.mission")</a></li>
+                <li><a href="@Url.RouteUrl("Madeinusa")">@T("header.menu.madeinamerica")</a></li>
+               @* <li><a href="@Url.RouteUrl("Blog")">@T("footer.blog")</a></li>*@
+                @*<li><a href="@Url.RouteUrl("NewsArchive")">@T("menu.Company.News")</a></li>*@
+                <li><a href="@Url.RouteUrl("ContactUs")">@T("footer.contact")</a></li>
+            </ul>
+        </li>
+
+
+        <li><a href="@Url.RouteUrl("storelocator")">@T("footer.stores")</a></li>
+        <li>
+            <a href="@Url.RouteUrl("ContactUs")">@T("header.topmenu.menuitem.contact")</a>
+        </li>
+       
+        @*<li><a href="@Url.RouteUrl("ContactUs")">@T("footer.contact")</a></li>*@
+        @*@if (pluginDescriptor != null)
+        {
+            if (Model.SupportEnabled)
+            {
+                <li><a href="@Url.RouteUrl("Support")">@T("footer.support")</a></li>
+            }
+        }*@
+
+        @*@if (Model.RecentlyAddedProductsEnabled)
+        {
+            <li><a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a>
+            </li>
+        }
+        <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+        <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+        @if (Model.BlogEnabled)
+        {
+            <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+        }
+        @if (Model.ForumEnabled)
+        {
+            <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+        }*@
+        @*<li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>*@
+        @*}*@
+        @*@Html.Widget("header_menu_after")*@
+        <div class="fltright margin">
+            <ul class="top-menu">
+                <li class="arrowbackground">
+                    <a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a>
+
+                    @if (IsCustomerRegistered)
+                    {
+                        <ul class="sublist" style="width:95px">
+                            <li>    <a href="@Url.RouteUrl("Logout")" class="ico-logout">@T("Account.Signout")</a></li>
+                            <li>    <a href="@Url.RouteUrl("CustomerOrders")" class="ico-logout">@T("Account.OrderHistory")</a></li>
+                        </ul>
+                    }
+
+
+                </li>
+                @*@if (!IsCustomerRegistered)
+                {
+                    @Html.Action("HeaderLinks", "Common")
+                }*@
+            </ul>
+
+
+
+        </div>
+
+    </ul>
+
+<script type="text/javascript">
+    $('li', '.top-menu').on('mouseenter', function () {
+        $('a', $(this)).first().addClass('hover');
+        if (!$(this).parent().hasClass('top-menu')) {
+            var width = $(this).innerWidth();
+            $('.sublist', $(this)).first().css('@(isRtl ? "right" : "left")', width + 15);
+        }
+        $('.sublist', $(this)).first().addClass('active');
+        $('.top-menu-triangle', $(this)).addClass('active');
+    });
+
+    $('li', '.top-menu').on('mouseleave', function () {
+        $('a', $(this)).first().removeClass('hover');
+        $('.sublist', $(this)).first().removeClass('active');
+        $('.top-menu-triangle', $(this)).removeClass('active');
+    });
+
+</script>
+<div class="mobilemenu">
+    <div>
+        <ul class="titleul">
+            <li class="menutitle" id="menuclick"><a href="javascript:void(0)"><img src="~/Themes/MisterLandscaper/Content/images/menu.png" style="width:100%" /></a></li>
+            <li class="menutitle titalmargin" id="menuclick1"><a href="javascript:void(0)">Menu</a></li>
+        </ul>
+        <div class="fltright margin mrgtop">
+            <a href="@Url.RouteUrl("CustomerInfo")" class="mobilemenumyaccount">@T("Account.MyAccount")</a>
+        </div>
+    </div>
+    <div class="mobilemenulistcontainer">
+        <div class="mobmenulist"><a href="@Url.RouteUrl("productcategory")"><img src="~/Themes/MisterLandscaper/Content/images/product.png" style="width:100%" /></a><div class="mobilemenuname"><a href="@Url.RouteUrl("productcategory")">Product</a></div></div>
+        <div class="mobmenulist"><a href="@Url.RouteUrl("Faqpublicinfo")"><img src="~/Themes/MisterLandscaper/Content/images/support.png" style="width:100%" /></a><div class="mobilemenuname"><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("how-to-get-started") })">Support</a></div></div>
+        <div class="mobmenulist"><a href="https://www.youtube.com/user/MisterLandscaper1" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/Video.png" style="width:100%" /></a><div class="mobilemenuname"><a href="https://www.youtube.com/user/MisterLandscaper1">Video</a></div></div>
+        <div class="mobmenulist"><a href="http://facebook.com/misterlandscaper" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/community.png" style="width:100%" /></a><div class="mobilemenuname"><a href="@Url.RouteUrl("CompanyHistory")">Community</a></div></div>
+        <div class="mobmenulist"><a href="@Url.RouteUrl("CompanyHistory")"><img src="~/Themes/MisterLandscaper/Content/images/company.png" style="width:100%" /></a><div class="mobilemenuname"><a href="">Company</a></div></div>
+        <div class="mobmenulist"><a href="@Url.RouteUrl("storelocator")"><img src="~/Themes/MisterLandscaper/Content/images/store.png" style="width:100%" /></a><div class="mobilemenuname"><a href="@Url.RouteUrl("storelocator")">Store</a></div></div>
+        <div class="mobmenulist"><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("what_is_drip_irrigation_and_micro_spray") })"><img src="~/Themes/MisterLandscaper/Content/images/whatisdrip.png" style="width:100%" /></a><div class="mobilemenuname"><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("what_is_drip_irrigation_and_micro_spray") }))">What is Drip</a></div></div>
+        @*<div class="mobmenulist"><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("how-to-get-started") })"><img src="~/Themes/MisterLandscaper/Content/images/howto.png" style="width:100%" /></a><div class="mobilemenuname"><a href="">How To</a></div></div>*@
+        <div class="mobmenulist"><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("how-to-get-started") })"><img src="~/Themes/MisterLandscaper/Content/images/getstarted.png" style="width:100%" /></a><div class="mobilemenuname"><a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("how-to-get-started") })">Get Started</a></div></div>
+        <div class="mobmenulist"><a href="@Url.RouteUrl("ContactUs")"><img src="~/Themes/MisterLandscaper/Content/images/contact.png" style="width:100%" /></a><div class="mobilemenuname"><a href="@Url.RouteUrl("ContactUs")">Contact</a></div></div>
+        <div class="mobmenulist-homeBtn"><a href="@Url.RouteUrl("HomePage")">Home</a></div>
+        @*<div class="mobmenulist"><a href=""><img src="~/Themes/MisterLandscaper/Content/images/education.png" style="width:100%" /></a><div class="mobilemenuname"><a href="">Education</a></div></div>*@
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+
+        $("#menuclick").click(function () {
+            $(".mobilemenulistcontainer").toggle(500);
+        });
+        $("#menuclick1").click(function () {
+            $(".mobilemenulistcontainer").toggle(500);
+        });
+
+    });
+
+</script>
+
+
+
+@if (supportResponsive)
+{
+    <div id="mob-menu-button">
+        <a href="">
+            <span class="icon"><span class="line"></span><span class="line"></span><span class="line"></span></span>
+            @{
+                var responsiveMenuTitle = Model.Categories.Count > 0 ? T("Categories") : T("Menu");
+            }
+            <span>@responsiveMenuTitle</span>
+        </a>
+    </div>
+        <ul class="mob-top-menu">
+            @Html.Widget("mob_header_menu_before")
+            @if (Model.Categories.Count > 0)
+            {
+                foreach (var category in Model.Categories)
+                {
+                    @RenderCategoryLine(category, 0, true)
+                }
+            }
+            else
+            {
+                //no categories to display? in this case let's diplay some default menu items (should we?)
+                <li><a href="@Url.RouteUrl("HomePage")">@T("HomePage")</a></li>
+                if (Model.RecentlyAddedProductsEnabled)
+                {
+                    <li>
+                        <a href="@Url.RouteUrl("RecentlyAddedProducts")">@T("Products.NewProducts")</a>
+                    </li>
+                }
+                <li><a href="@Url.RouteUrl("ProductSearch")">@T("Search")</a> </li>
+                <li><a href="@Url.RouteUrl("CustomerInfo")">@T("Account.MyAccount")</a></li>
+                if (Model.BlogEnabled)
+                {
+                    <li><a href="@Url.RouteUrl("Blog")">@T("Blog")</a></li>
+                }
+                if (Model.ForumEnabled)
+                {
+                    <li><a href="@Url.RouteUrl("Boards")">@T("Forum.Forums")</a></li>
+                }
+                @*<li><a href="@Url.RouteUrl("ContactUs")">@T("ContactUs")</a></li>*@
+            }
+            @Html.Widget("mob_header_menu_after")
+        </ul>
+        <script type="text/javascript">
+
+            $('a', $('#mob-menu-button')).toggle(function () {
+                $('.mob-top-menu').addClass('show');
+            },
+                function () {
+                    $('.mob-top-menu').removeClass('show');
+                }
+            );
+
+            $(function ($) {
+                $('.mob-top-menu .expand').click(function () {
+                    var parent = $(this).parent();
+                    if (parent.hasClass('active')) {
+                        $(".sublist:first", parent).hide(300);
+                        parent.removeClass('active');
+                    } else {
+                        $(".sublist:first", parent).show(300);
+                        parent.addClass('active');
+                    }
+                });
+            });
+        </script>
+                }

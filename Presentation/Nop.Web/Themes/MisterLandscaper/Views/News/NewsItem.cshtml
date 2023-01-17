@@ -1,0 +1,190 @@
+﻿@model NewsItemModel
+@using Nop.Web.Models.News;
+@using Nop.Core.Infrastructure;
+@using Nop.Core.Domain;
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    Html.AddTitleParts(!String.IsNullOrEmpty(Model.MetaTitle) ? Model.MetaTitle : Model.Title);
+    Html.AddMetaDescriptionParts(Model.MetaDescription);
+    Html.AddMetaKeywordParts(Model.MetaKeywords);
+
+    var _storeinfosetting = EngineContext.Current.Resolve<StoreInformationSettings>();
+    var _webStoreContext = EngineContext.Current.Resolve<Nop.Core.IWebHelper>();
+    var currentStoreUrl = _webStoreContext.GetStoreLocation();
+}
+<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>
+<div class="page news-item-page">
+    <div class="clr topiccontainer" style="margin-top: 36px;">
+        <div style="width: 78%; margin: auto;">
+            <div class="fltleft" style="width: 20%; margin-right: 10px;"><img style="width: 100%;" src="/Themes/MisterLandscaper/Content/images/newstitle.png" alt="" /></div>
+            <div class="fltleft" style="width: 78%;">
+                <span class="topicmaintitlespan">Mister Landscaper News</span>
+                <div class="topicpageheaderdiv">The latest news on water conservation, Drip Irrigation, Micro Irrigation, and new product development.</div>
+            </div>
+        </div>
+        <div class="cleardiv">&nbsp;</div>
+    </div>
+    <div class="forline">&nbsp;</div>
+    <div class="clr">&nbsp;</div>
+
+    <div style="text-align:center">
+        @{
+            var result = TempData["nop.news.addcomment.result"] as string;
+        }
+        @if (!String.IsNullOrEmpty(result))
+        {
+            <div class="result">@result</div>
+        }
+    </div>
+    <div class="page-body">
+        <div class="latestnewstitle">
+            Latest News
+        </div>
+        <div class="news-details">
+            <a class="newstitle" href="@Url.RouteUrl("NewsItem", new { SeName = Model.SeName })">
+                @Model.Title
+            </a> <span class="news-details">
+                -
+                @Model.CreatedOn.ToString("D")
+            </span>
+        </div>
+        @*<div class="news-date">
+                @Model.CreatedOn.ToString("D")
+            </div>*@
+        @Html.Widget("newsitem_page_before_body", Model.Id)
+        <div class="newsdescription news-details">
+            @Html.Raw(Model.Full)
+        </div>
+       <div>
+@if (Model.AllowComments)
+{
+           <div><a href="javascript:void(0)" id="leavecom" class="button-1">Leave A Comment</a></div>
+    if (Model.Comments.Count > 0)
+    {
+           <div style="margin:10px 0px;"><a href="javascript:void(0)" id="viewcom" class="newstitle">View Comments</a></div>
+    }
+}
+
+           @{
+
+
+               //var fb = "https://www.facebook.com/sharer/sharer.php?u=" + currentStoreUrl + Model.SeName + ".VQLWUgldiV8.facebook&p[title]=" + Model.SeName + "s&display=popup";
+               var fb = "https://www.facebook.com/sharer/sharer.php?u=" + currentStoreUrl + Model.SeName + "&p[title]=" + Model.SeName + "s&display=popup";
+               var twitterUrl = "https://twitter.com/intent/tweet?url=" + currentStoreUrl + Model.SeName + "&amp;text=Blog&amp;via=MisterLandscaper";
+               var pinterestURL = "http://pinterest.com/pin/create/button/?url=" + currentStoreUrl + Model.SeName + "&media=" + currentStoreUrl + "Themes/MisterLandscaper/Content/Images/product.png";
+               }
+           <div class="social-icon">
+               <a href="@fb" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/smallFacebook_Icon.jpg" /></a>
+               <a href="@twitterUrl" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/smallTwitter_Icon.jpg" /></a>
+               @*<a href="@_storeinfosetting.YoutubeLink" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/smallYoutube_Icon.jpg" /></a>*@
+               <span class="newsposts-pinitspan"><a href="@pinterestURL" target="_blank"><img src="~/Themes/MisterLandscaper/Content/images/smallPinterest.png" /></a></span>
+
+           </div>
+       </div>
+        @Html.Widget("newsitem_page_before_comments", Model.Id)
+        @if (Model.AllowComments)
+        {
+            <div class="fieldset new-comment">
+                <div class="title">
+                    <strong>@T("News.Comments.LeaveYourComment")</strong>
+                </div>
+                <div class="notifications">
+                    <div class="message-error">@Html.ValidationSummary(true)</div>
+                 
+                </div>
+                @using (Html.BeginForm())
+                {
+                    <div class="form-fields">
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.AddNewComment.CommentTitle, new { }, ":")
+                            @Html.TextBoxFor(model => model.AddNewComment.CommentTitle, new { @class = "comment-title" })
+                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentTitle)
+                        </div>
+                        <div class="inputs">
+                            @Html.LabelFor(model => model.AddNewComment.CommentText, new { }, ":")
+                            @Html.TextAreaFor(model => model.AddNewComment.CommentText, new { @class = "comment-text" })
+                            @Html.ValidationMessageFor(model => model.AddNewComment.CommentText)
+                        </div>
+                        @if (Model.AddNewComment.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                @Html.Raw(Html.GenerateCaptcha())
+                            </div>
+                        }
+                    </div>
+                    <div class="buttons">
+                        <input type="submit" name="add-comment" class="button-1 news-item-add-comment-button" value="@T("News.Comments.SubmitButton")" />
+                    </div>
+                }
+            </div>
+            if (Model.Comments.Count > 0)
+            {
+                <div class="comment-list">
+                    <div class="title">
+                        <strong>@T("News.Comments")</strong>
+                    </div>
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <div class="news-comment">
+                            <div class="comment-info">
+                                <div class="user-info">
+                                    @if (comment.AllowViewingProfiles)
+                                    {
+                                        <a href="@Url.RouteUrl("CustomerProfile", new { id = comment.CustomerId })" class="username">@(comment.CustomerName)</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="username">@(comment.CustomerName)</span>
+                                    }
+                                    <div class="avatar">
+                                        @if (!String.IsNullOrEmpty(comment.CustomerAvatarUrl))
+                                        {
+                                            <img src="@(comment.CustomerAvatarUrl)" class="avatar-img" title="avatar" alt="avatar" />
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                <div class="comment-time">
+                                    <label>@T("News.Comments.CreatedOn"):</label>
+                                    <span class="stat-value">@comment.CreatedOn.ToString("g")</span>
+                                </div>
+                                <div class="comment-title">
+                                    <strong class="comment-text">@comment.CommentTitle</strong>
+                                </div>
+                                <div class="comment-body">
+                                    <p class="comment-text">@Html.Raw(Nop.Core.Html.HtmlHelper.FormatText(comment.CommentText, false, true, false, false, false, false))</p>
+                                </div>
+                            </div>
+                            @Html.Widget("newsitem_page_inside_comment", comment.Id)
+                        </div>
+                    }
+                </div>
+            }
+        }
+        @Html.Widget("newsitem_page_after_comments", Model.Id)
+    </div>
+</div>
+<script>
+
+    $(window).bind("load", function () {
+        $(".news-item-page .newsposts-pinitspan a").removeClass();
+        $(".news-item-page .newsposts-pinitspan a").addClass("newsposts-pinit");
+    });
+
+    $(document).ready(function () {
+        $(".new-comment").hide();
+        $(".comment-list").hide();
+    });
+    $("#leavecom").click(function () {
+        $(".new-comment").show();
+        $("#leavecom").hide();
+    });
+    $("#viewcom").click(function () {
+        $(".comment-list").show();
+        $("#viewcom").hide();
+
+    });
+</script>

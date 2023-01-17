@@ -1,0 +1,70 @@
+﻿.settigndiv {
+  border: 1px solid #a7bac5;
+    border-radius: 5px;
+    margin: 0 auto;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 8px 8px 5px #888;
+    width: 371px;
+}
+.pad {padding-left:25px;}
+.checkright {text-align:right;width:20px;padding-right: 5px;}
+.settigndiv table {margin:0 auto 7px;width:269px;
+}
+.searchtext {
+     border: 1px solid #a7bac5;
+    border-radius: 5px;
+    float: right;
+    padding: 10px;
+    width: 46%;
+}
+.taxtitle {
+    margin: -17px 0 14px;
+}
+.taxtitle strong {
+    background: none repeat scroll 0 0 #fff;
+    font-size: 12px;
+}
+.dateconain {
+     float: left;
+    margin-right: 20px;
+    padding-top: 3px;
+}
+.dmain {
+     border: 1px solid #a7bac5;
+    border-radius: 7px;
+    margin: 0 auto;
+    padding: 15px 10px 15px 16px;
+    width: 550px;
+}
+.dmain .calltitle {
+    margin: -22px 0 14px;
+    text-align: center;
+}
+
+.calltitle strong {
+    background: none repeat scroll 0 0 #fff;
+    font-size: 12px;
+    text-align:center;
+}
+.seprate {border-top: 1px solid #0e275f;
+    margin-top: 16px;
+    min-height: 2px;
+    text-align: center;}
+.stitle {
+  margin: -19px 0 14px;
+    text-align: center;
+}
+.stitle strong {
+    font-size: 22px;
+    font-weight: bold;
+    color:#0E275F;
+    background:#ffffff;
+}
+.normalfontcontainerdiv {font-weight:500;
+}
+.videotitlecontainer {
+    text-align: left;
+    width: 200px;
+    font-size:17px;
+}

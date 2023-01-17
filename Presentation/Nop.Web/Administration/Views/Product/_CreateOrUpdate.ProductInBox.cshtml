@@ -1,0 +1,174 @@
+﻿@model ProductModel
+
+@if (Model.Id > 0)
+{<div class="productinboxbtncontainer">
+        <div class="productboxbtnsubcontain">
+            <div style="margin: 16px 0px;">
+                <input type="submit" id="btnAddNewProductinBox" name="btnAddNewProductinBox" value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@T("admin.addtobox")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" onclick="javascript:OpenWindow('@(Url.Action("ProductInBoxAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshProductsinbox", formId = "product-form" }))    ', 800, 800, true); return false;" class="k-button" />
+
+            </div>
+            <div style="margin: 16px 0px;">
+                <input type="submit" id="btnAddNewProductinBox" name="btnAddNewProductinBox" value="@T("admin.addinbox")" onclick="javascript:OpenWindow('@(Url.Action("ProductInBoxSimpleAddPopup", "Product", new { productId = Model.Id, btnId = "btnRefreshProductsinbox", formId = "product-form" }))    ', 400, 250, true); return false;" class="k-button" />
+
+            </div>
+        </div>
+    </div>
+    <table class="adminContent">
+        <tr>
+            <td width="100%">
+
+                <input type="submit" id="btnRefreshProductsinbox" name="btnRefreshProductsinbox" style="display: none" />
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#btnRefreshProductsinbox').click(function () {
+                            //refresh grid
+                            var optionsGrid = $("#productinbox-grid").data('kendoGrid');
+                            optionsGrid.dataSource.read();
+
+                            //return false to don't reload a page
+                            return false;
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div id="productinbox-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+                        $("#productinbox-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+                                    read: {
+                                        url: "@Html.Raw(Url.Action("ProsuctInBoxList", "Product", new { productId = Model.Id }))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    update: {
+                                        url: "@Html.Raw(Url.Action("ProsuctInBoxUpdate", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    },
+                                    destroy: {
+                                        url: "@Html.Raw(Url.Action("ProsuctInBoxDelete", "Product"))",
+                                        type: "POST",
+                                        dataType: "json"
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors",
+                                    model: {
+                                        id: "Id",
+                                        fields: {
+                                            ProductName: { editable: false, type: "string" },
+                                            Quantity: { editable: true, type: "number" },
+                                            DisplayOrder: { editable: true, type: "number" },
+                                            Id: { editable: false, type: "number" }
+                                        }
+                                    }
+                                },
+                                requestEnd: function (e) {
+                                    if (e.type == "update") {
+                                        this.read();
+                                    }
+                                },
+                                error: function (e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                numeric: false,
+                                previousNext: false,
+                                info: false
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "ProductName",
+                                title: "@T("Admin.Catalog.Products.AssociatedProducts.Fields.Product")"
+                            }, {
+                                field: "Quantity",
+                                title: "@T("admin.orders.products.quantity")",
+                                width: 100
+                            },
+                             {
+                                 field: "DisplayOrder",
+                                 title: "@T("Admin.Catalog.Products.Pictures.Fields.DisplayOrder")",
+                                 //integer format
+                                 format: "{0:0}",
+                                 width: 150
+                             },
+                              {
+                                  command: [{
+                                      name: "edit",
+                                      text: "@T("Admin.Common.Edit")"
+                                  }, {
+                                      name: "destroy",
+                                      text: "@T("Admin.Common.Delete")"
+                                  }],
+                                  width: 200
+                              }]
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+
+    </table>
+
+}
+else
+{
+    @T("Admin.Catalog.Products.AssociatedProducts.SaveBeforeEdit")
+}
+@*<script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#addProductinboxbt').click(function () {
+                var title = $("#@Html.FieldIdFor(model => model.AddInBox.ProductName)").val();
+                var quantity = $("#@Html.FieldIdFor(model => model.AddInBox.Quantity)").val();
+                var parentid = $("#@Html.FieldIdFor(model => model.Id)").val();
+
+                if (parentid == 0) {
+                    alert('No product Found');
+                    return;
+                }
+                if (title == null) {
+                    alert('Write Product Name Which You Want To Put In Box');
+                    return;
+                }
+
+
+                $('#addProductinboxbt').attr('disabled', true);
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@(Url.Action("OtherProductInBoxAdd", "Product"))",
+                    data: { "title": title, "parentid": parentid, "quantity": quantity },
+                    success: function (data) {
+                        var productpicturesGrid = $("#productinbox-grid");
+                        productpicturesGrid.data('kendoGrid').dataSource.read();
+                        $('#addProductinboxbt').attr('disabled', false);
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert('Failed to add product in box.');
+                        $('#addProductinboxbt').attr('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>*@

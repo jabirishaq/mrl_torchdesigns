@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="English">
+  <LocaleResource Name="Plugins.Widgets.Storelocator.GoogleAPIKey">
+    <Value>Google API Key</Value>
+  </LocaleResource>
+</Language>

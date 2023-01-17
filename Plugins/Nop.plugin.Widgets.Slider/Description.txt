@@ -1,0 +1,8 @@
+﻿Group: Widgets
+FriendlyName: HomePage Slider
+SystemName: Widgets.Slider
+Version: 1.0
+SupportedVersions: 3.40
+Author: Torch Designs, LLC
+DisplayOrder: 1
+FileName: Nop.Plugin.Widgets.Slider.dll

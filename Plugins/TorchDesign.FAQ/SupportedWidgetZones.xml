@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<SupportedWidgetZones>
+  <WidgetZone>
+    <text>home_page_top</text>
+    <value>home_page_top</value>
+  </WidgetZone>
+  <WidgetZone>
+    <text>home_page_bottom</text>
+    <value>home_page_bottom</value>
+  </WidgetZone>
+  <WidgetZone>
+    <text>footer</text>
+    <value>footer</value>
+  </WidgetZone>
+  <WidgetZone>
+    <text>left_side_column_before</text>
+    <value>left_side_column_before</value>
+  </WidgetZone>
+  <WidgetZone>
+    <text>left_side_column_after</text>
+    <value>left_side_column_after</value>
+  </WidgetZone>
+  <WidgetZone>
+    <text>right_side_column_before</text>
+    <value>right_side_column_before</value>
+  </WidgetZone>
+  <WidgetZone>
+    <text>right_side_column_after</text>
+    <value>right_side_column_after</value>
+  </WidgetZone>
+  <WidgetZone>
+    <text>main_column_before</text>
+    <value>main_column_before</value>
+  </WidgetZone>
+</SupportedWidgetZones>

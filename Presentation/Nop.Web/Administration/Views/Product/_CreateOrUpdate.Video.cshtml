@@ -1,0 +1,304 @@
+﻿@model ProductModel
+@using System.Text;
+@if (Model.Id > 0)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            //product tags
+            $(document).ready(function () {
+                @*@Html.Raw(videotagsSb.ToString())*@
+                $("#@Html.FieldIdFor(model => model.AddVideo.Tagname)").tagit({
+
+                    allowSpaces: true
+                });
+
+            });
+        });
+    </script>
+    <div>
+        <div id="productvideo-grid"></div>
+
+
+        <input type="submit" id="videobtnRefresh" name="videobtnRefresh" style="display: none" />
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#videobtnRefresh').click(function () {
+                    //refresh grid
+                    var optionsGrid = $("#productvideo-grid").data('kendoGrid');
+                    //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                    optionsGrid.dataSource.read();
+
+                    //return false to don't reload a page
+                    return false;
+                });
+            });
+        </script>
+        <div id="productvideo-grid"></div>
+        <script>
+    $(document).ready(function () {
+        $("#productvideo-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("ProductVideoList", "Product", new { productId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    update: {
+                        url:"@Html.Raw(Url.Action("ProductVideoUpdate", "Product"))",
+                        type: "POST",
+                        dataType: "json"
+                    },
+                    @*destroy: {
+                        url: "@Html.Raw(Url.Action("ProductVedioDelete", "Product", new { productId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json"
+                    }*@
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            PictureUrl: {editable: false, type: "string" },
+                            DisplayOrder: {editable: true, type: "number" }
+                        }
+                    }
+                },
+                requestEnd: function(e) {
+                    if(e.type=="update") {
+                        this.read();
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "PictureUrl",
+                title: "@T("Admin.Catalog.Products.Pictures.Fields.Picture")",
+                template: '<a href="#=PictureUrl#" target="_blank"><img alt="#=PictureId#" src="#=PictureUrl#" width="150" /><a/>',
+                width: 200
+            },
+            {
+                field: "VideoId",
+                title: "@T("Admin.Catalog.Products.Video.Fields.VideoId")",
+                width: 150
+            },
+             {
+                 field: "VideoTitle",
+                 title: "@T("admin.catalog.productreviews.fields.title")",
+                 width: 150
+             },
+              {
+                  field: "VideoDescription",
+                  title: "@T("admin.catalog.categories.fields.description")",
+                  width: 150
+              },
+             {
+                 field: "Tagname",
+                 title: "@T("Admin.Catalog.Products.Video.Fields.Tagname")",
+                 width: 300
+             },
+               {
+                   field: "Id",
+                   title: "@T("Admin.Common.Edit")",
+                   width: 100,
+                   template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('/Admin/Product/ProductVideoUpdate/#=Id#?btnId=videobtnRefresh&formId=product-form', 800, 400, true); return false;\" class='k-button' />"
+               },
+               { 
+                   field: "Id",
+                   title: "@T("Admin.Common.Delete")",
+                   headerAttributes: { style: "text-align:center" },
+                   width: 150,
+                   attributes: { style: "text-align:center" },
+                   template: "<a href='javascript:void(0)'class='k-button k-button-icontext k-grid-delete' onclick='deletestepfunction(#=Id#,@Model.Id)'>Delete</a>"
+               },@* {
+                command: [{
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                    template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Widgets.Slider.EditPopup")?id=#=Id#&btnId=videobtnRefresh&formId=Widgets-slider-form', 800, 400, true); return false;\" class='k-button' />"
+                }, {
+                    name: "destroy",
+                    text: "@T("Admin.Common.Delete")"
+                }],
+                width: 200
+            }*@]
+        });
+    });
+        </script>
+
+    </div>
+    <p>
+        <strong>@T("Admin.Catalog.Products.Video.AddNew")</strong>
+    </p>
+    <script type="text/javascript">
+
+
+    $(document).ready(function () {
+        $('#addProductVideosbt').click(function () {
+            var pictureId = $("#@Html.FieldIdFor(model => model.AddVideo.PictureId)").val();
+            var videodescription = $("#@Html.FieldIdFor(model => model.AddVideo.VideoDescription)").val();
+            var videotitle = $("#@Html.FieldIdFor(model => model.AddVideo.VideoTitle)").val();
+            var videourl = $("#@Html.FieldIdFor(model => model.AddVideo.VideoId)").val();
+            var displayOrder = $("#@Html.FieldIdFor(model => model.AddVideo.DisplayOrder)").val();
+            var tags = $("#@Html.FieldIdFor(model => model.AddVideo.Tagname)").val();
+            if (pictureId == 0) {
+                alert('Upload picture first');
+                return;
+            }
+            if(videotitle == "")
+            {
+                alert('Insert Title');
+                return;
+            }
+            if (videourl== "") {
+                alert('Insert VideoId');
+                return;
+            }
+
+
+            $('#addProductVideosbt').attr('disabled', true);
+            $.ajax({
+                cache:false,
+                type: "POST",
+                url: "@(Url.Action("ProductVideoAdd", "Product"))",
+                data: { "pictureId": pictureId,"videourl": videourl,  "videotitle": videotitle, "videodescription": videodescription,"displayOrder": displayOrder, "productId": @Model.Id ,"tags":tags},
+                success: function (data) {
+                    var productpicturesGrid = $("#productvideo-grid");
+                    productpicturesGrid.data('kendoGrid').dataSource.read();
+                    $('#addProductVideosbt').attr('disabled', false);
+                },
+                error:function (xhr, ajaxOptions, thrownError){
+                    alert('Failed to add product picture.');
+                    $('#addProductVideosbt').attr('disabled', false);
+                }
+            });
+        });
+    });
+
+
+    function deletestepfunction(id,productId) {
+
+
+        //var x = window.confirm("Are you sure you want to delete this step?")
+        //if (x)
+        //{
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.Action("ProductVedioDelete", "Product")",
+            data: { "id": id,"productId":productId },
+        success: function (data) {
+
+            var productpicturesGrid = $("#productvideo-grid");
+            productpicturesGrid.data('kendoGrid').dataSource.read();
+            //  alert("This Step Has Been MoveDown ")
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            alert("Error In Delete");
+            //alert('Failed to add product picture.');
+            //$('#addProductPicture').attr('disabled', false);
+        }
+    });
+
+    //}
+    //else
+    //{
+    //        var productpicturesGrid = $("#supporttopicstep-grid");
+    //productpicturesGrid.data('kendoGrid').dataSource.read();
+    //}
+
+    }
+
+    </script>
+    <table class="adminContent">
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddVideo.PictureId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddVideo.PictureId)
+                @Html.ValidationMessageFor(model => model.AddVideo.PictureId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddVideo.VideoTitle):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddVideo.VideoTitle)
+                @Html.ValidationMessageFor(model => model.AddVideo.VideoTitle)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddVideo.VideoDescription):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddVideo.VideoDescription)
+                @Html.ValidationMessageFor(model => model.AddVideo.VideoDescription)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddVideo.VideoId):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddVideo.VideoId)
+                @Html.ValidationMessageFor(model => model.AddVideo.VideoId)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddVideo.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddVideo.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.AddVideo.DisplayOrder)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.AddVideo.Tagname):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.AddVideo.Tagname)
+                @Html.ValidationMessageFor(model => model.AddVideo.Tagname)
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="button" id="addProductVideosbt" class="k-button" value="@T("Admin.Catalog.Products.Video.AddButton")" />
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    @T("Admin.Catalog.Products.Pictures.SaveBeforeEdit")
+}
+
+

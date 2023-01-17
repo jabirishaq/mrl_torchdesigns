@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/Shared/_Root.cshtml";
+}
+@{
+    var pluginFinder = Nop.Core.Infrastructure.EngineContext.Current.Resolve<Nop.Core.Plugins.IPluginFinder>();
+
+    //current category ID
+    int currentCategoryId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("category", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentCategoryId = Convert.ToInt32(Url.RequestContext.RouteData.Values["categoryId"].ToString());
+    }
+
+
+    //current manufacturer ID
+    int currentManufacturerId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("catalog", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("manufacturer", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentManufacturerId = Convert.ToInt32(Url.RequestContext.RouteData.Values["manufacturerId"].ToString());
+    }
+
+
+    //current product ID
+    int currentProductId = 0;
+    if (Url.RequestContext.RouteData.Values["controller"].ToString().Equals("product", StringComparison.InvariantCultureIgnoreCase) &&
+        Url.RequestContext.RouteData.Values["action"].ToString().Equals("productdetails", StringComparison.InvariantCultureIgnoreCase))
+    {
+        currentProductId = Convert.ToInt32(Url.RequestContext.RouteData.Values["productId"].ToString());
+    }
+    // check plugin is installed
+    var pluginDescriptortestimonial = pluginFinder.GetPluginDescriptorBySystemName("Widgets.Testimonials");
+    bool TestimonialEnabledsetting = false;
+    if (pluginDescriptortestimonial != null)
+    {
+        //var pluginField = _pluginFinder.GetPluginDescriptors(false)
+        //    .FirstOrDefault(x => x.SystemName.Equals("Widgets.Testimonials", StringComparison.InvariantCultureIgnoreCase));
+        TestimonialEnabledsetting = true;
+
+    }
+}
+
+<div class="side-2">
+    @if (IsSectionDefined("left"))
+    {
+        @RenderSection("left")
+    }
+    else
+    {
+        @Html.Widget("left_side_column_before")
+        @Html.Action("CategoryNavigation", "Catalog", new { currentCategoryId = currentCategoryId, currentProductId = currentProductId })
+        @Html.Widget("left_side_column_after_category_navigation")
+        @*@Html.Action("ManufacturerNavigation", "Catalog", new { currentManufacturerId = currentManufacturerId })*@
+        @Html.Action("VendorNavigation", "Catalog")
+        @*@Html.Action("NewsletterBox", "Newsletter")*@
+        @Html.Widget("left_side_column_after")
+        <div style="text-align:center;margin-bottom: 8px;">
+            <a href="@Url.RouteUrl("Topic", new { SeName = Html.GetTopicSeName("ShippingInfo") })"><img src="~/Themes/MisterLandscaper/Content/images/FreeShipping.png" style="width:70%" /></a>
+        </div>
+        if (TestimonialEnabledsetting)
+        {
+            <div style="text-align:center">
+                <a href="@Url.RouteUrl("testimonials")"><img src="~/Themes/MisterLandscaper/Content/images/Testimonials_Icon.png" style="width:100%" /></a>
+            </div>
+        }
+    }
+</div>
+<div class="center-2">
+    @Html.Widget("home_page_top")
+    <div class="forsearchresult"></div>
+    @Html.Widget("main_column_before")
+    @RenderBody()
+    @Html.Widget("main_column_after")
+</div>

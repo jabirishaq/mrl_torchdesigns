@@ -1,0 +1,42 @@
+﻿@model IList<ProductOverviewModel>
+
+@using Nop.Web.Models.Catalog;
+@if (Model.Count > 0)
+{
+    @* <div class="related-products-grid product-grid">
+        <div class="title">
+             <strong>@T("Products.RelatedProducts")</strong>
+         </div>*@
+
+        <div class="relatedproductslidermaindiv">
+    <script>
+        //$(document).ready(function () {
+            $('.relatedproductmycarousel').jcarousel({
+                                        list: '.relatedproducthome-page-category-grid',
+                                        items: '.relatedproductitem-box'
+                                    });
+
+                                //});
+    </script>
+    <div class="relatedproductmycarousel">
+        <div class="relatedproducthome-page-category-grid">
+
+        @foreach (var item in Model)
+        {  <div class="relatedproductitem-box">
+            @Html.Partial("_AlsopurchasedProductbox", item)
+            </div>
+            }
+        </div>
+        </div>
+            <a href="#" class="relatedproductjcarousel-control-prev"></a>
+            <a href="#" class="relatedproductjcarousel-control-next"></a>
+            </div>
+    
+    @*</div>*@
+    <script>
+    $(document).ready(function () {
+        $("#productdetail_menu_Related").css("display", "block");
+    });
+    </script>
+}
+

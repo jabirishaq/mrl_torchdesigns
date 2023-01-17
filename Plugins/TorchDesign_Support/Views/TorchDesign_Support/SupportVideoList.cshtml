@@ -1,0 +1,158 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportVideoModel
+@using Nop.Web.Framework;
+@{    
+	//page title
+	ViewBag.Title = T("Admin.Support.SupportVideos.Manage").Text;
+	Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="section-header">
+    <div class="title">
+        <img src="@Url.Content("~/Administration/Content/images/ico-content.png")" alt="" />
+        @T("Admin.Support.SupportVideos.Manage")
+    </div>
+    <div class="options">
+        <a href="@Url.Action("CreateSupportVideo")" class="k-button">@T("Admin.Common.AddNew")</a>
+    </div>
+</div>
+
+<table class="adminContent">
+    <tr>
+        <td>
+            <div id="supportVideos-grid"></div>
+
+            <script>
+    $(document).ready(function () {
+        $("#supportVideos-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("SupportVideoList", "Support"))",
+                        type: "POST",
+                        dataType: "json"
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors"
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            scrollable: false,
+            columns: [{
+                field: "Title",
+                title: "@T("Admin.Support.SupportVideo.Fields.Title")"
+            }, {
+                field: "PictureThumbnailUrl",
+                title: "@T("Support.SupportVideo.Fields.PictureThumbnailUrl")",
+                template: '<img src="#=PictureThumbnailUrl#" />',
+                width: 200
+            }, {
+                field: "VimeoInformation",
+                title: "@T("Admin.Support.SupportVideo.Fields.VimeoInformation")"
+            }, {
+                field: "Id",
+                title: "@T("Admin.Common.Edit")",
+                width: 100,
+                template: '<a href="EditSupportVideo/#=Id#">@T("Admin.Common.Edit")</a>'
+            }, {
+                field: "Id",
+                title: "@T("Admin.Common.Delete")",
+                headerAttributes: { style: "text-align:center" },
+                width: 150,
+                attributes: { style: "text-align:center" },
+                template: "<a href='javascript:void(0)'class='k-button k-button-icontext k-grid-delete' onclick='deletefunction(#=Id#)'>Delete</a>"
+            }]
+        });
+    });
+            </script>
+
+            @*<script type="text/javascript">
+
+					//$(document).ready(function () {
+
+					function DeleteSupportVideo(Id)
+                	{
+                		$.ajax({
+                			type: "POST",
+                			contentType: "application/json; charset=utf-8",
+                			data: "{}",
+                			dataFilter: function (data)
+                			{
+                				var msg;
+                				if (typeof (JSON) !== 'undefined' &&
+									typeof (JSON.parse) === 'function')
+                					msg = JSON.parse(data);
+                				else
+                					msg = eval('(' + data + ')');
+                				if (msg.hasOwnProperty('d'))
+                					return msg.d;
+                				else
+                					return msg;
+                			},
+                			url: "Support/DeleteSupportVideo/"+Id,
+                			success: function (msg)
+                			{
+                				DeleteSupportVideo(Id);
+                			}
+                		});
+                	}
+                //});
+               
+            </script>*@
+
+            <script>
+
+    function deletefunction(id) {
+
+
+        var x = window.confirm("Are you sure you want to delete this Support Video ?")
+        if (x) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Plugin.DeleteSupportVideo")",
+                data: { "id": id },
+                success: function (data) {
+                    if (data.Result) {
+                        var productpicturesGrid = $("#supportVideos-grid");
+                        productpicturesGrid.data('kendoGrid').dataSource.read();
+
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error In Delete");
+
+                }
+            });
+
+        }
+        else {
+            var productpicturesGrid = $("#supportVideos-grid");
+            productpicturesGrid.data('kendoGrid').dataSource.read();
+        }
+
+    }
+
+            </script>
+        </td>
+    </tr>
+</table>

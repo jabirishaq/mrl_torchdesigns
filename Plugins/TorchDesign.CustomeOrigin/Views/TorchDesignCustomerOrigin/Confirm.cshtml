@@ -1,0 +1,150 @@
+﻿@model CheckoutConfirmModel
+@using System.Web.Mvc.Html;
+@using System.Web.Mvc.Razor;
+@using System.Text;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.UI;
+@using Nop.Plugin.TorchDesign.CustomerOrigin.Models;
+@{
+    Layout = "~/Views/Shared/_ColumnsOne.cshtml";
+
+    //title
+    //Html.AddTitleParts(T("PageTitle.Checkout").Text);
+}
+<link href="~/Plugins/TorchDesign.CustomerOrigin/Content/CustomeOriginstyle.css" rel="stylesheet" />
+
+<div class="page checkout-page">
+    @Html.Action("CheckoutProgress", "MiscCheckout", new { step = CheckoutProgressStep.Confirm })
+
+    <div class="page-title">
+        <h1>@T("Checkout.ConfirmYourOrder")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        @Html.HiddenFor(model => model.DefaultSelectedOptionId)
+        @*  @Html.EditorFor(model => model.defaultoption)*@
+        <div class="section confirm-order maincontain">
+            @using (Html.BeginRouteForm("CheckoutConfirm", FormMethod.Post, new { id = "confirm-order-form" }))
+            {
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('.confirm-order-next-step-button').click(function () {
+                            //terms of service
+                            var termOfServiceOk = true;
+                            if ($('#termsofservice').length > 0) {
+                                //terms of service element exists
+                                if (!$('#termsofservice').is(':checked')) {
+                                    $("#terms-of-service-warning-box").dialog();
+                                    termOfServiceOk = false;
+                                } else {
+                                    termOfServiceOk = true;
+                                }
+                            }
+                            if (termOfServiceOk) {
+                                //$('#confirm-order-form').submit();
+                                //$('.confirm-order-next-step-button').attr('disabled', 'disabled');
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        });
+                    });
+                </script>
+                <div class="optioncontainer fltleft">
+                    <div class="questioncontainer">@T("Plugin.custom.origin.feedback.question")</div>
+                    <ul>
+
+                        @foreach (var opt in Model.Configrationmodel)
+                        {
+                            if (!opt.DefaultSelected)
+                            {
+                                <li>
+                                    <div class="questionradio">
+
+
+                                        <input type="radio" name="@Html.FieldNameFor(x => x.Selecteditem)" value="@opt.Id" id="rid_image_@opt.Id">
+
+                                        <label for="id_image_@opt.OptionName">
+                                            <span style="font-weight: 500;padding-left: 6px;font-size:13px"><span></span></span>  @opt.OptionName
+                                        </label>
+
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="fltleft cofirmpagetitle">
+                    <div class="boldtitle ">Mister Landscaper needs your help. We depend on your feedback when it comes to reaching new customers. Please help us in our endeavor. We can’t do it without you!</div>
+                    <div style="width:100%">
+                        <img src="~/Themes/MisterLandscaper/Content/images/Spread The Word.png" style="width:100%" />
+
+                    </div>
+                    <div class="bellowchartdiv">Your feedback helps us know how and where our customers are finding us. By letting us know how YOU found us, we can better focus our efforts. We can make better use of our resources, and we can spend more of our energy on making and keeping you and our other customers happy. We appreciate your support, and we thank you for helping us spread the word!</div>
+                </div>
+                <div class="clr"></div>
+
+                if (!String.IsNullOrEmpty(Model.MinOrderTotalWarning))
+                {
+                    <span class="min-order-warning">@Model.MinOrderTotalWarning</span>
+                }
+                else
+                {
+                    if (Model.TermsOfServiceOnOrderConfirmPage)
+                    {
+                        <div id="terms-of-service-warning-box" title="@T(" checkout.termsofservice")" style="display:none;">
+                            <p>@T("Checkout.TermsOfService.PleaseAccept")</p>
+                        </div>
+                        <div class="terms-of-service">
+                            <input id="termsofservice" type="checkbox" name="termsofservice" />
+                            @T("Checkout.TermsOfService.IAccept")
+                            <span class="read" onclick="javascript:OpenWindow('@Url.RouteUrl(" topicpopup", new { systemname="conditionsofuse" })', 450, 500, true)">@T("Checkout.TermsOfService.Read")</span>
+                        </div>
+                    }
+                    <div class="buttondiv">
+                        @*    <a id="nothanks" href="javascript:void(0)" class="button-1 confirm-order-next-step-button">No Thanks</a>*@
+                        <input type="submit" id="nothanksbtn" name="nothanksbtn" value="No Thanks" class="button-1 confirm-order-next-step-button" />
+                        <input type="submit" id="nextstep" name="nextstep" value="@T(" checkout.confirmbutton")" class="button-1 confirm-order-next-step-button" style=" margin-left: 10px; padding: 5px 16px;" />
+
+
+                    </div>
+                }
+                if (Model.Warnings.Count > 0)
+                {
+                    <div class="message-error">
+                        <ul>
+                            @foreach (var warning in Model.Warnings)
+                            {
+                                <li>@warning</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            }
+        </div>
+        @*  @Html.Widget("checkout_confirm_bottom")*@
+        <div class="order-summary-body">
+            @Html.Action("OrderSummary", "ShoppingCart", new { prepareAndDisplayOrderReviewData = true })
+        </div>
+    </div>
+</div>
+<script>
+    $("#nextstep").click(function () {
+        var flag = false;
+
+        $("[id^=rid_image_]").each(function (index) {
+
+            var loopsearch = document.getElementById(this.id);
+            if (loopsearch.checked) {
+                flag = true;
+
+            }
+
+        });
+        if (flag == false) {
+            alert("Please Select Any One Option");
+            return false;
+        }
+
+    });
+
+</script>

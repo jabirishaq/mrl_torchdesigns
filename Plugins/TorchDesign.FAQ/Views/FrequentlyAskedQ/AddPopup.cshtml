@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Administration/Views/Shared/_AdminPopupLayout.cshtml";
+}
+@model ConfigurationModel
+@using Nop.Plugin.TorchDesign.FAQ.Models;
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "product-form" }))
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-configuration.png")" alt="" />
+            @T("Admin.Common.AddNew")
+        </div>
+        <div class="options">
+            <input type="submit" name="save" class="k-button" value="@T("Admin.Common.Save")" />
+            <input type="submit" name="save-continue" class="k-button" value="@T("Admin.Common.SaveContinue")" />
+        </div>
+    </div>
+    @Html.Partial("~/Plugins/TorchDesign.FAQs/Views/FrequentlyAskedQ/_CreateOrUpdate.cshtml", Model)
+}

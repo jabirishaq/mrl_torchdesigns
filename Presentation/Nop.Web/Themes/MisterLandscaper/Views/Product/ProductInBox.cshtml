@@ -1,0 +1,31 @@
+﻿@model ProductIntoBox
+@using Nop.Web.Models.Catalog;
+
+@if (Model.Productlistinbox.Count > 0)
+{
+    <div class="inboxcontainer">
+        <ul>
+            @foreach (var item in Model.Productlistinbox)
+            {
+                if (item.Type == 0)
+                {
+                    <li>
+                        <span>@item.Quantity x @item.Title</span>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a href="@item.Sename" class="">@item.Quantity x @item.Title @if(!String.IsNullOrEmpty(item.Partno)){<span style="color:#ff6600;font-size: 14px;">(@item.Partno)</span>}</a>
+                    </li>
+                }
+
+            }
+        </ul>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $("#productdetail_menu_Education").css("display", "block");
+        });
+    </script>
+}

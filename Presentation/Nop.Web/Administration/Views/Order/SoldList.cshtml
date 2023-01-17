@@ -1,0 +1,269 @@
+﻿@model SoldListModel
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<Nop.Core.Domain.Common.AdminAreaSettings>().GridPageSizes;
+
+    //page title
+    ViewBag.Title = "Sold Item List";
+
+}
+
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+            Sold Item List
+        </div>
+        <div class="options">
+        </div>
+    </div>
+
+
+
+    <table width="100%">
+        <tr>
+            <td class="adminTitle">
+                StartDate :
+            </td>
+            <td class="adminData" style="width:160px!important">
+                @Html.EditorFor(model => model.StartDate)
+            </td>
+            <td>
+                @Html.DropDownListFor(model => model.StartTime, Nop.Admin.Controllers.OrderController.GetTimeIntervalList())
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle" style="width:160px!important">
+                EndDate :
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.EndDate)
+            </td>
+            <td class="adminData">
+                @Html.DropDownListFor(model => model.EndTime, Nop.Admin.Controllers.OrderController.GetTimeIntervalList())
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <input type="button" id="btnSearch" title="Search" class="k-button" value="Search" />
+            </td>
+        </tr>
+    </table>
+    <p>
+    </p>
+    <table class="adminContent">
+        <tr>
+            <td>
+                <div id="neversoldreport-grid"></div>
+
+                <script>
+                    $(document).ready(function () {
+
+
+                    });
+                    function Loadgrid() {
+                        $("#neversoldreport-grid").kendoGrid({
+                            dataSource: {
+                                type: "json",
+                                transport: {
+
+                                    read: {
+
+                                        url: "@Html.Raw(Url.Action("SoldItemList", "Order"))",
+                                        type: "POST",
+                                        dataType: "json",
+                                        data: additionalData,
+
+                                    }
+                                },
+                                schema: {
+                                    data: "Data",
+                                    total: "Total",
+                                    errors: "Errors"
+                                },
+                                error: function(e) {
+                                    display_kendoui_grid_error(e);
+                                    // Cancel the changes
+                                    this.cancelChanges();
+                                },
+                                pageSize: @(defaultGridPageSize),
+                                serverPaging: true,
+                                serverFiltering: true,
+                                serverSorting: true
+                            },
+                            pageable: {
+                                refresh: true,
+                                pageSizes: [@(gridPageSizes)]
+                            },
+                            editable: {
+                                confirmation: false,
+                                mode: "inline"
+                            },
+                            scrollable: false,
+                            columns: [{
+                                field: "ProductName",
+                                title:"Name"
+                            }
+                            , {
+                                field: "TotalProduct",
+                                title:"Total Count",
+                                width: 100
+
+                            }]
+                        });
+                    }
+                </script>
+
+                <script type="text/javascript">
+
+                    $(document).ready(function () {
+
+                        $('#btnSearch').click(function () {
+                            var StartDate =$('#@Html.FieldIdFor(model => model.StartDate)').val();
+                            var EndDate =$('#@Html.FieldIdFor(model => model.EndDate)').val();
+                            if(( StartDate=='' ||StartDate==null )&&(EndDate=='' || EndDate ==null))
+                            {
+                                alert('Please select start date and end date.');
+                                return false;
+                            }
+
+                            if(StartDate=='' || StartDate ==null)
+                            {
+                                alert('Please select start date.');
+                                return false;
+                            }
+                            if( EndDate=='' ||EndDate==null)
+                            {
+                                alert('Please select end date.');
+                                return false;
+                            }
+                            date1 = new Date(StartDate).getTime();
+                            date2 = new Date(EndDate).getTime();
+                            var timediff = date2 - date1;
+
+                            var i = timediff.toString().indexOf('-');
+                            if(i==-1 )
+                            {
+                                Loadgrid();
+                                var grid = $('#neversoldreport-grid').data('kendoGrid');
+                                grid.dataSource.page(1); //new search. Set page size to 1
+                                grid.dataSource.read();
+                                // LoadChart();
+                                return false;
+                            }
+                            else{
+                                alert('End date must be greater than start date.');
+                                return false;
+                            }
+                        });
+                    });
+
+                    function additionalData() {
+                        return {
+                            StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                            EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                            StartTime: $('#@Html.FieldIdFor(model => model.StartTime)').val(),
+                            EndTime: $('#@Html.FieldIdFor(model => model.EndTime)').val()
+
+
+                        };
+                    }
+
+                </script>
+            </td>
+        </tr>
+    </table>
+
+    @*<table width="100%">
+            <tr>
+                <td>
+                    <div id="container" style="min-width: 510px; height: 400px; max-width: 100%; margin: 0 auto"></div>
+
+                </td>
+            </tr>
+        </table>*@
+
+}
+
+
+
+@*<script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            LoadChart();
+        });
+        function ChartDataData() {
+            return {
+
+                StartDate: $('#@Html.FieldIdFor(model => model.StartDate)').val(),
+                EndDate: $('#@Html.FieldIdFor(model => model.EndDate)').val(),
+                OrderStatusId: $('#@Html.FieldIdFor(model => model.OrderStatusId)').val(),
+                PaymentStatusId: $('#@Html.FieldIdFor(model => model.PaymentStatusId)').val(),
+            };
+        }
+        function LoadChart(){
+
+            $.ajax({
+            url: "@Html.Raw(Url.Action("SalesReportAllList", "Order"))",
+            dataType: 'json',
+            data: ChartDataData(),
+            type: 'POST',
+            success: function(data) {
+                var chartData=[];
+                $.each(data, function(index)
+                {
+                    var dataD = data[index];
+                    var point = [];
+                    point.push(dataD.ProductName);
+                    point.push(dataD.TotalProduct);
+                    chartData.push(point);
+                });
+
+                $(function () {
+                    $('#container').highcharts({
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: 1,//null,
+                            plotShadow: false
+                        },
+                        title: {
+                            text: 'Sales Reports'
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                    style: {
+                                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                    }
+                                }
+                            }
+                        },
+
+                        series: [{
+                            type: 'pie',
+                            name: 'Browser share',
+                            data: chartData
+                        }]
+                    });
+                });
+            },
+            error: function(data) {
+            },
+            timeout: 15000
+        });
+        }
+
+    </script>*@

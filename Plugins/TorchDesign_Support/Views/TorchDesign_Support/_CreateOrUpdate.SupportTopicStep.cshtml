@@ -1,0 +1,415 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportTopicModel
+@using Nop.Web.Framework;
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+
+
+
+@using (Html.BeginForm("AddSupportTopicStep", "Support", FormMethod.Post, new { id = "suuportTopicstep-form" }))
+{
+
+    <div>
+
+        <div id="stepitle_id" class="steptitlecontainer">
+          @*  Step @Model.AddSupportTopicStepModel.SupportStepNo :*@
+        </div>
+        <table class="adminContent topicsteptable">
+            <tr>
+                <td class="steptitlecontainer">
+                    Step @Model.AddSupportTopicStepModel.SupportStepNo :
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AddSupportTopicStepModel.Title):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.AddSupportTopicStepModel.Title)
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AddSupportTopicStepModel.Description):
+                </td>
+                <td class="adminData">
+
+                    @Html.TextAreaFor(model => model.AddSupportTopicStepModel.Description, new { @class = "enquiry" })
+
+
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.AddSupportTopicStepModel.PictureId)
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.AddSupportTopicStepModel.PictureId)
+                    @Html.ValidationMessageFor(model => model.AddSupportTopicStepModel.PictureId)
+                </td>
+            </tr>
+            @if (Model.Id > 0)
+            {
+
+
+                <tr>
+                    <td></td>
+                    <td align="left">
+                        <input type="button" id="addSupportTopic" class="k-button" value="@T(" admin.support.supporttopic.supporttopicstep.addbutton")" />
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    if (Model.Id > 0)
+    {
+        <div>
+            <input type="submit" id="btnRefreshsp" name="btnRefreshsp" style="display: none" />
+            <script type="text/javascript">
+                $(document).ready(function ()
+                {
+                    $('#btnRefreshsp').click(function ()
+                    {
+                        //refresh grid
+                        var optionsGrid = $("#supporttopicstep-grid").data('kendoGrid');
+                        //taxCountrystatezipGrid.dataSource.page(1); //new search. Set page size to 1
+                        optionsGrid.dataSource.read();
+                        //return false to don't reload a page
+                        return false;
+                    });
+                });
+
+                //$(document).ready(function()
+                //{
+
+
+                //});
+                //$('#addSupportTopic').click(function ()
+                //{
+                //	alert("2");
+                //	debugger;
+                //	$('#suuportTopicstep-form').submit();
+                //	return false;
+                //})
+            </script>
+
+            <div id="supporttopicstep-grid"></div>
+            @*<script>
+                $(document).ready(function ()
+                {
+                    $("#supporttopicstep-grid").kendoGrid({
+                        dataSource: {
+                            type: "json",
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("SupportTopicStepList", "Support", new { supportTopicId = Model.Id}))",
+                                    type: "POST",
+                                    dataType: "json"
+                                },
+                                @*update: {
+                            url: "@Html.Raw(Url.Action("ProductSpecAttrUpdate", "Product"))",
+                    type: "POST",
+                    dataType: "json"
+                },*@
+                                @*destroy: {
+                            url: "@Html.Raw(Url.Action("SupportTopicStepDelete", "Support"))",
+                type: "POST",
+                dataType: "json"
+            }*@
+                            @*},
+                            schema: {
+                                data: "Data",
+                                total: "Total",
+                                errors: "Errors",
+                                model: {
+                                    id: "Id",
+                                    fields: {
+
+                                        Id: { editable: false, type: "number" }
+                                    }
+                                }
+                            },
+                            requestEnd: function (e)
+                            {
+                                if (e.type == "update")
+                                {
+                                    this.read();
+                                }
+                            },
+                            error: function (e)
+                            {
+                                display_kendoui_grid_error(e);
+                                // Cancel the changes
+                                this.cancelChanges();
+                            },
+                            serverPaging: true,
+                            serverFiltering: true,
+                            serverSorting: true
+                        },
+                        pageable: {
+                            refresh: true,
+                            numeric: false,
+                            previousNext: false,
+                            info: false
+                        },
+                        editable: {
+                            confirmation: false,
+                            mode: "inline"
+                        },
+                        scrollable: false,
+                        columns: [{
+                            field: "SupportStepNo",
+                            title: "@T("Admin.Suport.SupportTopics.Steps")",
+                            width: 200,
+                            template: "<lable>Step-#=SupportStepNo#</lable>"
+                        },{
+                            field: "Title",
+                            title: "@T("Admin.Support.SupportTopics.SupportTopicStep.Fields.Title")",
+                            width: 200
+                        },{
+                            field: "Description",
+                            title: "@T("Admin.Support.SupportTopicStep.Fields.Description")",
+                            width: 200
+                        },
+                    {
+                        field: "PictureThumbnailUrl",
+                        title: "@T("Admin.Support.SupportTopics.SupportTopicStep.Fields.PictureThumbnailUrl")",
+                        template: '<img src="#=PictureThumbnailUrl#" />',
+                        width: 200
+                    },
+                    {
+                        field: "Id",
+                        title: "@T("plugins.torchdesign.testimonial.Action")",
+                        headerAttributes: { style: "text-align:center" },
+                        width: 80,
+                        attributes: { style: "text-align:center" },
+                        template: "<input type='submit' value='@T("Admin.Common.Edit")' onclick=\"javascript:OpenWindow('@Url.RouteUrl("Plugin.Widgets.Support.EditPopup")?id=#=Id#&btnId=btnRefreshsp&formId=supportTopic-form', 1000, 600, true); return false;\" class='buttonsameaslink' /></br> <a href='javascript:void(0)' onclick='makeup(#=Id#)'>Move Up</a> </br><a href='javascript:void(0)' onclick='makedown(#=Id#)'>Move Down</a>"
+                    },
+                    {
+                        field: "Id",
+                        title: "@T("Admin.Common.Delete")",
+                        headerAttributes: { style: "text-align:center" },
+                        width: 150,
+                        attributes: { style: "text-align:center" },
+                        template: "<a href='javascript:void(0)'class='k-button k-button-icontext k-grid-delete' onclick='deletestepfunction(#=Id#)'>Delete</a>"
+                    },
+                        ]
+                    });
+                });
+            </script>*@
+            @*}*@
+        </div>
+    }
+
+    <script type="text/javascript">
+        $("#addnewstep").click(function(){
+      
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Plugin.addnewstepajax")",
+                data:$("#supportTopic-form").serialize(),
+            success: function (data) {
+
+                $("#topic-list").html(data);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error In Add New Step ");
+                //alert('Failed to add product picture.');
+                //$('#addProductPicture').attr('disabled', false);
+            }
+        });
+        });
+        function makeup(id,srno) {
+
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Plugin.SupportMoveup")",
+                data: { "id": id ,"topicid" : @Model.Id },
+                success: function (data) {
+                    if(data.Result)
+                    {
+                        srno = srno.substr(4,srno.length);
+                        var currentdiv =document.getElementById("topic-step-div_"+ srno).innerHTML;
+                        var upperdiv =document.getElementById("topic-step-div_"+ (srno-1)).innerHTML;
+                        var up="mov_"+(srno-1);
+                        var down="mov_"+(srno);
+                        var upstepno="Step : "+(parseInt(srno));
+                        var downstepno="Step : "+(parseInt(srno)+1);
+                        upperdiv=upperdiv.replace(up,down);
+                        upperdiv=upperdiv.replace(up,down);
+                        upperdiv=upperdiv.replace(upstepno,downstepno);
+
+                        currentdiv=currentdiv.replace(down,up);
+                        currentdiv=currentdiv.replace(down,up);
+                        currentdiv=currentdiv.replace(downstepno,upstepno);
+                        document.getElementById("topic-step-div_"+ srno).innerHTML = upperdiv;
+                        document.getElementById("topic-step-div_"+ (srno-1)).innerHTML = currentdiv;
+                        //var upanch = document.getElementById("moveup_"+srno);
+
+                        //var supporttopicstep = $("#topic-list");
+                        //supporttopicstep.data('topic-step-div').dataSource.read();
+                    }
+                    else{
+                        alert("This Step Allready At First Position ");
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error In MoveUp Step ");
+                    //alert('Failed to add product picture.');
+                    //$('#addProductPicture').attr('disabled', false);
+                }
+            });
+
+        }
+
+        function makedown(id,srno) {
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Plugin.SupportMoveDown")",
+                data: { "id": id ,"topicid" : @Model.Id },
+                success: function (data) {
+                    if(data.Result)
+                    {
+
+                        srno = parseInt(srno.substr(4,srno.length));
+                        var div1 = "topic-step-div_"+srno;
+                        var div2 = "topic-step-div_"+(srno+1);
+
+                        var currentdiv = document.getElementById(div1).innerHTML;
+                        var downdiv =document.getElementById(div2).innerHTML;
+                        var currentstepno="Step : "+(parseInt(srno)+parseInt(1));
+                        var downstepno="Step : "+(parseInt(srno)+parseInt(2));
+                        var down="mov_"+(srno);
+                        var cnt="mov_"+(srno+1);
+                        downdiv=downdiv.replace(down,cnt);
+                        downdiv=downdiv.replace(down,cnt);
+                        downdiv=downdiv.replace(downstepno,currentstepno);
+                        currentdiv=currentdiv.replace(cnt,down);
+                        currentdiv=currentdiv.replace(cnt,down);
+                        currentdiv=currentdiv.replace(currentstepno,downstepno);
+                        document.getElementById("topic-step-div_"+ srno).innerHTML = downdiv;
+                        document.getElementById("topic-step-div_"+ (srno+1)).innerHTML = currentdiv;
+                        //var supporttopicstep = $("#topic-list");
+                        //supporttopicstep.data('topic-step-div').dataSource.read();
+                    }
+                    else{
+                        alert("This Step Allready At Last Position ");
+                    }
+
+                    //  alert("This Step Has Been MoveDown ")
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error In MoveDown Step ");
+                    //alert('Failed to add product picture.');
+                    //$('#addProductPicture').attr('disabled', false);
+                }
+            });
+
+        }
+
+
+        function deletestepfunction(id) {
+
+
+            var x = window.confirm("Are you sure you want to delete this step?")
+            if (x)
+            {
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    url: "@Url.RouteUrl("Plugin.DeleteStep")",
+                    data: { "id": id },
+                    success: function (data) {
+                        if(data.Result)
+                        {
+                            var productpicturesGrid = $("#supporttopicstep-grid");
+                            productpicturesGrid.data('kendoGrid').dataSource.read();
+                            var oldstepnum= $("#@Html.FieldIdFor(model => model.AddSupportTopicStepModel.SupportStepNo)").val();
+                            oldstepnum = parseInt(oldstepnum) - parseInt(1);
+                            var step="Step-"+ oldstepnum;
+                            var displaystep="Step "+oldstepnum+":";
+
+                            document.getElementById('AddSupportTopicStepModel_SupportStepNo').value=oldstepnum;
+                            document.getElementById('AddSupportTopicStepModel_Title').value=step;
+                            document.getElementById("stepitle_id").innerHTML=displaystep;
+                        }
+                        else{
+                            alert("One Step Must Be Required So Cannot Delete It.");
+                        }
+
+                        //  alert("This Step Has Been MoveDown ")
+                    },
+                    error: function (xhr, ajaxOptions, thrownError) {
+                        alert("Error In Delete");
+                        //alert('Failed to add product picture.');
+                        //$('#addProductPicture').attr('disabled', false);
+                    }
+                });
+
+            }
+            else
+            {
+                var productpicturesGrid = $("#supporttopicstep-grid");
+                productpicturesGrid.data('kendoGrid').dataSource.read();
+            }
+
+        }
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#addSupportTopic').click(function () {
+                var pictureId = $("#@Html.FieldIdFor(model => model.AddSupportTopicStepModel.PictureId)").val();
+                var title = $("#@Html.FieldIdFor(model => model.AddSupportTopicStepModel.Title)").val();
+                var description = $("#@Html.FieldIdFor(model => model.AddSupportTopicStepModel.Description)").val();
+                var oldstepnum= $("#@Html.FieldIdFor(model => model.AddSupportTopicStepModel.SupportStepNo)").val()
+
+                if (pictureId == 0) {
+                    alert('Upload picture first');
+                    return;
+                }
+                if (title == null) {
+                    alert('Title must be requeired');
+                    return;
+                }
+
+                $.ajax({
+                    cache:false,
+                    type: "POST",
+                    url: "@(Url.Action("AddStep", "Support"))",
+                    data: { "pictureId": pictureId,"title": title, "description": description, "topicid": @Model.Id,"StepNo": oldstepnum },
+                    success: function (data) {
+                        var productpicturesGrid = $("#supporttopicstep-grid");
+                        productpicturesGrid.data('kendoGrid').dataSource.read();
+                        var oldstepnum= $("#@Html.FieldIdFor(model => model.AddSupportTopicStepModel.SupportStepNo)").val();
+                        oldstepnum = parseInt(oldstepnum) + parseInt(1);
+                        var step="Step-"+ oldstepnum;
+                        var displaystep="Step "+oldstepnum+":";
+
+                        document.getElementById('AddSupportTopicStepModel_SupportStepNo').value=oldstepnum;
+                        document.getElementById('AddSupportTopicStepModel_Title').value=step;
+                        document.getElementById("stepitle_id").innerHTML=displaystep;
+
+                    },
+                    error:function (xhr, ajaxOptions, thrownError){
+                        alert('Failed to add step.');
+                    }
+                });
+            });
+        });
+    </script>
+
+}
+
+
+

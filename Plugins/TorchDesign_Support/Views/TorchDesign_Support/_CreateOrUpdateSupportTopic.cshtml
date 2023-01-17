@@ -1,0 +1,568 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportTopicModel
+@Html.ValidationSummary(false)
+@using Nop.Core.Infrastructure;
+@using Nop.Services;
+@using Nop.Services.Events;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.Events;
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "SupportTopic-form" }))
+{
+    @Html.HiddenFor(model => model.Id)
+    @*@Html.HiddenFor(model => model.AddCount)*@
+    @Html.HiddenFor(model => model.redirect)
+    @Html.HiddenFor(model => model.AddSupportTopicStepModel.SupportStepNo)
+    @*<div id="supportTopic-edit">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportTopics.Info")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportTopics.SupportCategory")
+            </li>
+            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportTopics.ProductCategory")
+            </li>
+            @*<li @Html.RenderSelectedTabIndex(3, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportTopics.Steps")
+            </li>*@
+    @*<li @Html.RenderSelectedTabIndex(4, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportTopics.RelatedProducts")
+            </li>
+
+        </ul>
+        <div>
+            @TabInfo()
+        </div>
+        <div>
+            @TabSupportCategories()
+        </div>
+        <div>
+            @TabProductCategories()
+        </div>
+        @*<div>
+            @TabSteps()
+        </div>*@
+    @*<div>
+            @TabRelatedProducts()
+        </div>*@
+
+    @*</div>
+        <script>
+            $(document).ready(function () {
+                $("#supportTopic-edit").kendoTabStrip({
+                    animation: {
+                        open: {
+                            effects: "fadeIn"
+                        }
+                    },
+                    select: tabstrip_on_tab_select
+                });
+            });
+        </script>*@
+
+    @*@{
+            //custom tabs
+            var eventMessage = new AdminTabStripCreated(this.Html, "supportTopic-edit");
+            EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+            foreach (var eventBlock in eventMessage.BlocksToRender)
+            {
+                @eventBlock
+            }
+        }*@
+
+    @*save selected tab index*@
+    @*<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+        @helper TabInfo()
+        {*@
+    <div class="InfoTab">
+        <table>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Title):
+                </td>
+                <td class="adminData">
+                    @Html.EditorFor(model => model.Title)
+                    @Html.ValidationMessageFor(model => model.Title)
+                </td>
+            </tr>
+
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.TemplateId):
+                </td>
+                <td class="adminData">
+                    @Html.DropDownListFor(model => model.TemplateId, ((Nop.Plugin.Widgets.TorchDesign_Support.Domain.SupportTopicStepTemplate)Model.TemplateId).ToSelectList())
+                    @Html.ValidationMessageFor(model => model.TemplateId)
+                </td>
+            </tr>
+            <tr>
+                <td class="adminTitle">
+                    @Html.NopLabelFor(model => model.Description):
+                </td>
+                <td class="adminData">
+                    @Html.TextAreaFor(model => model.Description, new { @class = "enquiry" })
+                    @Html.ValidationMessageFor(model => model.Description)
+                </td>
+            </tr>
+        </table>
+        <h4 class="topicrelatedProduct"> Products:</h4>
+
+        @Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdate.RelatedProducts.cshtml", Model)
+    </div>
+    @*}
+
+        @helper TabSupportCategories()
+        {*@
+    <div class="productCategoryTab">
+        <table>
+            <tr>
+                <td><h4>Support Categories:</h4></td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.AvailableSupportCategories != null && Model.AvailableSupportCategories.Count > 0)
+                    {
+                        foreach (var supportCategory in Model.AvailableSupportCategories)
+                        {
+                            <input type="checkbox" name="SelectedSupportCategoryIds" value="@supportCategory.Id"
+                                   @if (Model.SelectedSupportCategoryIds != null && Model.SelectedSupportCategoryIds.Contains(supportCategory.Id)){ <text> checked="checked" </text>               } />@supportCategory.Title
+                        }
+                    }
+                    else
+                    {
+                        @T("Admin.Support.Fields.SupportCategories.NoSupportCategories")
+
+                    }
+
+                </td>
+            </tr>
+
+
+            @*}
+
+                @helper TabProductCategories()
+                {*@
+
+            <tr>
+                <td><h4>Product Categories:</h4></td>
+            </tr>
+            <tr>
+                <td>
+                    @if (Model.AvailableCategories != null && Model.AvailableCategories.Count > 0)
+                    {
+                        foreach (var productCategory in Model.AvailableCategories)
+                        {
+
+                            <input type="checkbox" name="SelectedProductCategoryIds" value="@productCategory.Value"
+                                   @if (Model.SelectedProductCategoryIds != null && Model.SelectedProductCategoryIds.Contains(int.Parse(productCategory.Value))) { <text> checked="checked" </text>               } />@productCategory.Text
+
+
+                                <br />
+                        }
+                    }
+                    else
+                    {
+                        @T("Admin.Support.Fields.ProductCategories.NoProductCategories")
+                    }
+                </td>
+            </tr>
+
+        </table>
+
+
+    </div>
+
+    @*@helper TabSteps()
+        {
+
+
+
+        }*@
+    @*@helper TabRelatedProducts()
+        {*@
+
+
+    @*}*@
+    <div class="clr"></div>
+    <div class="topicStep" id="topic-list">
+        <div class="topicpage">
+            <div><h4>Steps:</h4></div>
+            <ul style="list-style:none;">
+
+                @for (int i = 0; i < Model.AvailableTopicStep.Count; i++)
+                {
+                    var item = Model.AvailableTopicStep[i];
+                    @Html.HiddenFor(x => x.AvailableTopicStep[i].Id)
+
+                    <li>
+                        <div class="topicStepdiv" id="topic-step-div_@i">
+                            <div class="clr"></div>
+                            <div class="left">
+                                <div class="steptitlecontainer">
+                                    Step : @Html.DisplayFor(model => Model.AvailableTopicStep[i].SupportStepNo)
+                                    @Html.HiddenFor(x => x.AvailableTopicStep[i].SupportStepNo)
+                                </div>
+                                <table>
+                                    <tr>
+                                        <td class="topictext"> Step Title :</td>
+                                        <td class="topicdata">
+                                            @Html.EditorFor(model => Model.AvailableTopicStep[i].Title)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="topictext" style="display:block;"> Description :</td>
+                                        <td class="topicdata">
+                                            @Html.TextAreaFor(model => Model.AvailableTopicStep[i].Description, new { style = "Width: 250px; Height: 150px;" })
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="right">
+                                <div class="stepbtn">
+
+                                   @* @{string srrno = "mov_" + i;}*@
+                                 @if (Model.CompareCount > i)
+                                 {
+                                     string srrno = "mov_" + i;
+                                        <a href='javascript:void(0)' class="k-button" onclick='makeup(@Model.AvailableTopicStep[i].Id,"@srrno")'>Move Up</a>
+                                        <a href='javascript:void(0)' class="k-button" onclick='makedown(@Model.AvailableTopicStep[i].Id,"@srrno")'>Move Down</a>
+                                        <a href='javascript:void(0)' class='k-button k-button-icontext k-grid-delete' onclick='deletestepfunction(@Model.AvailableTopicStep[i].Id, "@srrno")'>Delete Step</a>
+                                    }
+
+
+                                    @*<a href='javascript:void(0)' class="k-button" onclick='makeup(@Model.AvailableTopicStep[i].Id,"@srrno")'>Move Up</a>
+                                    <a href='javascript:void(0)' class="k-button" onclick='makedown(@Model.AvailableTopicStep[i].Id,"@srrno")'>Move Down</a>
+                                    <a href='javascript:void(0)' class='k-button k-button-icontext k-grid-delete' onclick='deletestepfunction(@Model.AvailableTopicStep[i].Id,"@srrno")'>Delete Step</a>*@
+                                    <input type="submit" id="btnRefreshsp" name="btnRefreshsp" style="display: none" />
+
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $('#btnRefreshsp').click(function () {
+                                                alert("Reload page");
+                                                var topicstep = $("#topic-list").data('topic-step-div');
+                                                topicstep.dataSource.read();
+
+                                                return false;
+                                            });
+                                        });
+                                    </script>
+
+                                </div>
+                                <div class="clr"></div>
+                                <div class="topictext">
+
+                                    <div>  Picture Preview :</div>
+                                    @* <img src="@item.PictureThumbnailUrl" class="steppicture" />*@
+                                    <div>   @Html.EditorFor(model => Model.AvailableTopicStep[i].PictureId)</div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                }
+
+            </ul>
+            <div class="clr"></div>
+
+        </div>
+
+    </div>
+    <div class="topicstepaddnew">
+        @if (Model.Id > 0)
+        {
+            <input type="button" value="Add Step" id="addnewstep" style="display:block" class="k-button">
+        }
+        @if (Model.Id == 0)
+        {
+            <input type="button" value="Add Step" id="addnewstep-2" style="display:block" class="k-button">
+        }
+
+    </div>
+
+    @*@Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdate.SupportTopicStep.cshtml", Model)*@
+
+}
+<script type="text/javascript">
+
+    $("#addnewstep").click(function(){
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.RouteUrl("Plugin.addnewstepajax")",
+            data:$("#supportTopic-form").serialize(),
+            success: function (data) {
+                if(data.Result=='false')
+                {
+                    $("#topic-list").html(data.error);
+                }
+                else
+                {
+                    $("#topic-list").html(data);
+                }
+
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error In MoveUp Step ");
+                //alert('Failed to add product picture.');
+                //$('#addProductPicture').attr('disabled', false);
+            }
+        });
+    });
+    $("#addnewstep-2").click(function(){
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.RouteUrl("Plugin.addnewstepajaxfornewtopic")",
+            data:$("#AddsupportTopic-form").serialize(),
+            success: function (data) {
+
+                $("#topic-list").html(data);
+
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error In MoveUp Step ");
+                //alert('Failed to add product picture.');
+                //$('#addProductPicture').attr('disabled', false);
+            }
+        });
+    });
+
+
+    function makeup(id,srno) {
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.RouteUrl("Plugin.SupportMoveup")",
+            data: { "id": id ,"topicid" : @Model.Id },
+            success: function (data) {
+                if(data.Result)
+                {
+                    srno = srno.substr(4,srno.length);
+                    var currentdiv =document.getElementById("topic-step-div_"+ srno).innerHTML;
+                    var upperdiv =document.getElementById("topic-step-div_"+ (srno-1)).innerHTML;
+                    var up="mov_"+(srno-1);
+                    var down="mov_"+(srno);
+                    var upstepno="Step : "+(parseInt(srno));
+                    var downstepno="Step : "+(parseInt(srno)+parseInt(1));
+                    upperdiv=upperdiv.replace(up,down);
+                    upperdiv=upperdiv.replace(up,down);
+                    upperdiv=upperdiv.replace(upstepno,downstepno);
+
+                    currentdiv=currentdiv.replace(down,up);
+                    currentdiv=currentdiv.replace(down,up);
+                    currentdiv=currentdiv.replace(downstepno,upstepno);
+                    document.getElementById("topic-step-div_"+ srno).innerHTML = upperdiv;
+                    document.getElementById("topic-step-div_"+ (srno-1)).innerHTML = currentdiv;
+                    //var upanch = document.getElementById("moveup_"+srno);
+
+                    //var supporttopicstep = $("#topic-list");
+                    //supporttopicstep.data('topic-step-div').dataSource.read();
+                }
+                else{
+                    alert("This Step Allready At First Position ");
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error In MoveUp Step ");
+                //alert('Failed to add product picture.');
+                //$('#addProductPicture').attr('disabled', false);
+            }
+        });
+
+    }
+
+    function makedown(id,srno) {
+
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "@Url.RouteUrl("Plugin.SupportMoveDown")",
+            data: { "id": id ,"topicid" : @Model.Id },
+            success: function (data) {
+                if(data.Result)
+                {
+
+                    srno = parseInt(srno.substr(4,srno.length));
+                    var div1 = "topic-step-div_"+srno;
+                    var div2 = "topic-step-div_"+(srno+1);
+
+                    var currentdiv = document.getElementById(div1).innerHTML;
+                    var downdiv =document.getElementById(div2).innerHTML;
+                    var currentstepno="Step : "+(parseInt(srno)+parseInt(1));
+                    var downstepno="Step : "+(parseInt(srno)+parseInt(2));
+                    var down="mov_"+(srno+1);
+                    var cnt="mov_"+(srno);
+                    downdiv=downdiv.replace(down,cnt);
+                    downdiv=downdiv.replace(down,cnt);
+                    downdiv=downdiv.replace(downstepno,currentstepno);
+                    currentdiv=currentdiv.replace(cnt,down);
+                    currentdiv=currentdiv.replace(cnt,down);
+                    currentdiv=currentdiv.replace(currentstepno,downstepno);
+                    document.getElementById("topic-step-div_"+ srno).innerHTML = downdiv;
+                    document.getElementById("topic-step-div_"+ (srno+1)).innerHTML = currentdiv;
+                    //var supporttopicstep = $("#topic-list");
+                    //supporttopicstep.data('topic-step-div').dataSource.read();
+                }
+                else{
+                    alert("This Step Allready At Last Position ");
+                }
+
+                //  alert("This Step Has Been MoveDown ")
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert("Error In MoveDown Step ");
+                //alert('Failed to add product picture.');
+                //$('#addProductPicture').attr('disabled', false);
+            }
+        });
+
+    }
+
+
+
+</script>
+<script type="text/javascript">
+
+
+    function deletestepfunction(id,delno) {
+
+
+        var x = window.confirm("Are you sure you want to delete this step?")
+        if (x) {
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Plugin.DeleteStep")",
+                data: { "id": id },
+                success: function (data) {
+                    if(data.Result)
+                    {
+
+                        delno = parseInt(delno.substr(4,delno.length));
+                        //var deldiv = "topic-step-div_"+delno;
+                        ////var i= 0;
+                        $("[id^=topic-step-div_]").each(function (index) {
+
+
+                            var currid =  this.id;
+
+                            currid= parseInt( currid.substr(15,currid.length));
+                            if(currid > delno)
+                            {
+
+                                var downdiv = document.getElementById(this.id).innerHTML;
+
+                                var down="mov_"+(currid);
+                                var cnt="mov_"+(currid-1);
+
+                                var upstepno="Step : "+(parseInt(currid));
+                                var downstepno="Step : "+(parseInt(currid)+parseInt(1));
+
+                                downdiv=downdiv.replace(down,cnt);
+                                downdiv=downdiv.replace(down,cnt);
+                                downdiv=downdiv.replace(down,cnt);
+
+                                downdiv=downdiv.replace(downstepno,upstepno);
+                                document.getElementById(this.id).innerHTML = downdiv;
+
+                                document.getElementById(this.id).id = "topic-step-div_"+ (currid - 1);
+
+
+                            }
+                        });
+
+                        document.getElementById("topic-step-div_"+delno).innerHTML = "";
+                        $("#topic-step-div_"+delno).css("display","none");
+                        document.getElementById("topic-step-div_"+delno).id = "deleted"+ delno;
+
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            url: "@Url.RouteUrl("Plugin.removenullstep")",
+                            data:$("#supportTopic-form").serialize(),
+                            success: function (data) {
+
+                                $("#topic-list").html(data);
+
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                alert("Error In Delete Step ");
+
+                            }
+                        });
+
+                        //delno = parseInt(delno.substr(4,delno.length));
+                        ////var deldiv = "topic-step-div_"+delno;
+                        //////var i= 0;
+                        //$("[id^=topic-step-div_]").each(function (index) {
+
+
+                        //    var currid =  this.id;
+
+                        //    currid= parseInt( currid.substr(15,currid.length));
+                        //    if(currid > delno)
+                        //    {
+
+                        //        var downdiv = document.getElementById(this.id).innerHTML;
+
+                        //        var down="mov_"+(currid);
+                        //        var cnt="mov_"+(currid-1);
+
+                        //        var upstepno="Step : "+(parseInt(currid));
+                        //        var downstepno="Step : "+(parseInt(currid)+parseInt(1));
+
+                        //        downdiv=downdiv.replace(down,cnt);
+                        //        downdiv=downdiv.replace(down,cnt);
+                        //        downdiv=downdiv.replace(down,cnt);
+
+                        //        downdiv=downdiv.replace(downstepno,upstepno);
+                        //        document.getElementById(this.id).innerHTML = downdiv;
+
+                        //        document.getElementById(this.id).id = "topic-step-div_"+ (currid - 1);
+
+
+                        //    }
+                        //});
+
+
+                        //document.getElementById("topic-step-div_"+delno).innerHTML = "";
+                        //$("#topic-step-div_"+delno).css("display","none");
+                        //document.getElementById("topic-step-div_"+delno).id = "deleted"+ delno;
+                    }
+                    else
+                    {
+                        alert("No Any Step Deleted.")
+                    }
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert("Error in Delete");
+                    //alert('Failed to add product picture.');
+                    //$('#addProductPicture').attr('disabled', false);
+                }
+            });
+
+        }
+    }
+
+</script>
+<style>
+    .qq-uploader {
+        width: 250px;
+    }
+
+    .qq-upload-button {
+        padding: 5px 0;
+    }
+
+    .qq-upload-list li {
+        line-height: 5px;
+    }
+</style>

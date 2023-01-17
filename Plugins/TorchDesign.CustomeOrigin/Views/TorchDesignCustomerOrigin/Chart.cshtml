@@ -1,0 +1,68 @@
+﻿@model ChartModel
+@using Nop.Plugin.TorchDesign.CustomerOrigin.Models;
+@using Nop.Web.Framework;
+@using Nop.Core.Infrastructure;
+@using System.Globalization;
+@{
+    Layout = "~/Administration/Views/Shared/_AdminLayout.cshtml";
+
+    ViewBag.Title = T("Plugins.TorchDesign.Customer.Title").Text;
+}
+<link href="~/Plugins/TorchDesign.CustomerOrigin/Content/CustomeOriginstyle.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Plugins/TorchDesign.CustomerOrigin/Content/canvasjs.min.js"></script>
+@using (Html.BeginForm())
+{
+    <div class="section-header">
+        <div class="title">
+            <img src="@Url.Content("~/Administration/Content/images/ico-sales.png")" alt="" />
+            @T("Plugins.TorchDesign.Customerorigin.Backlinktitle") <a href="/Admin/Widget/ConfigureWidget?systemName=TorchDesignCustomerOrigin">@T("Plugins.TorchDesign.Zip2Tax.Counterbacklinl")</a>
+        </div>
+
+    </div>
+    <div style="margin-top:20px;margin-bottom:20px;">
+        <div class="dmain">
+            <div class="calltitle">
+                <strong>@T("Plugins.TorchDesign.Custome.FindReview")</strong>
+            </div>
+            <div class="dateconain">
+                <span> @Html.LabelFor(model => model.StartDate):</span>
+                <span> @Html.EditorFor(model => model.StartDate)</span>
+            </div>
+            <div class="dateconain">
+                <span>@Html.LabelFor(model => model.EndDate):</span>
+                <span> @Html.EditorFor(model => model.EndDate)</span>
+                <span></span>
+            </div>
+            <div class="fltleft"><input type="submit" id="btnSearch" class="k-button" value="@T(" admin.common.search")" /></div>
+        </div>
+    </div>
+
+    if (Model.IsResultfound)
+    { <div class="titlecontain">@T("plugin.custome.origin.feedbacktitle")</div>
+    <script type="text/javascript">
+        window.onload = function () {
+            var chart = new CanvasJS.Chart("chartContainer",
+            {
+                title: {},
+                data: [
+               {
+                   type: "pie",
+                   showInLegend: true,
+                   dataPoints: @Html.Raw(Model.Charatdata),
+               }
+                ]
+            });
+
+            chart.render();
+        }
+    </script>
+    <div id="chartContainer" style="height:100% ;width: 100%;margin:0 auto">
+    </div>
+    }
+    if (Model.IsResultfound == false)
+    {
+        <div class="titlecontain">@T("Plugins.TorchDesign.Custome.error")</div>
+    }
+}
+
+

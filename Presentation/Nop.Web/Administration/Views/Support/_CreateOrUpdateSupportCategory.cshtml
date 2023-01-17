@@ -1,0 +1,113 @@
+﻿@model Nop.Admin.Models.Support.SupportCategoryModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+<div id="supportcategory-edit">
+    <ul>
+        <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+            @T("Admin.Support.SupportCategories.Info")
+        </li>
+  
+    </ul>
+    <div>
+        @TabInfo()
+    </div>
+   
+</div>
+<script>
+    $(document).ready(function() {
+    	$("#supportcategory-edit").kendoTabStrip({
+            animation:  {
+                open: {
+                    effects: "fadeIn"
+                }
+            },
+            select: tabstrip_on_tab_select
+        });
+    });
+</script>
+
+@{
+	//custom tabs
+	var eventMessage = new AdminTabStripCreated(this.Html, "supportcategory-edit");
+    EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+    foreach (var eventBlock in eventMessage.BlocksToRender)
+    {
+        @eventBlock
+    }
+}
+
+
+@*save selected tab index*@
+<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+@helper TabInfo()
+    {
+    
+    <script type="text/javascript">
+        $(document).ready(function () {
+            @*$("#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)").click(togglePageSize);
+            togglePageSize();*@
+        });
+
+        @*function togglePageSize() {
+            if ($('#@Html.FieldIdFor(model => model.AllowCustomersToSelectPageSize)').is(':checked')) {
+                $('#pnlPageSize').hide();
+                $('#pnlPageSizeOptions').show();
+            } else {
+                $('#pnlPageSize').show();
+                $('#pnlPageSizeOptions').hide();
+            }
+        }*@
+    </script>
+        
+  
+    <table class="adminContent">
+	 	<tr>
+	 		<td class="adminTitle">
+	 			@Html.NopLabelFor(model => model.Title):
+	 	</td>
+	 	<td class="adminData">
+	 		@Html.EditorFor(model => model.Title)
+	 	@Html.ValidationMessageFor(model => model.Title)
+	 </td>
+	 </tr>
+	 <tr>
+	 	<td class="adminTitle">
+	 		@Html.NopLabelFor(model => model.Description):
+	 </td>
+	 <td class="adminData">
+	 	@Html.EditorFor(x => x.Description, "RichEditor")
+	 @Html.ValidationMessageFor(model => model.Description)
+	 </td>
+	 </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PictureId)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PictureId)
+                @Html.ValidationMessageFor(model => model.PictureId)
+            </td>
+        </tr>
+   
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.ShowInFooter):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(x => x.ShowInFooter)
+                @Html.ValidationMessageFor(model => model.ShowInFooter)
+            </td>
+        </tr>
+      
+    </table>
+}
+
+
+
+
+
+
+

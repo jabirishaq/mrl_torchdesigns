@@ -1,0 +1,158 @@
+﻿@model ConfigurationModel
+@using Nop.Plugin.Widgets.TorchDesign_StoreLocator.Models;
+@using Nop.Web.Framework;
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();}
+        catch (e){} 
+        window.close();
+    </script>
+}
+
+    <table>
+        @*<tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.category):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.category)
+                @Html.ValidationMessageFor(model => model.Title)
+            </td>
+        </tr>*@
+
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreNumber)
+              
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreType):
+            </td>
+            <td class="adminData">
+
+                @Html.DropDownListFor(model => model.StoreType, Model.AvailableOptions)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.StoreName):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.StoreName)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Address):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Address, new { style = "Width: 250px; Height: 50px;" })
+                @*@Html.ValidationMessageFor(model => model.ShortDescription)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.City):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.City)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Region):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Region)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.CountryCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.CountryCode)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PostalCode):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PostalCode)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PhoneNumber):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.PhoneNumber)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Latitude):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Latitude)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Longitude):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Longitude)
+                @*@Html.ValidationMessageFor(model => model.Title)*@
+            </td>
+        </tr>
+        
+    </table>
+   
+   <script>
+
+       $(document).ready(function (){
+
+           var doption =$( "#StoreType" ).val();
+           if (doption == "Lowe's") {
+               document.getElementById("StoreName").disabled = true;
+               document.getElementById("StoreName").value="";
+              }
+           if (doption == "Other") {
+               document.getElementById("StoreName").disabled = false;
+           }
+
+           $("#StoreType").change(function(){
+               var doption =$( "#StoreType" ).val();
+               if (doption == "Lowe's") {
+                   document.getElementById("StoreName").disabled = true;
+                   document.getElementById("StoreName").value="";
+               }
+               if (doption == "Other") {
+                   document.getElementById("StoreName").disabled = false;
+               }
+             
+           });
+       });
+</script>
+    

@@ -1,0 +1,322 @@
+﻿@model Nop.Plugin.Widgets.TorchDesign_Support.Models.SupportVideoModel
+@Html.ValidationSummary(false)
+@using Nop.Core.Infrastructure;
+@using Nop.Services;
+@using Nop.Services.Events;
+@using Nop.Web.Framework;
+@using Nop.Web.Framework.Events;
+
+<link href="~/Content/tagit/jquery.tagit.css" rel="stylesheet" />
+<link href="~/Plugins/Widgets.TorchDesign_Support/Content/Support.css" rel="stylesheet" />
+
+<script src="~/Scripts/tag-it.min.js"></script>
+<script src="~/Themes/MisterLandscaper/Content/fancybox/jquery.fancybox.js?v=2.1.4"></script>
+<script src="~/Themes/MisterLandscaper/Content/fancybox/jquery.fancybox.pack.js"></script>
+<script src="~/Themes/MisterLandscaper/Content/fancybox/helpers/jquery.fancybox-media.js?v=1.0.5"></script>
+<script src="~/Themes/MisterLandscaper/Content/fancybox/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
+<link href="~/Themes/MisterLandscaper/Content/fancybox/jquery.fancybox.css" rel="stylesheet" />
+<link href="~/Themes/MisterLandscaper/Content/fancybox/helpers/jquery.fancybox-buttons.css" rel="stylesheet" />
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.redirect)
+
+@*<div id="supportVideo-edit">
+        <ul>
+            <li @Html.RenderSelectedTabIndex(0, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportVideo.Info")
+            </li>
+            <li @Html.RenderSelectedTabIndex(1, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportVideo.ProductCategory")
+            </li>
+            <li @Html.RenderSelectedTabIndex(2, GetSelectedTabIndex())>
+                @T("Admin.Suport.SupportVideo.RelatedProducts")
+            </li>
+        </ul>
+        <div>
+            @TabInfo()
+        </div>
+        <div>
+            @TabProductCategories()
+        </div>
+        <div>
+            @TabRelatedProducts()
+        </div>
+    </div>*@
+@*<script>
+        $(document).ready(function () {
+            $("#supportVideo-edit").kendoTabStrip({
+                animation: {
+                    open: {
+                        effects: "fadeIn"
+                    }
+                },
+                select: tabstrip_on_tab_select
+            });
+        });
+    </script>*@
+
+@*@{
+        //custom tabs
+        var eventMessage = new AdminTabStripCreated(this.Html, "supportVideo-edit");
+        EngineContext.Current.Resolve<IEventPublisher>().Publish(eventMessage);
+        foreach (var eventBlock in eventMessage.BlocksToRender)
+        {
+            @eventBlock
+        }
+    }*@
+
+@*save selected tab index*@
+@*<input type="hidden" id="selected-tab-index" name="selected-tab-index" value="@(GetSelectedTabIndex())">
+
+    @helper TabInfo()
+    {*@
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('.forvideoicon img').each(function () {
+            var newDiv = $('<div />').addClass('action-select');
+            //var newspan = $('<span />').addClass('devide');
+            $(this).before(newDiv);
+            //$(this).after(newspan);
+            //$(this).after(newDiv);
+            newDiv.append(this);
+
+        });
+        @{
+
+
+    //TODO move to Model
+            string str = Model.Tag;
+            string[] Tagarray;
+            var videoTagsSb = new System.Text.StringBuilder();
+            if (Model.Tag!=null)
+            {
+                Tagarray = str.Split(',');
+
+                videoTagsSb.Append("var sampleTags = [");
+                for (int i = 0; i < Tagarray.Count(); i++)
+                {
+                    var videotag = Tagarray[i];
+                    videoTagsSb.Append("'");
+                    videoTagsSb.Append(HttpUtility.JavaScriptStringEncode(videotag));
+                    videoTagsSb.Append("'");
+                    if (i != Tagarray.Count() - 1)
+                    {
+                        videoTagsSb.Append(",");
+                    }
+                }
+                videoTagsSb.Append("]");
+
+            }
+            else
+            {
+                Tagarray = null;
+                videoTagsSb.Append("var sampleTags = [");
+                 videoTagsSb.Append("]");
+            }
+
+
+
+        }
+
+
+        //      $(".action-select")
+        //.mouseover(function () {
+        //    $(".playlinkdiv").css("display", "block");
+        //    $(".PlayLink").css("display", "block");
+        //    $(".PlayLink").css("margin-top", "-125px");
+        //    $(".PlayLink").css("margin-left", "50px");
+        //    $(".playlinkdiv").css("width", "200px");
+        //    $(".playlinkdiv").css("height", "125px");
+        //    //$(".PlayLink").css("padding-top", "40px");
+
+        //})
+        //.mouseout(function () {
+        //    $(".playlinkdiv").css("display", "none");
+        //    $(".PlayLink").css("display", "none");
+        //});
+
+        (function ($) {
+
+            $(function () {
+
+                $(".fancyYoutube").fancybox({
+                    'transitionIn': 'elastic',
+                    'transitionOut': 'fade',
+                    'width': '680',
+                    'height': '495',
+                    'type': 'swf'
+                });
+
+                // $('.fancybox').fancybox();
+
+                $('.fancyCarausal')
+                .attr('rel', 'media-gallery')
+                .fancybox({
+                    openEffect: 'none',
+                    closeEffect: 'none',
+                    prevEffect: 'none',
+                    nextEffect: 'none',
+
+                    arrows: false,
+                    helpers: {
+                        media: {},
+                        buttons: {}
+                    }
+                });
+
+
+            });
+
+        })(jQuery);
+
+        $(document).ready(function () {
+            var vurl = "http://vimeo.com/";
+            @Html.Raw(videoTagsSb.ToString())
+            $("#@Html.FieldIdFor(model => model.Tag)").tagit({
+                availableTags: sampleTags,
+                allowSpaces: true
+            });
+
+            $(".forvideoicon").css("width", "100px");
+            $()
+            var videourl = $("#@Html.FieldIdFor(model => model.VimeoInformation)").val();
+            $(".forvideoicon").append("<div class='playlinkdiv'><a href='" + vurl + videourl + "' class='fancybox fancybox.iframe' data-fancybox-group='gallery'><div class='PlayLink'></div></a></div>");
+
+            $(".fancybox").fancybox({
+                width: '70%',
+                height: '70%',
+                helpers: {
+                    media: {}
+                }
+            });
+
+        });
+    });
+</script>
+
+<div class="InfoTab">
+
+    <table class="adminContent">
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Title):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Title)
+                @Html.ValidationMessageFor(model => model.Title)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Description):
+            </td>
+            <td class="adminData">
+                @Html.TextAreaFor(model => model.Description, new { @class = "enquiry" })
+                @Html.ValidationMessageFor(model => model.Description)
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="RelatedProducts">
+                <div class="RelatedProductTab">
+                    <div class="title">
+                        <strong>@T("Admin.Suport.SupportVideo.RelatedProducts"):</strong>
+                        @*<input type="button" id="delete-selected" class="k-button" value="@T("Admin.Common.Delete.Selected")" />*@
+                    </div>
+                    @Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdate.SupportVideoRelatedProducts.cshtml", Model)
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="title">
+                    <strong>Video:</strong>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.VimeoInformation)
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.VimeoInformation)
+                @Html.ValidationMessageFor(model => model.VimeoInformation)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.Tag):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.Tag)
+                @Html.ValidationMessageFor(model => model.Tag)
+            </td>
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.PictureId)
+            </td>
+            <td class="adminData">
+                <div id="video">
+
+                    @Html.EditorFor(model => model.PictureId)
+
+                </div>
+                @Html.ValidationMessageFor(model => model.PictureId)
+            </td>
+
+        </tr>
+        <tr>
+            <td class="adminTitle">
+                @Html.NopLabelFor(model => model.DisplayOrder):
+            </td>
+            <td class="adminData">
+                @Html.EditorFor(model => model.DisplayOrder)
+                @Html.ValidationMessageFor(model => model.DisplayOrder)
+            </td>
+        </tr>
+    </table>
+</div>
+
+@*}
+
+    @helper TabProductCategories()
+    {*@
+
+<div class="productCategoryTab">
+    @if (Model.AvailableCategories != null && Model.AvailableCategories.Count > 0)
+    {
+        <div class="title">
+            <strong>@T("Admin.Suport.SupportVideo.ProductCategory"):</strong><br />
+        </div>
+        foreach (var productCategory in Model.AvailableCategories)
+        {
+            <input type="checkbox" name="SelectedProductCategoryIds" value="@productCategory.Value"
+                   @if (Model.SelectedProductCategoryIds != null && Model.SelectedProductCategoryIds.Contains(int.Parse(productCategory.Value))) { <text> checked="checked" </text>            } /> @productCategory.Text
+                <br />
+
+        }
+    }
+    else
+    {
+        @T("Admin.Support.Fields.SupportCategories.NoVideoCategories")
+    }
+
+</div>
+<div class="clr"></div>
+<style>
+    ul.tagit {
+        width: 430px;
+    }
+</style>
+@*}
+
+
+    @helper TabRelatedProducts()
+    {*@
+@*<div class="RelatedProductTab">
+        @Html.Partial("~/Plugins/Widgets.TorchDesign_Support/Views/TorchDesign_Support/_CreateOrUpdate.SupportVideoRelatedProducts.cshtml", Model)
+    </div>*@
+@*}*@
+

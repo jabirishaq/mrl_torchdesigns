@@ -1,0 +1,9 @@
+﻿@using Nop.Core;
+@using Nop.Core.Domain
+@using Nop.Core.Infrastructure;
+@{
+ Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+ }
+<div>
+    @Html.Action("TopicBlock", "Topic", new { systemName = "download-pdf-instruction" })
+</div>
